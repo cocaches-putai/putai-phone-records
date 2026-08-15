@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
-Mobile Web Dashboard Generator for Putai Second Brain
+Mobile Web Dashboard Generator for Putai Second Brain & GitHub Actions
 Features:
+- Live Data Freshness Banner: Displays latest record date (e.g. 115.08.14) & call count
 - Real-Time Cloud Synchronization (Google Apps Script / Google Sheets API)
 - Real-time cross-device horizontal communication: Any director's edit is visible to all within seconds
 - Mobile-Optimized Teacher Chip Manager: 1-Tap Delete (✕) + Presets
@@ -20,6 +21,7 @@ from datetime import datetime
 from pathlib import Path
 import docx
 
+# Detect dynamic base directory
 SCRIPT_DIR = Path(__file__).resolve().parent
 if (SCRIPT_DIR.parent / "Clippings").exists():
     BASE_DIR = SCRIPT_DIR.parent
@@ -198,6 +200,7 @@ def generate_html(months_data):
     months_keys = sorted(months_data.keys(), reverse=True)
     months_json = json.dumps(months_data, ensure_ascii=False)
     months_keys_json = json.dumps(months_keys, ensure_ascii=False)
+    build_time = datetime.now().strftime('%Y-%m-%d %H:%M')
 
     html = f"""<!DOCTYPE html>
 <html lang="zh-TW">
@@ -349,7 +352,7 @@ def generate_html(months_data):
     header {{
       background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
       color: white;
-      padding: 16px;
+      padding: 14px 16px 16px 16px;
       position: sticky;
       top: 0;
       z-index: 100;
@@ -360,11 +363,11 @@ def generate_html(months_data):
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }}
 
     .school-title {{
-      font-size: 1.05rem;
+      font-size: 1.02rem;
       font-weight: 700;
       display: flex;
       align-items: center;
@@ -399,6 +402,31 @@ def generate_html(months_data):
     .month-select option {{
       background: #0f172a;
       color: white;
+    }}
+
+    /* Data Freshness Banner */
+    .freshness-banner {{
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      padding: 5px 10px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      font-size: 0.76rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #f1f5f9;
+    }}
+
+    .freshness-banner strong {{
+      color: #93c5fd;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }}
+
+    .freshness-sub {{
+      font-size: 0.7rem;
+      color: #cbd5e1;
     }}
 
     .search-wrapper {{
@@ -1032,6 +1060,13 @@ def generate_html(months_data):
         <!-- Options injected via JS -->
       </select>
     </div>
+
+    <!-- Live Data Freshness Banner -->
+    <div class="freshness-banner">
+      <span>📅 資料庫收錄至：<strong id="freshnessDateText">115.08.14</strong></span>
+      <span class="freshness-sub" id="freshnessSubText">（本月已收錄 0 筆通話）</span>
+    </div>
+
     <div class="search-wrapper">
       <span class="search-icon">🔍</span>
       <input type="text" id="searchInput" class="search-input" placeholder="搜尋學生、來電事由、師長或分機..." oninput="handleSearch()">
@@ -1187,6 +1222,7 @@ def generate_html(months_data):
     const monthsData = {months_json};
     const monthKeys = {months_keys_json};
     const CODE_NAMES = {json.dumps(CODE_MAP, ensure_ascii=False)};
+    const BUILD_TIME = "{build_time}";
 
     let currentMonth = monthKeys[0] || '115.08';
     let currentView = 'key'; // 'key' or 'all'
@@ -1437,7 +1473,6 @@ def generate_html(months_data):
         timestamp: new Date().toISOString()
       }};
 
-      // 1. Instant local memory update (0.01s visual feedback)
       let allFeedbacks = JSON.parse(localStorage.getItem('putai_supervisor_feedbacks') || '[]');
       allFeedbacks = allFeedbacks.filter(f => f.caseId !== activeCaseId);
       allFeedbacks.push(feedback);
@@ -1447,7 +1482,6 @@ def generate_html(months_data):
       closeReplyModal();
       render();
 
-      // 2. Real-time background cloud transmission to Google Sheet
       const badge = document.getElementById('cloudStatusBadge');
       if (badge) badge.innerText = '⏳ 雲端同步中...';
 
@@ -1535,6 +1569,24 @@ def generate_html(months_data):
       const mData = monthsData[currentMonth] || {{ records: [], key_cases: [] }};
       const records = mData.records;
       const keyCases = mData.key_cases;
+
+      // 1. Calculate and display Data Freshness Banner
+      let maxDate = '';
+      records.forEach(r => {{
+        if (r.date && r.date > maxDate) maxDate = r.date;
+      }});
+      if (!maxDate && keyCases.length > 0) {{
+        keyCases.forEach(k => {{
+          if (k.date && k.date > maxDate) maxDate = k.date;
+        }});
+      }}
+      
+      const freshnessDateEl = document.getElementById("freshnessDateText");
+      const freshnessSubEl = document.getElementById("freshnessSubText");
+      if (freshnessDateEl && maxDate) {{
+        freshnessDateEl.innerText = maxDate;
+        freshnessSubEl.innerText = `（本月已收錄 ${{records.length}} 筆通話紀錄）`;
+      }}
 
       const redCount = keyCases.filter(r => r.level === 'red').length;
       const yellowCount = keyCases.filter(r => r.level === 'yellow').length;
@@ -1682,7 +1734,7 @@ def generate_html(months_data):
 """
     with open(OUTPUT_HTML, "w", encoding="utf-8") as f:
         f.write(html)
-    print(f"[✓] 成功產出支援 Google 雲端即時連線的主管追蹤儀表板：{OUTPUT_HTML}")
+    print(f"[✓] 成功產出包含最新收錄日期橫幅的主管追蹤儀表板：{OUTPUT_HTML}")
 
 def main():
     WEB_DIR.mkdir(parents=True, exist_ok=True)
