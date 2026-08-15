@@ -799,7 +799,7 @@
   <div id="replyModal" style="display:none;">
     <div class="reply-sheet">
       <div class="sheet-header">
-        <div class="sheet-title">🏷️ 編輯處室單位、標籤與備註</div>
+        <div class="sheet-title">🏷️ 編輯處室單位、主責師長與標籤</div>
         <button class="sheet-close" onclick="closeReplyModal()">✕</button>
       </div>
 
@@ -845,8 +845,8 @@
       </div>
 
       <div class="form-group">
-        <label class="form-label">👤 主責師長／處室（可多位）：</label>
-        <input type="text" id="modalTeacherInput" class="form-input" placeholder="例如：學務主任 辜漢宗、導師 張薏雯">
+        <label class="form-label">👤 主責師長（可多位，以「、」分隔）：</label>
+        <input type="text" id="modalTeacherInput" class="form-input" placeholder="例如：洪誌陽（副校長）、連傑（教務主任）、吳淑娟（導師）">
       </div>
 
       <div class="form-group">
@@ -854,7 +854,7 @@
         <textarea id="modalActionInput" class="form-textarea" placeholder="請填寫最新處置、回電情形或追蹤備註..."></textarea>
       </div>
 
-      <button class="sheet-submit-btn" onclick="submitReply()">確認儲存處室標籤與處置</button>
+      <button class="sheet-submit-btn" onclick="submitReply()">確認儲存處置與主責師長</button>
     </div>
   </div>
 
@@ -1019,17 +1019,17 @@
       });
     }
 
-    function openReplyModal(caseId, caseName, defaultTeacher, currentFollowUp, currentLevel, currentCode, currentDeptName) {
+    function openReplyModal(caseId, caseName, teachersStr, currentFollowUp, currentLevel, currentCode, currentDeptName) {
       activeCaseId = caseId;
       document.getElementById('modalCaseName').innerText = `📋 案件：${caseName}`;
-      document.getElementById('modalTeacherInput').value = localStorage.getItem('putai_last_teacher') || defaultTeacher || '';
+      
+      // Load ALL existing teachers into the input
+      document.getElementById('modalTeacherInput').value = teachersStr || '';
       document.getElementById('modalActionInput').value = currentFollowUp || '';
       
-      // Pre-fill Department code and SubDept text
       const codeSelect = document.getElementById('modalDeptCodeSelect');
       codeSelect.value = currentCode || '12';
       
-      // Extract sub department if exists, e.g. "出納組" from "教務處 / 出納組"
       let subDept = '';
       if (currentDeptName) {
         const parts = currentDeptName.split('/');
@@ -1048,7 +1048,7 @@
     }
 
     function submitReply() {
-      const teacher = document.getElementById('modalTeacherInput').value.trim();
+      const rawTeacherInput = document.getElementById('modalTeacherInput').value.trim();
       const action = document.getElementById('modalActionInput').value.trim();
       const code = document.getElementById('modalDeptCodeSelect').value;
       const subDept = document.getElementById('modalSubDeptInput').value.trim();
@@ -1056,18 +1056,29 @@
       const mainDeptName = CODE_NAMES[code] || '其他';
       const fullDeptName = subDept ? `${mainDeptName} / ${subDept}` : mainDeptName;
 
+      // Parse and strictly deduplicate teachers from user input
+      const rawList = rawTeacherInput.split(/[、,，\s]+/);
+      const seen = new Set();
+      const cleanedTeachers = [];
+      rawList.forEach(t => {
+        const c = t.trim().replace(/^\[\[/, '').replace(/\]\]$/, '');
+        if (c && !seen.has(c)) {
+          seen.add(c);
+          cleanedTeachers.append ? cleanedTeachers.append(c) : cleanedTeachers.push(c);
+        }
+      });
+
       const feedback = {
         caseId: activeCaseId,
         month: currentMonth,
         code: code,
         dept_name: fullDeptName,
-        teacher: teacher || '處室主管',
+        teachers: cleanedTeachers,
         action: action,
         status: selectedModalTag,
         timestamp: new Date().toISOString()
       };
 
-      localStorage.setItem('putai_last_teacher', teacher);
       let allFeedbacks = JSON.parse(localStorage.getItem('putai_supervisor_feedbacks') || '[]');
       allFeedbacks = allFeedbacks.filter(f => f.caseId !== activeCaseId);
       allFeedbacks.push(feedback);
@@ -1076,7 +1087,7 @@
       applyFeedbackToMemory(feedback);
       closeReplyModal();
       render();
-      alert('✓ 負責處室、標籤與處置備註已成功更新！');
+      alert('✓ 主責師長、處室單位與處置備註已成功更新！');
     }
 
     function applyFeedbackToMemory(fb) {
@@ -1092,11 +1103,9 @@
           foundKey.level_text = (fb.status === 'red') ? '重點關懷' : (fb.status === 'yellow') ? '處室追蹤' : '已結案';
           if (fb.code) foundKey.code = fb.code;
           if (fb.dept_name) foundKey.dept_name = fb.dept_name;
+          if (fb.teachers) foundKey.teachers = Array.from(new Set(fb.teachers));
           if (fb.action) {
-            foundKey.follow_up = fb.action.startsWith('【') ? fb.action : `【${fb.teacher}實際回報】${fb.action}`;
-          }
-          if (fb.teacher && !foundKey.teachers.includes(fb.teacher)) {
-            foundKey.teachers.push(fb.teacher);
+            foundKey.follow_up = fb.action;
           }
         }
       } else if (fb.status !== 'normal') {
@@ -1112,8 +1121,8 @@
             level_text: (fb.status === 'red') ? '重點關懷' : (fb.status === 'yellow') ? '處室追蹤' : '已結案',
             content: rawRec.content,
             action: rawRec.action,
-            teachers: fb.teacher ? [fb.teacher] : [],
-            follow_up: fb.action ? (fb.action.startsWith('【') ? fb.action : `【${fb.teacher}標記追蹤】${fb.action}`) : ''
+            teachers: fb.teachers ? Array.from(new Set(fb.teachers)) : [],
+            follow_up: fb.action || ''
           };
           mData.key_cases.push(newCase);
         }
@@ -1202,10 +1211,12 @@
         const isGreen = item.level === 'green';
         const highlightClass = isRed ? 'highlight-red' : isYellow ? 'highlight-yellow' : isGreen ? 'highlight-green' : '';
 
-        const teachersHtml = (item.teachers && item.teachers.length > 0) ? `
+        // Strictly deduplicate teachers for UI pills
+        const uniqueTeachers = Array.from(new Set(item.teachers || []));
+        const teachersHtml = (uniqueTeachers.length > 0) ? `
           <div class="teachers-tags">
             <span style="font-size:0.72rem; color:#64748b; font-weight:600;">👤 主責師長：</span>
-            ${item.teachers.map(t => `<span class="teacher-pill">${t}</span>`).join('')}
+            ${uniqueTeachers.map(t => `<span class="teacher-pill">${t}</span>`).join('')}
           </div>
         ` : '';
 
@@ -1226,11 +1237,11 @@
 
         const safeFollowUp = (item.follow_up || '').replace(/'/g, "\'");
         const safeDeptName = (item.dept_name || '').replace(/'/g, "\'");
-        const defaultTeacher = (item.teachers && item.teachers[0]) ? item.teachers[0].replace(/（.+）/, '') : '';
+        const safeTeachersStr = uniqueTeachers.join('、').replace(/'/g, "\'");
 
         const replyButtonHtml = `
-          <button class="btn-reply" onclick="openReplyModal('${item.id}', '${item.caller}', '${defaultTeacher}', '${safeFollowUp}', '${item.level}', '${item.code}', '${safeDeptName}')">
-            🏷️ 編輯處室與標籤
+          <button class="btn-reply" onclick="openReplyModal('${item.id}', '${item.caller}', '${safeTeachersStr}', '${safeFollowUp}', '${item.level}', '${item.code}', '${safeDeptName}')">
+            🏷️ 編輯處室與師長
           </button>
         `;
 
