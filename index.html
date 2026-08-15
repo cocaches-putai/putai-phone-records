@@ -561,6 +561,8 @@
       padding: 20px 18px 30px 18px;
       box-shadow: 0 -10px 25px rgba(0,0,0,0.2);
       animation: slideUp 0.25s ease-out;
+      max-height: 90vh;
+      overflow-y: auto;
     }
 
     @keyframes slideUp {
@@ -572,7 +574,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
 
     .sheet-title {
@@ -612,7 +614,7 @@
       font-size: 0.78rem;
       font-weight: 700;
       color: #475569;
-      margin-bottom: 6px;
+      margin-bottom: 5px;
       display: block;
     }
 
@@ -678,7 +680,7 @@
     }
 
     .form-textarea {
-      height: 70px;
+      height: 65px;
       resize: none;
     }
 
@@ -797,11 +799,32 @@
   <div id="replyModal" style="display:none;">
     <div class="reply-sheet">
       <div class="sheet-header">
-        <div class="sheet-title">🏷️ 設定追蹤標籤與備註</div>
+        <div class="sheet-title">🏷️ 編輯處室單位、標籤與備註</div>
         <button class="sheet-close" onclick="closeReplyModal()">✕</button>
       </div>
 
       <div class="sheet-case-name" id="modalCaseName">案件名稱</div>
+
+      <div class="form-group">
+        <label class="form-label">🏢 負責業務處室／細部組別：</label>
+        <div style="display: flex; gap: 8px;">
+          <select id="modalDeptCodeSelect" class="form-input" style="flex: 1.2; font-weight: 600;">
+            <option value="1">[1] 教務處</option>
+            <option value="2">[2] 學務處</option>
+            <option value="3">[3] 總務處</option>
+            <option value="4">[4] 輔導室</option>
+            <option value="5">[5] 國際部</option>
+            <option value="6">[6] 音樂中心</option>
+            <option value="7">[7] 人事室</option>
+            <option value="8">[8] 住宿處</option>
+            <option value="9">[9] 國中部導師</option>
+            <option value="10">[10] 高中部導師</option>
+            <option value="11">[11] 招生組</option>
+            <option value="12">[12] 其他</option>
+          </select>
+          <input type="text" id="modalSubDeptInput" class="form-input" style="flex: 1;" placeholder="細部組別（如：出納組）">
+        </div>
+      </div>
 
       <div class="form-group">
         <label class="form-label">📌 自選案件列管標籤：</label>
@@ -831,7 +854,7 @@
         <textarea id="modalActionInput" class="form-textarea" placeholder="請填寫最新處置、回電情形或追蹤備註..."></textarea>
       </div>
 
-      <button class="sheet-submit-btn" onclick="submitReply()">確認儲存標籤與處置</button>
+      <button class="sheet-submit-btn" onclick="submitReply()">確認儲存處室標籤與處置</button>
     </div>
   </div>
 
@@ -996,11 +1019,26 @@
       });
     }
 
-    function openReplyModal(caseId, caseName, defaultTeacher, currentFollowUp, currentLevel) {
+    function openReplyModal(caseId, caseName, defaultTeacher, currentFollowUp, currentLevel, currentCode, currentDeptName) {
       activeCaseId = caseId;
       document.getElementById('modalCaseName').innerText = `📋 案件：${caseName}`;
       document.getElementById('modalTeacherInput').value = localStorage.getItem('putai_last_teacher') || defaultTeacher || '';
       document.getElementById('modalActionInput').value = currentFollowUp || '';
+      
+      // Pre-fill Department code and SubDept text
+      const codeSelect = document.getElementById('modalDeptCodeSelect');
+      codeSelect.value = currentCode || '12';
+      
+      // Extract sub department if exists, e.g. "出納組" from "教務處 / 出納組"
+      let subDept = '';
+      if (currentDeptName) {
+        const parts = currentDeptName.split('/');
+        if (parts.length > 1) {
+          subDept = parts.slice(1).join('/').trim();
+        }
+      }
+      document.getElementById('modalSubDeptInput').value = subDept;
+
       selectTagOption(currentLevel || 'yellow');
       document.getElementById('replyModal').style.display = 'flex';
     }
@@ -1012,10 +1050,17 @@
     function submitReply() {
       const teacher = document.getElementById('modalTeacherInput').value.trim();
       const action = document.getElementById('modalActionInput').value.trim();
+      const code = document.getElementById('modalDeptCodeSelect').value;
+      const subDept = document.getElementById('modalSubDeptInput').value.trim();
+      
+      const mainDeptName = CODE_NAMES[code] || '其他';
+      const fullDeptName = subDept ? `${mainDeptName} / ${subDept}` : mainDeptName;
 
       const feedback = {
         caseId: activeCaseId,
         month: currentMonth,
+        code: code,
+        dept_name: fullDeptName,
         teacher: teacher || '處室主管',
         action: action,
         status: selectedModalTag,
@@ -1031,7 +1076,7 @@
       applyFeedbackToMemory(feedback);
       closeReplyModal();
       render();
-      alert('✓ 案件標籤與處置備註已成功更新！');
+      alert('✓ 負責處室、標籤與處置備註已成功更新！');
     }
 
     function applyFeedbackToMemory(fb) {
@@ -1045,6 +1090,8 @@
         } else {
           foundKey.level = fb.status;
           foundKey.level_text = (fb.status === 'red') ? '重點關懷' : (fb.status === 'yellow') ? '處室追蹤' : '已結案';
+          if (fb.code) foundKey.code = fb.code;
+          if (fb.dept_name) foundKey.dept_name = fb.dept_name;
           if (fb.action) {
             foundKey.follow_up = fb.action.startsWith('【') ? fb.action : `【${fb.teacher}實際回報】${fb.action}`;
           }
@@ -1058,8 +1105,8 @@
           const newCase = {
             id: rawRec.id,
             date: rawRec.date,
-            code: rawRec.code,
-            dept_name: rawRec.dept_name,
+            code: fb.code || rawRec.code,
+            dept_name: fb.dept_name || rawRec.dept_name,
             caller: rawRec.caller,
             level: fb.status,
             level_text: (fb.status === 'red') ? '重點關懷' : (fb.status === 'yellow') ? '處室追蹤' : '已結案',
@@ -1178,11 +1225,12 @@
         }
 
         const safeFollowUp = (item.follow_up || '').replace(/'/g, "\'");
+        const safeDeptName = (item.dept_name || '').replace(/'/g, "\'");
         const defaultTeacher = (item.teachers && item.teachers[0]) ? item.teachers[0].replace(/（.+）/, '') : '';
 
         const replyButtonHtml = `
-          <button class="btn-reply" onclick="openReplyModal('${item.id}', '${item.caller}', '${defaultTeacher}', '${safeFollowUp}', '${item.level}')">
-            🏷️ 編輯標籤與處置
+          <button class="btn-reply" onclick="openReplyModal('${item.id}', '${item.caller}', '${defaultTeacher}', '${safeFollowUp}', '${item.level}', '${item.code}', '${safeDeptName}')">
+            🏷️ 編輯處室與標籤
           </button>
         `;
 
