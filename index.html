@@ -770,20 +770,20 @@
   <div id="replyModal" style="display:none;">
     <div class="reply-sheet">
       <div class="sheet-header">
-        <div class="sheet-title">📝 處室處置進度回報</div>
+        <div class="sheet-title">📝 編輯處置備註與結案</div>
         <button class="sheet-close" onclick="closeReplyModal()">✕</button>
       </div>
 
       <div class="sheet-case-name" id="modalCaseName">案件名稱</div>
 
       <div class="form-group">
-        <label class="form-label">👤 回報師長／主任：</label>
+        <label class="form-label">👤 回報／編輯師長：</label>
         <input type="text" id="modalTeacherInput" class="form-input" placeholder="例如：學務主任 辜漢宗、導師 張薏雯">
       </div>
 
       <div class="form-group">
-        <label class="form-label">💬 最新處置說明：</label>
-        <textarea id="modalActionInput" class="form-textarea" placeholder="請簡述今日聯繫、協調或處理情形..."></textarea>
+        <label class="form-label">💬 處置追蹤文字（可自由修改）：</label>
+        <textarea id="modalActionInput" class="form-textarea" placeholder="請填寫最新處置或修正備註文字..."></textarea>
       </div>
 
       <div class="form-group">
@@ -798,7 +798,7 @@
         </div>
       </div>
 
-      <button class="sheet-submit-btn" onclick="submitReply()">確認送出處置</button>
+      <button class="sheet-submit-btn" onclick="submitReply()">儲存處置更新</button>
     </div>
   </div>
 
@@ -950,15 +950,17 @@
       }
     }
 
-    /* Supervisor Interactive Response Handlers */
+    /* Supervisor / User Interactive Edit Modal Handlers */
     let selectedModalStatus = 'green';
 
-    function openReplyModal(caseId, caseName, defaultTeacher) {
+    function openReplyModal(caseId, caseName, defaultTeacher, currentFollowUp, currentLevel) {
       activeCaseId = caseId;
       document.getElementById('modalCaseName').innerText = `📋 案件：${caseName}`;
       document.getElementById('modalTeacherInput').value = localStorage.getItem('putai_last_teacher') || defaultTeacher || '';
-      document.getElementById('modalActionInput').value = '';
-      selectStatusRadio('green');
+      
+      // Pre-fill existing follow up text so user can edit it freely!
+      document.getElementById('modalActionInput').value = currentFollowUp || '';
+      selectStatusRadio(currentLevel === 'green' ? 'green' : 'yellow');
       document.getElementById('replyModal').style.display = 'flex';
     }
 
@@ -984,7 +986,7 @@
       const action = document.getElementById('modalActionInput').value.trim();
 
       if (!action) {
-        alert('請填寫處置說明！');
+        alert('請填寫處置追蹤文字！');
         return;
       }
 
@@ -997,17 +999,17 @@
         timestamp: new Date().toISOString()
       };
 
-      // Save locally in mobile browser
       localStorage.setItem('putai_last_teacher', teacher);
       let allFeedbacks = JSON.parse(localStorage.getItem('putai_supervisor_feedbacks') || '[]');
+      // Update or add
+      allFeedbacks = allFeedbacks.filter(f => f.caseId !== activeCaseId);
       allFeedbacks.push(feedback);
       localStorage.setItem('putai_supervisor_feedbacks', JSON.stringify(allFeedbacks));
 
-      // Apply update directly in current dataset
       applyFeedbackToMemory(feedback);
       closeReplyModal();
       render();
-      alert('✓ 處置進度已成功回報並更新！');
+      alert('✓ 處置追蹤文字已成功更新！');
     }
 
     function applyFeedbackToMemory(fb) {
@@ -1016,7 +1018,8 @@
           if (c.id === fb.caseId) {
             c.level = fb.status;
             c.level_text = (fb.status === 'green') ? '已結案' : '處室追蹤';
-            c.follow_up = `【${fb.teacher}實際回報】${fb.action}`;
+            // If already has prefix, avoid duplicating
+            c.follow_up = fb.action.startsWith('【') ? fb.action : `【${fb.teacher}實際回報】${fb.action}`;
             if (fb.teacher && !c.teachers.includes(fb.teacher)) {
               c.teachers.push(fb.teacher);
             }
@@ -1035,7 +1038,6 @@
       const records = mData.records;
       const keyCases = mData.key_cases;
 
-      // Update counters based on keyCases
       const redCount = keyCases.filter(r => r.level === 'red').length;
       const yellowCount = keyCases.filter(r => r.level === 'yellow').length;
       const greenCount = keyCases.filter(r => r.level === 'green').length;
@@ -1047,14 +1049,12 @@
       document.getElementById("statMonthYellow").innerText = yellowCount;
       document.getElementById("statMonthGreen").innerText = greenCount;
 
-      // Calculate 12-code counts
       const codeCounts = {};
       for (let c in CODE_NAMES) codeCounts[c] = 0;
       records.forEach(r => {
         codeCounts[r.code] = (codeCounts[r.code] || 0) + 1;
       });
 
-      // Render 12-code panel chips
       const chipsPanel = document.getElementById("statsPanel");
       chipsPanel.innerHTML = Object.keys(CODE_NAMES).map(code => `
         <div class="stat-chip ${currentCodeFilter === code ? 'active' : ''}" onclick="filterByCode('${code}')">
@@ -1114,14 +1114,17 @@
         } else if (isRed || isYellow) {
           followUpHtml = `
             <div class="follow-up-box pending">
-              <strong>⏳ 處置追蹤：</strong> 尚未有處室主管／導師回報（請點右下方回報）
+              <strong>⏳ 處置追蹤：</strong> 尚未有處室主管／導師回報（請點右下方編輯回報）
             </div>
           `;
         }
 
+        const safeFollowUp = (item.follow_up || '').replace(/'/g, "\'");
+        const defaultTeacher = (item.teachers && item.teachers[0]) ? item.teachers[0].replace(/（.+）/, '') : '';
+
         const replyButtonHtml = (item.id && (isRed || isYellow || isGreen)) ? `
-          <button class="btn-reply" onclick="openReplyModal('${item.id}', '${item.caller}', '${(item.teachers && item.teachers[0]) ? item.teachers[0].replace(/（.+）/, '') : ''}')">
-            ✏️ 回報處置 / 結案
+          <button class="btn-reply" onclick="openReplyModal('${item.id}', '${item.caller}', '${defaultTeacher}', '${safeFollowUp}', '${item.level}')">
+            ✏️ 編輯處置 / 結案
           </button>
         ` : '';
 
