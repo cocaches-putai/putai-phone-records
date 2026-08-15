@@ -257,22 +257,53 @@
     /* Stats bar */
     .quick-stats-row {
       background: #ffffff;
-      padding: 8px 16px;
+      padding: 8px 12px;
       display: flex;
+      gap: 6px;
       justify-content: space-around;
       border-bottom: 1px solid var(--border);
       text-align: center;
     }
 
     .q-stat {
+      flex: 1;
       font-size: 0.72rem;
       color: var(--text-muted);
+      cursor: pointer;
+      padding: 6px 4px;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      transition: all 0.15s;
+    }
+
+    .q-stat:active {
+      transform: scale(0.96);
     }
 
     .q-stat strong {
       display: block;
-      font-size: 0.95rem;
+      font-size: 0.98rem;
       color: #0f172a;
+    }
+
+    .q-stat.active-total {
+      background: #eff6ff;
+      border-color: #93c5fd;
+    }
+
+    .q-stat.active-red {
+      background: #fef2f2;
+      border-color: #fca5a5;
+    }
+
+    .q-stat.active-yellow {
+      background: #fffbeb;
+      border-color: #fcd34d;
+    }
+
+    .q-stat.active-green {
+      background: #f0fdf4;
+      border-color: #86efac;
     }
 
     /* 12 Codes Statistics Panel */
@@ -522,19 +553,19 @@
 
     <!-- Quick Stats Row -->
     <div class="quick-stats-row">
-      <div class="q-stat">
+      <div class="q-stat" id="qStatTotal" onclick="filterByStatus('all')">
         <strong id="statMonthTotal">0</strong>
         <span>本月總通話</span>
       </div>
-      <div class="q-stat">
+      <div class="q-stat" id="qStatRed" onclick="filterByStatus('red')">
         <strong style="color:#dc2626;" id="statMonthRed">0</strong>
         <span>重點關懷</span>
       </div>
-      <div class="q-stat">
+      <div class="q-stat" id="qStatYellow" onclick="filterByStatus('yellow')">
         <strong style="color:#d97706;" id="statMonthYellow">0</strong>
         <span>處室追蹤</span>
       </div>
-      <div class="q-stat">
+      <div class="q-stat" id="qStatGreen" onclick="filterByStatus('green')">
         <strong style="color:#16a34a;" id="statMonthGreen">0</strong>
         <span>已結案</span>
       </div>
@@ -571,6 +602,7 @@
 
     let currentMonth = monthKeys[0] || '115.08';
     let currentView = 'key'; // 'key' or 'all'
+    let currentStatusFilter = null; // null, 'red', 'yellow', 'green'
     let currentCodeFilter = null; // null or '1'..'12'
     let searchQuery = '';
 
@@ -612,17 +644,60 @@
 
     function changeMonth(m) {
       currentMonth = m;
+      currentStatusFilter = null;
       currentCodeFilter = null;
+      resetStatStyles();
       render();
     }
 
     function switchView(view) {
       currentView = view;
+      currentStatusFilter = null;
       currentCodeFilter = null;
+      resetStatStyles();
       document.getElementById("btnViewKey").classList.toggle("active", view === 'key');
       document.getElementById("btnViewAll").classList.toggle("active", view === 'all');
       document.getElementById("listTitle").innerText = view === 'key' ? '關鍵追蹤事項清單' : '全部通話紀錄明細';
       render();
+    }
+
+    function filterByStatus(status) {
+      if (status === 'all') {
+        currentStatusFilter = null;
+        currentCodeFilter = null;
+        switchView('all');
+        document.getElementById('qStatTotal').classList.add('active-total');
+        return;
+      }
+
+      if (currentStatusFilter === status) {
+        currentStatusFilter = null;
+        resetStatStyles();
+        document.getElementById("listTitle").innerText = (currentView === 'key') ? '關鍵追蹤事項清單' : '全部通話紀錄明細';
+      } else {
+        currentStatusFilter = status;
+        currentCodeFilter = null;
+        resetStatStyles();
+
+        if (status === 'red') {
+          document.getElementById('qStatRed').classList.add('active-red');
+          document.getElementById('listTitle').innerText = '🔴 重點關懷事項清單';
+        } else if (status === 'yellow') {
+          document.getElementById('qStatYellow').classList.add('active-yellow');
+          document.getElementById('listTitle').innerText = '🟡 處室追蹤事項清單';
+        } else if (status === 'green') {
+          document.getElementById('qStatGreen').classList.add('active-green');
+          document.getElementById('listTitle').innerText = '🟢 已結案事項清單';
+        }
+      }
+      render();
+    }
+
+    function resetStatStyles() {
+      ['qStatTotal', 'qStatRed', 'qStatYellow', 'qStatGreen'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.className = 'q-stat';
+      });
     }
 
     function filterByCode(code) {
@@ -630,7 +705,9 @@
         currentCodeFilter = null;
       } else {
         currentCodeFilter = code;
+        currentStatusFilter = null;
         currentView = 'all';
+        resetStatStyles();
         document.getElementById("btnViewKey").classList.remove("active");
         document.getElementById("btnViewAll").classList.add("active");
         document.getElementById("listTitle").innerText = `[${code}] ${CODE_NAMES[code]} 通話紀錄`;
@@ -685,10 +762,14 @@
         </div>
       `).join('');
 
-      // Filter displayed list
-      const sourceList = (currentView === 'key') ? keyCases : records;
+      // Determine source list
+      let sourceList = records;
+      if (!currentStatusFilter && !currentCodeFilter && currentView === 'key') {
+        sourceList = keyCases;
+      }
       
       const filtered = sourceList.filter(item => {
+        if (currentStatusFilter && item.level !== currentStatusFilter) return false;
         if (currentCodeFilter && item.code !== currentCodeFilter) return false;
 
         if (searchQuery.trim()) {
