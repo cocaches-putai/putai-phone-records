@@ -380,6 +380,15 @@
       align-items: center;
     }
 
+    .sort-indicator {
+      font-size: 0.7rem;
+      color: #2563eb;
+      background: #eff6ff;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+
     /* Card Item */
     .card-list {
       display: flex;
@@ -771,7 +780,10 @@
     <!-- Content List -->
     <main>
       <div class="section-title">
-        <span id="listTitle">關鍵追蹤事項清單</span>
+        <div>
+          <span id="listTitle">關鍵追蹤事項清單</span>
+          <span class="sort-indicator">⏱️ 最新優先</span>
+        </div>
         <span style="font-size:0.75rem; color:#94a3b8;" id="matchCount">共 0 筆</span>
       </div>
 
@@ -835,7 +847,6 @@
     let currentCodeFilter = null; // null or '1'..'12'
     let searchQuery = '';
     let activeCaseId = null;
-    let activeCaseTarget = null;
     let selectedModalTag = 'yellow';
 
     function checkAuth() {
@@ -1027,11 +1038,9 @@
       const mData = monthsData[fb.month] || monthsData[currentMonth];
       if (!mData) return;
 
-      // 1. Check if already in key_cases
       let foundKey = mData.key_cases.find(c => c.id === fb.caseId);
       if (foundKey) {
         if (fb.status === 'normal') {
-          // Remove from key cases
           mData.key_cases = mData.key_cases.filter(c => c.id !== fb.caseId);
         } else {
           foundKey.level = fb.status;
@@ -1044,7 +1053,6 @@
           }
         }
       } else if (fb.status !== 'normal') {
-        // Promote a raw record to key_cases!
         let rawRec = mData.records.find(r => r.id === fb.caseId);
         if (rawRec) {
           const newCase = {
@@ -1113,6 +1121,19 @@
           return fullText.includes(q);
         }
         return true;
+      });
+
+      // Sort Newest to Oldest (倒序排列，最新優先)
+      filtered.sort((a, b) => {
+        const dA = (a.date || '').replace(/\D/g, '');
+        const dB = (b.date || '').replace(/\D/g, '');
+        if (dA !== dB) return dB.localeCompare(dA);
+        
+        const tA = (a.time || '').replace(/\D/g, '').padEnd(4, '0');
+        const tB = (b.time || '').replace(/\D/g, '').padEnd(4, '0');
+        if (tA !== tB) return tB.localeCompare(tA);
+        
+        return (b.id || '').localeCompare(a.id || '');
       });
 
       document.getElementById("matchCount").innerText = `共 ${filtered.length} 筆`;
