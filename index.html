@@ -558,7 +558,7 @@
       width: 100%;
       max-width: 500px;
       border-radius: 20px 20px 0 0;
-      padding: 20px 18px 30px 18px;
+      padding: 18px 16px 26px 16px;
       box-shadow: 0 -10px 25px rgba(0,0,0,0.2);
       animation: slideUp 0.25s ease-out;
       max-height: 90vh;
@@ -574,7 +574,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
 
     .sheet-title {
@@ -596,26 +596,111 @@
 
     .sheet-case-name {
       background: #f8fafc;
-      padding: 8px 12px;
+      padding: 6px 10px;
       border-radius: 8px;
-      font-size: 0.84rem;
+      font-size: 0.82rem;
       font-weight: 600;
       color: #1e293b;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
       border: 1px solid var(--border);
     }
 
     .form-group {
-      margin-bottom: 12px;
+      margin-bottom: 10px;
       text-align: left;
     }
 
     .form-label {
-      font-size: 0.78rem;
+      font-size: 0.76rem;
       font-weight: 700;
       color: #475569;
-      margin-bottom: 5px;
+      margin-bottom: 4px;
       display: block;
+    }
+
+    /* Interactive Teacher Tag Chip Container (Mobile 1-Tap Delete) */
+    .teacher-chip-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      min-height: 36px;
+      background: #f8fafc;
+      border: 1px dashed #cbd5e1;
+      border-radius: 8px;
+      padding: 6px 8px;
+      align-items: center;
+    }
+
+    .edit-teacher-chip {
+      background: #e0e7ff;
+      color: #1e40af;
+      border: 1px solid #bfdbfe;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 0.76rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .chip-del-btn {
+      color: #dc2626;
+      font-weight: 800;
+      font-size: 0.82rem;
+      cursor: pointer;
+      padding: 0 2px;
+      border-radius: 50%;
+    }
+
+    .chip-del-btn:active {
+      background: #fee2e2;
+    }
+
+    .btn-add-teacher {
+      background: var(--primary-light);
+      color: white;
+      border: none;
+      padding: 0 14px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .btn-add-teacher:active {
+      transform: scale(0.96);
+    }
+
+    .quick-preset-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      align-items: center;
+      margin-top: 6px;
+    }
+
+    .preset-label {
+      font-size: 0.68rem;
+      color: #64748b;
+      font-weight: 600;
+    }
+
+    .preset-pill {
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      font-size: 0.7rem;
+      padding: 2px 7px;
+      border-radius: 10px;
+      cursor: pointer;
+      color: #334155;
+    }
+
+    .preset-pill:active {
+      background: #dbeafe;
+      border-color: #93c5fd;
+      color: #1e40af;
     }
 
     /* 4-Way Label Tag Selector */
@@ -680,7 +765,7 @@
     }
 
     .form-textarea {
-      height: 65px;
+      height: 60px;
       resize: none;
     }
 
@@ -805,6 +890,7 @@
 
       <div class="sheet-case-name" id="modalCaseName">案件名稱</div>
 
+      <!-- Department Selector -->
       <div class="form-group">
         <label class="form-label">🏢 負責業務處室／細部組別：</label>
         <div style="display: flex; gap: 8px;">
@@ -826,6 +912,7 @@
         </div>
       </div>
 
+      <!-- 4-Way Label Selector -->
       <div class="form-group">
         <label class="form-label">📌 自選案件列管標籤：</label>
         <div class="tag-selector-grid">
@@ -844,17 +931,38 @@
         </div>
       </div>
 
+      <!-- Mobile-Friendly Teacher Chips Manager -->
       <div class="form-group">
-        <label class="form-label">👤 主責師長（可多位，以「、」分隔）：</label>
-        <input type="text" id="modalTeacherInput" class="form-input" placeholder="例如：洪誌陽（副校長）、連傑（教務主任）、吳淑娟（導師）">
+        <label class="form-label">👤 主責師長名單（點 ✕ 可直接刪除）：</label>
+        <div id="modalTeacherChips" class="teacher-chip-container">
+          <!-- Injected via JS chips -->
+        </div>
+        <div style="display: flex; gap: 6px; margin-top: 6px;">
+          <input type="text" id="newTeacherInput" class="form-input" placeholder="輸入師長姓名或職稱..." style="flex: 1;" onkeydown="if(event.key==='Enter'){event.preventDefault();addModalTeacher();}">
+          <button type="button" class="btn-add-teacher" onclick="addModalTeacher()">＋加入</button>
+        </div>
+        <!-- Quick Preset Pills -->
+        <div class="quick-preset-row">
+          <span class="preset-label">快捷新增：</span>
+          <span class="preset-pill" onclick="quickAddTeacher('洪誌陽（副校長）')">副校長</span>
+          <span class="preset-pill" onclick="quickAddTeacher('連傑（教務主任）')">教務主任</span>
+          <span class="preset-pill" onclick="quickAddTeacher('辜漢宗（學務主任）')">學務主任</span>
+          <span class="preset-pill" onclick="quickAddTeacher('張月馨（教務副主任）')">月馨副主任</span>
+          <span class="preset-pill" onclick="quickAddTeacher('陳怡婷（住宿副主任）')">住宿副主任</span>
+          <span class="preset-pill" onclick="quickAddTeacher('羅可強（生輔組長）')">生輔組長</span>
+          <span class="preset-pill" onclick="quickAddTeacher('出納組')">出納組</span>
+          <span class="preset-pill" onclick="quickAddTeacher('國中註冊組')">註冊組</span>
+          <span class="preset-pill" onclick="quickAddTeacher('輔導室')">輔導室</span>
+        </div>
       </div>
 
+      <!-- Follow up note -->
       <div class="form-group">
         <label class="form-label">💬 處置追蹤文字（可自由輸入與修改）：</label>
         <textarea id="modalActionInput" class="form-textarea" placeholder="請填寫最新處置、回電情形或追蹤備註..."></textarea>
       </div>
 
-      <button class="sheet-submit-btn" onclick="submitReply()">確認儲存處置與主責師長</button>
+      <button class="sheet-submit-btn" onclick="submitReply()">確認儲存處置與師長</button>
     </div>
   </div>
 
@@ -871,6 +979,7 @@
     let searchQuery = '';
     let activeCaseId = null;
     let selectedModalTag = 'yellow';
+    let currentModalTeachers = [];
 
     function checkAuth() {
       const saved = localStorage.getItem("putai_auth_v2");
@@ -1019,12 +1128,53 @@
       });
     }
 
-    function openReplyModal(caseId, caseName, teachersStr, currentFollowUp, currentLevel, currentCode, currentDeptName) {
+    /* Interactive Mobile Teacher Chip Functions */
+    function renderModalTeacherChips() {
+      const container = document.getElementById('modalTeacherChips');
+      if (currentModalTeachers.length === 0) {
+        container.innerHTML = `<span style="font-size:0.75rem; color:#94a3b8; font-style:italic;">尚未指定師長（請由下方輸入或點選快捷）</span>`;
+        return;
+      }
+      container.innerHTML = currentModalTeachers.map((t, idx) => `
+        <span class="edit-teacher-chip">
+          ${t}
+          <span class="chip-del-btn" onclick="removeModalTeacher('${t}')">✕</span>
+        </span>
+      `).join('');
+    }
+
+    function removeModalTeacher(name) {
+      currentModalTeachers = currentModalTeachers.filter(t => t !== name);
+      renderModalTeacherChips();
+    }
+
+    function addModalTeacher() {
+      const input = document.getElementById('newTeacherInput');
+      const val = input.value.trim().replace(/^\[\[/, '').replace(/\]\]$/, '');
+      if (val && !currentModalTeachers.includes(val)) {
+        currentModalTeachers.push(val);
+        renderModalTeacherChips();
+        input.value = '';
+      }
+      input.focus();
+    }
+
+    function quickAddTeacher(name) {
+      if (!currentModalTeachers.includes(name)) {
+        currentModalTeachers.push(name);
+        renderModalTeacherChips();
+      }
+    }
+
+    function openReplyModal(caseId, caseName, teachersArray, currentFollowUp, currentLevel, currentCode, currentDeptName) {
       activeCaseId = caseId;
       document.getElementById('modalCaseName').innerText = `📋 案件：${caseName}`;
       
-      // Load ALL existing teachers into the input
-      document.getElementById('modalTeacherInput').value = teachersStr || '';
+      // Initialize teacher array
+      currentModalTeachers = Array.from(new Set(teachersArray || []));
+      renderModalTeacherChips();
+      document.getElementById('newTeacherInput').value = '';
+
       document.getElementById('modalActionInput').value = currentFollowUp || '';
       
       const codeSelect = document.getElementById('modalDeptCodeSelect');
@@ -1048,7 +1198,6 @@
     }
 
     function submitReply() {
-      const rawTeacherInput = document.getElementById('modalTeacherInput').value.trim();
       const action = document.getElementById('modalActionInput').value.trim();
       const code = document.getElementById('modalDeptCodeSelect').value;
       const subDept = document.getElementById('modalSubDeptInput').value.trim();
@@ -1056,24 +1205,12 @@
       const mainDeptName = CODE_NAMES[code] || '其他';
       const fullDeptName = subDept ? `${mainDeptName} / ${subDept}` : mainDeptName;
 
-      // Parse and strictly deduplicate teachers from user input
-      const rawList = rawTeacherInput.split(/[、,，\s]+/);
-      const seen = new Set();
-      const cleanedTeachers = [];
-      rawList.forEach(t => {
-        const c = t.trim().replace(/^\[\[/, '').replace(/\]\]$/, '');
-        if (c && !seen.has(c)) {
-          seen.add(c);
-          cleanedTeachers.append ? cleanedTeachers.append(c) : cleanedTeachers.push(c);
-        }
-      });
-
       const feedback = {
         caseId: activeCaseId,
         month: currentMonth,
         code: code,
         dept_name: fullDeptName,
-        teachers: cleanedTeachers,
+        teachers: currentModalTeachers,
         action: action,
         status: selectedModalTag,
         timestamp: new Date().toISOString()
@@ -1237,10 +1374,10 @@
 
         const safeFollowUp = (item.follow_up || '').replace(/'/g, "\'");
         const safeDeptName = (item.dept_name || '').replace(/'/g, "\'");
-        const safeTeachersStr = uniqueTeachers.join('、').replace(/'/g, "\'");
+        const teachersJsonStr = JSON.stringify(uniqueTeachers).replace(/"/g, '&quot;');
 
         const replyButtonHtml = `
-          <button class="btn-reply" onclick="openReplyModal('${item.id}', '${item.caller}', '${safeTeachersStr}', '${safeFollowUp}', '${item.level}', '${item.code}', '${safeDeptName}')">
+          <button class="btn-reply" onclick="openReplyModal('${item.id}', '${item.caller}', ${teachersJsonStr}, '${safeFollowUp}', '${item.level}', '${item.code}', '${safeDeptName}')">
             🏷️ 編輯處室與師長
           </button>
         `;
