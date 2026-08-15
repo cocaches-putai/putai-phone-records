@@ -2,9 +2,9 @@
 """
 Mobile Web Dashboard Generator for Putai Second Brain & GitHub Actions
 Features:
+- Mobile-First UI/UX: Fully optimized for one-thumb mobile phone operations (375px - 430px)
 - Live Data Freshness Banner: Displays latest record date (e.g. 115.08.14) & call count
 - Real-Time Cloud Synchronization (Google Apps Script / Google Sheets API)
-- Real-time cross-device horizontal communication: Any director's edit is visible to all within seconds
 - Mobile-Optimized Teacher Chip Manager: 1-Tap Delete (✕) + Presets
 - Department / Division Customization
 - Time Order: Strictly Newest to Oldest (倒序排列，最新優先)
@@ -206,12 +206,12 @@ def generate_html(months_data):
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>普台高級中學 — 護學會電話紀錄與事項追蹤</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>普台高中 — 護學會電話紀錄追蹤</title>
   <meta name="robots" content="noindex, nofollow, noarchive">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="theme-color" content="#1e3a8a">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#0f172a">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -252,8 +252,9 @@ def generate_html(months_data):
       font-family: 'Noto Sans TC', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       background-color: var(--bg);
       color: var(--text);
-      line-height: 1.5;
-      padding-bottom: 70px;
+      line-height: 1.45;
+      padding-bottom: calc(75px + env(safe-area-inset-bottom, 20px));
+      -webkit-text-size-adjust: 100%;
     }}
 
     /* Passcode Lock Screen Overlay */
@@ -275,8 +276,8 @@ def generate_html(months_data):
     .lock-card {{
       background: #ffffff;
       width: 100%;
-      max-width: 360px;
-      padding: 28px 24px;
+      max-width: 350px;
+      padding: 26px 22px;
       border-radius: 18px;
       text-align: center;
       box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
@@ -284,21 +285,21 @@ def generate_html(months_data):
     }}
 
     .lock-icon {{
-      font-size: 2.8rem;
-      margin-bottom: 12px;
+      font-size: 2.5rem;
+      margin-bottom: 10px;
     }}
 
     .lock-title {{
-      font-size: 1.15rem;
+      font-size: 1.12rem;
       font-weight: 700;
       color: #0f172a;
-      margin-bottom: 4px;
+      margin-bottom: 3px;
     }}
 
     .lock-desc {{
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       color: #64748b;
-      margin-bottom: 20px;
+      margin-bottom: 18px;
     }}
 
     .lock-input {{
@@ -309,7 +310,7 @@ def generate_html(months_data):
       font-size: 1.05rem;
       text-align: center;
       letter-spacing: 2px;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
       outline: none;
       transition: border-color 0.2s;
     }}
@@ -336,9 +337,9 @@ def generate_html(months_data):
     }}
 
     .lock-error {{
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       color: #dc2626;
-      margin-top: 10px;
+      margin-top: 8px;
       display: none;
     }}
 
@@ -348,11 +349,11 @@ def generate_html(months_data):
       40%, 80% {{ transform: translateX(6px); }}
     }}
 
-    /* Header */
+    /* Mobile Sticky Header */
     header {{
       background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
       color: white;
-      padding: 14px 16px 16px 16px;
+      padding: 12px 14px 14px 14px;
       position: sticky;
       top: 0;
       z-index: 100;
@@ -367,33 +368,32 @@ def generate_html(months_data):
     }}
 
     .school-title {{
-      font-size: 1.02rem;
+      font-size: 0.96rem;
       font-weight: 700;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
+      white-space: nowrap;
     }}
 
     .cloud-badge {{
-      font-size: 0.68rem;
-      background: rgba(34, 197, 94, 0.2);
-      border: 1px solid rgba(34, 197, 94, 0.4);
+      font-size: 0.65rem;
+      background: rgba(34, 197, 94, 0.22);
+      border: 1px solid rgba(34, 197, 94, 0.45);
       color: #86efac;
-      padding: 2px 6px;
-      border-radius: 12px;
-      display: inline-flex;
-      align-items: center;
-      gap: 3px;
-      font-weight: 500;
+      padding: 1px 5px;
+      border-radius: 10px;
+      font-weight: 600;
+      white-space: nowrap;
     }}
 
     .month-select {{
-      background: rgba(255,255,255,0.18);
-      border: 1px solid rgba(255,255,255,0.3);
+      background: rgba(255,255,255,0.2);
+      border: 1px solid rgba(255,255,255,0.35);
       color: white;
-      padding: 4px 10px;
-      border-radius: 20px;
-      font-size: 0.82rem;
+      padding: 3px 8px;
+      border-radius: 16px;
+      font-size: 0.78rem;
       font-weight: 600;
       outline: none;
       cursor: pointer;
@@ -404,14 +404,14 @@ def generate_html(months_data):
       color: white;
     }}
 
-    /* Data Freshness Banner */
+    /* Mobile-Optimized Data Freshness Banner */
     .freshness-banner {{
       background: rgba(255, 255, 255, 0.12);
-      border: 1px solid rgba(255, 255, 255, 0.22);
-      padding: 5px 10px;
-      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 4px 8px;
+      border-radius: 6px;
       margin-bottom: 8px;
-      font-size: 0.76rem;
+      font-size: 0.73rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -421,11 +421,11 @@ def generate_html(months_data):
     .freshness-banner strong {{
       color: #93c5fd;
       font-weight: 700;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.3px;
     }}
 
     .freshness-sub {{
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       color: #cbd5e1;
     }}
 
@@ -435,11 +435,11 @@ def generate_html(months_data):
 
     .search-input {{
       width: 100%;
-      background: rgba(255, 255, 255, 0.95);
+      background: rgba(255, 255, 255, 0.96);
       border: none;
-      padding: 8px 14px 8px 34px;
+      padding: 7px 12px 7px 32px;
       border-radius: 8px;
-      font-size: 0.88rem;
+      font-size: 0.84rem;
       color: #1e293b;
       outline: none;
     }}
@@ -450,23 +450,19 @@ def generate_html(months_data):
 
     .search-icon {{
       position: absolute;
-      left: 10px;
+      left: 9px;
       top: 50%;
       transform: translateY(-50%);
       color: #64748b;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       pointer-events: none;
     }}
 
-    /* View Switcher Bar (Key Highlights vs All) */
+    /* View Switcher Bar */
     .view-switcher-bar {{
       background: #ffffff;
-      padding: 8px 16px;
+      padding: 6px 12px;
       border-bottom: 1px solid var(--border);
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      justify-content: space-between;
     }}
 
     .switch-group {{
@@ -481,27 +477,29 @@ def generate_html(months_data):
       flex: 1;
       border: none;
       background: transparent;
-      padding: 6px 10px;
-      font-size: 0.8rem;
+      padding: 7px 6px;
+      font-size: 0.78rem;
       font-weight: 600;
       color: #64748b;
       border-radius: 6px;
       cursor: pointer;
       transition: all 0.15s;
+      text-align: center;
     }}
 
     .switch-btn.active {{
       background: #ffffff;
       color: var(--primary);
       box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      font-weight: 700;
     }}
 
-    /* Stats bar */
+    /* Mobile Quick Stats Row */
     .quick-stats-row {{
       background: #ffffff;
-      padding: 8px 12px;
+      padding: 6px 8px;
       display: flex;
-      gap: 6px;
+      gap: 4px;
       justify-content: space-around;
       border-bottom: 1px solid var(--border);
       text-align: center;
@@ -509,11 +507,11 @@ def generate_html(months_data):
 
     .q-stat {{
       flex: 1;
-      font-size: 0.72rem;
+      font-size: 0.68rem;
       color: var(--text-muted);
       cursor: pointer;
-      padding: 6px 4px;
-      border-radius: 8px;
+      padding: 5px 2px;
+      border-radius: 6px;
       border: 1px solid transparent;
       transition: all 0.15s;
     }}
@@ -524,8 +522,9 @@ def generate_html(months_data):
 
     .q-stat strong {{
       display: block;
-      font-size: 0.98rem;
+      font-size: 0.94rem;
       color: #0f172a;
+      line-height: 1.15;
     }}
 
     .q-stat.active-total {{
@@ -554,11 +553,11 @@ def generate_html(months_data):
       background: #ffffff;
       border: none;
       border-bottom: 1px solid var(--border);
-      padding: 8px 16px;
+      padding: 7px 14px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 0.78rem;
+      font-size: 0.74rem;
       font-weight: 700;
       color: var(--primary);
       cursor: pointer;
@@ -567,17 +566,17 @@ def generate_html(months_data):
     .official-stats-panel {{
       background: #ffffff;
       border-bottom: 1px solid var(--border);
-      padding: 8px 16px 12px 16px;
+      padding: 6px 12px 10px 12px;
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 6px;
+      gap: 5px;
     }}
 
     .stat-chip {{
       background: #f8fafc;
       border: 1px solid #e2e8f0;
       border-radius: 6px;
-      padding: 5px 3px;
+      padding: 4px 2px;
       text-align: center;
       cursor: pointer;
       transition: all 0.15s;
@@ -589,76 +588,79 @@ def generate_html(months_data):
     }}
 
     .chip-code {{
-      font-size: 0.65rem;
+      font-size: 0.62rem;
       color: var(--text-muted);
     }}
 
     .chip-name {{
-      font-size: 0.74rem;
+      font-size: 0.7rem;
       font-weight: 600;
       color: #1e293b;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }}
 
     .chip-count {{
-      font-size: 0.82rem;
+      font-size: 0.78rem;
       font-weight: 700;
       color: var(--primary-light);
     }}
 
-    /* Main Container */
+    /* Main Container for Mobile */
     main {{
-      padding: 12px 16px;
-      max-width: 760px;
+      padding: 10px 12px;
+      max-width: 640px;
       margin: 0 auto;
     }}
 
     .section-title {{
-      font-size: 0.8rem;
+      font-size: 0.76rem;
       font-weight: 700;
       color: var(--text-muted);
-      margin-bottom: 10px;
+      margin-bottom: 8px;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }}
 
     .sort-indicator {{
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       color: #2563eb;
       background: #eff6ff;
-      padding: 2px 6px;
+      padding: 2px 5px;
       border-radius: 4px;
       font-weight: 600;
     }}
 
-    /* Card Item */
+    /* Card Item (Mobile Ergonomic Design) */
     .card-list {{
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 9px;
     }}
 
     .case-card {{
       background: var(--card-bg);
       border-radius: var(--radius);
-      padding: 14px;
+      padding: 12px 13px;
       box-shadow: var(--shadow-sm);
       border: 1px solid var(--border);
       position: relative;
     }}
 
     .case-card.highlight-red {{
-      border-left: 4px solid #dc2626;
+      border-left: 4.5px solid #dc2626;
       background: #fffafa;
     }}
 
     .case-card.highlight-yellow {{
-      border-left: 4px solid #d97706;
+      border-left: 4.5px solid #d97706;
       background: #fffdfa;
     }}
 
     .case-card.highlight-green {{
-      border-left: 4px solid #16a34a;
+      border-left: 4.5px solid #16a34a;
       background: #fcfdfc;
     }}
 
@@ -666,18 +668,18 @@ def generate_html(months_data):
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 6px;
+      margin-bottom: 5px;
     }}
 
     .code-badge {{
       display: inline-flex;
       align-items: center;
-      gap: 4px;
+      gap: 3px;
       background: #e2e8f0;
       color: #334155;
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       font-weight: 700;
-      padding: 2px 7px;
+      padding: 2px 6px;
       border-radius: 4px;
     }}
 
@@ -690,42 +692,46 @@ def generate_html(months_data):
     .code-badge.c11 {{ background: #fae8ff; color: #86198f; }}
 
     .card-time {{
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       color: var(--text-muted);
       font-weight: 500;
     }}
 
     .caller-name {{
-      font-size: 0.95rem;
+      font-size: 0.92rem;
       font-weight: 700;
       color: #0f172a;
-      margin-bottom: 4px;
+      margin-bottom: 3px;
+      line-height: 1.35;
     }}
 
     .content-box {{
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       color: #334155;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
+      line-height: 1.45;
     }}
 
     .action-box {{
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       color: #475569;
       background: #f8fafc;
-      padding: 6px 10px;
+      padding: 5px 8px;
       border-radius: 6px;
-      margin-bottom: 6px;
+      margin-bottom: 5px;
       border-left: 2px solid #cbd5e1;
+      line-height: 1.4;
     }}
 
     .follow-up-box {{
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       color: #0c4a6e;
       background: #f0f9ff;
-      padding: 8px 10px;
+      padding: 6px 8px;
       border-radius: 6px;
       border: 1px dashed #7dd3fc;
-      margin-top: 6px;
+      margin-top: 5px;
+      line-height: 1.4;
     }}
 
     .follow-up-box.pending {{
@@ -738,16 +744,17 @@ def generate_html(months_data):
     .teachers-tags {{
       display: flex;
       flex-wrap: wrap;
-      gap: 4px;
-      margin-top: 6px;
+      gap: 3px;
+      margin-top: 5px;
+      align-items: center;
     }}
 
     .teacher-pill {{
-      font-size: 0.72rem;
+      font-size: 0.68rem;
       background: #f1f5f9;
       color: #1e293b;
-      padding: 1px 6px;
-      border-radius: 10px;
+      padding: 1px 5px;
+      border-radius: 8px;
       border: 1px solid #cbd5e1;
     }}
 
@@ -755,10 +762,10 @@ def generate_html(months_data):
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-top: 8px;
-      padding-top: 6px;
+      margin-top: 7px;
+      padding-top: 5px;
       border-top: 1px solid #f1f5f9;
-      font-size: 0.72rem;
+      font-size: 0.68rem;
       color: var(--text-muted);
     }}
 
@@ -766,28 +773,29 @@ def generate_html(months_data):
       background: #eff6ff;
       border: 1px solid #93c5fd;
       color: #1e40af;
-      padding: 4px 10px;
+      padding: 5px 9px;
       border-radius: 6px;
-      font-size: 0.74rem;
+      font-size: 0.72rem;
       font-weight: 600;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       gap: 3px;
+      min-height: 30px;
     }}
 
     .btn-reply:active {{
       background: #dbeafe;
     }}
 
-    /* Supervisor Tag & Edit Modal */
+    /* Mobile Bottom Sheet Modal */
     #replyModal {{
       position: fixed;
       top: 0;
       left: 0;
       right: 0;
       bottom: 0;
-      background: rgba(15, 23, 42, 0.7);
+      background: rgba(15, 23, 42, 0.75);
       backdrop-filter: blur(4px);
       z-index: 10000;
       display: flex;
@@ -800,11 +808,12 @@ def generate_html(months_data):
       width: 100%;
       max-width: 500px;
       border-radius: 20px 20px 0 0;
-      padding: 18px 16px 26px 16px;
+      padding: 16px 14px calc(24px + env(safe-area-inset-bottom, 15px)) 14px;
       box-shadow: 0 -10px 25px rgba(0,0,0,0.2);
       animation: slideUp 0.25s ease-out;
-      max-height: 90vh;
+      max-height: 88vh;
       overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
     }}
 
     @keyframes slideUp {{
@@ -816,11 +825,11 @@ def generate_html(months_data):
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }}
 
     .sheet-title {{
-      font-size: 1.05rem;
+      font-size: 0.98rem;
       font-weight: 700;
       color: #0f172a;
     }}
@@ -831,32 +840,35 @@ def generate_html(months_data):
       width: 28px;
       height: 28px;
       border-radius: 50%;
-      font-size: 1rem;
+      font-size: 0.95rem;
       color: #64748b;
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }}
 
     .sheet-case-name {{
       background: #f8fafc;
-      padding: 6px 10px;
-      border-radius: 8px;
-      font-size: 0.82rem;
+      padding: 5px 8px;
+      border-radius: 6px;
+      font-size: 0.78rem;
       font-weight: 600;
       color: #1e293b;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
       border: 1px solid var(--border);
     }}
 
     .form-group {{
-      margin-bottom: 10px;
+      margin-bottom: 8px;
       text-align: left;
     }}
 
     .form-label {{
-      font-size: 0.76rem;
+      font-size: 0.74rem;
       font-weight: 700;
       color: #475569;
-      margin-bottom: 4px;
+      margin-bottom: 3px;
       display: block;
     }}
 
@@ -864,12 +876,12 @@ def generate_html(months_data):
     .teacher-chip-container {{
       display: flex;
       flex-wrap: wrap;
-      gap: 6px;
-      min-height: 36px;
+      gap: 5px;
+      min-height: 32px;
       background: #f8fafc;
       border: 1px dashed #cbd5e1;
-      border-radius: 8px;
-      padding: 6px 8px;
+      border-radius: 6px;
+      padding: 5px 6px;
       align-items: center;
     }}
 
@@ -877,54 +889,46 @@ def generate_html(months_data):
       background: #e0e7ff;
       color: #1e40af;
       border: 1px solid #bfdbfe;
-      padding: 3px 8px;
-      border-radius: 12px;
-      font-size: 0.76rem;
+      padding: 2px 7px;
+      border-radius: 10px;
+      font-size: 0.74rem;
       font-weight: 600;
       display: inline-flex;
       align-items: center;
-      gap: 5px;
+      gap: 4px;
     }}
 
     .chip-del-btn {{
       color: #dc2626;
       font-weight: 800;
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       cursor: pointer;
       padding: 0 2px;
-      border-radius: 50%;
-    }}
-
-    .chip-del-btn:active {{
-      background: #fee2e2;
     }}
 
     .btn-add-teacher {{
       background: var(--primary-light);
       color: white;
       border: none;
-      padding: 0 14px;
-      border-radius: 8px;
-      font-size: 0.8rem;
+      padding: 0 12px;
+      border-radius: 6px;
+      font-size: 0.78rem;
       font-weight: 700;
       cursor: pointer;
       white-space: nowrap;
-    }}
-
-    .btn-add-teacher:active {{
-      transform: scale(0.96);
+      min-height: 34px;
     }}
 
     .quick-preset-row {{
       display: flex;
       flex-wrap: wrap;
-      gap: 4px;
+      gap: 3px;
       align-items: center;
-      margin-top: 6px;
+      margin-top: 5px;
     }}
 
     .preset-label {{
-      font-size: 0.68rem;
+      font-size: 0.65rem;
       color: #64748b;
       font-weight: 600;
     }}
@@ -932,9 +936,9 @@ def generate_html(months_data):
     .preset-pill {{
       background: #f1f5f9;
       border: 1px solid #cbd5e1;
-      font-size: 0.7rem;
-      padding: 2px 7px;
-      border-radius: 10px;
+      font-size: 0.68rem;
+      padding: 2px 6px;
+      border-radius: 8px;
       cursor: pointer;
       color: #334155;
     }}
@@ -949,16 +953,16 @@ def generate_html(months_data):
     .tag-selector-grid {{
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 6px;
+      gap: 5px;
     }}
 
     .tag-btn-option {{
       background: #f8fafc;
       border: 1.5px solid #cbd5e1;
-      padding: 8px 6px;
-      border-radius: 8px;
+      padding: 7px 4px;
+      border-radius: 6px;
       text-align: center;
-      font-size: 0.78rem;
+      font-size: 0.74rem;
       font-weight: 600;
       color: #334155;
       cursor: pointer;
@@ -996,9 +1000,9 @@ def generate_html(months_data):
     .form-input, .form-textarea {{
       width: 100%;
       border: 1px solid #cbd5e1;
-      border-radius: 8px;
-      padding: 8px 10px;
-      font-size: 0.88rem;
+      border-radius: 6px;
+      padding: 7px 8px;
+      font-size: 0.84rem;
       outline: none;
     }}
 
@@ -1007,7 +1011,7 @@ def generate_html(months_data):
     }}
 
     .form-textarea {{
-      height: 60px;
+      height: 55px;
       resize: none;
     }}
 
@@ -1016,12 +1020,12 @@ def generate_html(months_data):
       background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
       color: white;
       border: none;
-      padding: 12px;
-      border-radius: 10px;
-      font-size: 0.92rem;
+      padding: 11px;
+      border-radius: 8px;
+      font-size: 0.88rem;
       font-weight: 700;
       cursor: pointer;
-      margin-top: 6px;
+      margin-top: 5px;
     }}
 
     .sheet-submit-btn:active {{
@@ -1030,7 +1034,7 @@ def generate_html(months_data):
 
     .empty-state {{
       text-align: center;
-      padding: 40px 20px;
+      padding: 30px 15px;
       color: var(--text-muted);
     }}
   </style>
@@ -1049,12 +1053,12 @@ def generate_html(months_data):
     </div>
   </div>
 
-  <!-- Header -->
+  <!-- Mobile Header -->
   <header id="mainApp" style="display:none;">
     <div class="header-top">
       <div class="school-title">
-        <span>📞</span> 普台高中 護學會電話紀錄
-        <span class="cloud-badge" id="cloudStatusBadge">🟢 雲端同步中</span>
+        <span>📞</span> 普台電話追蹤
+        <span class="cloud-badge" id="cloudStatusBadge">🟢 雲端連線</span>
       </div>
       <select id="monthSelect" class="month-select" onchange="changeMonth(this.value)">
         <!-- Options injected via JS -->
@@ -1063,13 +1067,13 @@ def generate_html(months_data):
 
     <!-- Live Data Freshness Banner -->
     <div class="freshness-banner">
-      <span>📅 資料庫收錄至：<strong id="freshnessDateText">115.08.14</strong></span>
-      <span class="freshness-sub" id="freshnessSubText">（本月已收錄 0 筆通話）</span>
+      <span>📅 資料收錄至：<strong id="freshnessDateText">115.08.14</strong></span>
+      <span class="freshness-sub" id="freshnessSubText">本月已收錄 0 筆</span>
     </div>
 
     <div class="search-wrapper">
       <span class="search-icon">🔍</span>
-      <input type="text" id="searchInput" class="search-input" placeholder="搜尋學生、來電事由、師長或分機..." oninput="handleSearch()">
+      <input type="text" id="searchInput" class="search-input" placeholder="搜尋學生、事由、師長或分機..." oninput="handleSearch()">
     </div>
   </header>
 
@@ -1079,8 +1083,8 @@ def generate_html(months_data):
     <!-- View Switcher -->
     <div class="view-switcher-bar">
       <div class="switch-group">
-        <button class="switch-btn active" id="btnViewKey" onclick="switchView('key')">🎯 關鍵追蹤事項 (<span id="countKey">0</span>)</button>
-        <button class="switch-btn" id="btnViewAll" onclick="switchView('all')">📋 全部通話明細 (<span id="countAll">0</span>)</button>
+        <button class="switch-btn active" id="btnViewKey" onclick="switchView('key')">🎯 關鍵追蹤 (<span id="countKey">0</span>)</button>
+        <button class="switch-btn" id="btnViewAll" onclick="switchView('all')">📋 全部明細 (<span id="countAll">0</span>)</button>
       </div>
     </div>
 
@@ -1106,7 +1110,7 @@ def generate_html(months_data):
 
     <!-- Official 12 Codes Statistics Panel -->
     <button class="stat-collapse-btn" onclick="toggleStats()">
-      <span>📊 護學會 12 業務電話統計表（點擊可快速過濾）</span>
+      <span>📊 護學會 12 業務統計表（點擊篩選處室）</span>
       <span id="statArrow">▶</span>
     </button>
 
@@ -1121,7 +1125,7 @@ def generate_html(months_data):
           <span id="listTitle">關鍵追蹤事項清單</span>
           <span class="sort-indicator">⏱️ 最新優先</span>
         </div>
-        <span style="font-size:0.75rem; color:#94a3b8;" id="matchCount">共 0 筆</span>
+        <span style="font-size:0.72rem; color:#94a3b8;" id="matchCount">共 0 筆</span>
       </div>
 
       <div class="card-list" id="cardsContainer">
@@ -1134,7 +1138,7 @@ def generate_html(months_data):
   <div id="replyModal" style="display:none;">
     <div class="reply-sheet">
       <div class="sheet-header">
-        <div class="sheet-title">🏷️ 編輯處室單位、主責師長與標籤</div>
+        <div class="sheet-title">🏷️ 編輯處室單位、師長與標籤</div>
         <button class="sheet-close" onclick="closeReplyModal()">✕</button>
       </div>
 
@@ -1143,7 +1147,7 @@ def generate_html(months_data):
       <!-- Department Selector -->
       <div class="form-group">
         <label class="form-label">🏢 負責業務處室／細部組別：</label>
-        <div style="display: flex; gap: 8px;">
+        <div style="display: flex; gap: 6px;">
           <select id="modalDeptCodeSelect" class="form-input" style="flex: 1.2; font-weight: 600;">
             <option value="1">[1] 教務處</option>
             <option value="2">[2] 學務處</option>
@@ -1158,7 +1162,7 @@ def generate_html(months_data):
             <option value="11">[11] 招生組</option>
             <option value="12">[12] 其他</option>
           </select>
-          <input type="text" id="modalSubDeptInput" class="form-input" style="flex: 1;" placeholder="細部組別（如：出納組）">
+          <input type="text" id="modalSubDeptInput" class="form-input" style="flex: 1;" placeholder="組別（如：出納組）">
         </div>
       </div>
 
@@ -1187,13 +1191,13 @@ def generate_html(months_data):
         <div id="modalTeacherChips" class="teacher-chip-container">
           <!-- Injected via JS chips -->
         </div>
-        <div style="display: flex; gap: 6px; margin-top: 6px;">
-          <input type="text" id="newTeacherInput" class="form-input" placeholder="輸入師長姓名或職稱..." style="flex: 1;" onkeydown="if(event.key==='Enter'){{event.preventDefault();addModalTeacher();}}">
+        <div style="display: flex; gap: 5px; margin-top: 5px;">
+          <input type="text" id="newTeacherInput" class="form-input" placeholder="輸入姓名或職稱..." style="flex: 1;" onkeydown="if(event.key==='Enter'){{event.preventDefault();addModalTeacher();}}">
           <button type="button" class="btn-add-teacher" onclick="addModalTeacher()">＋加入</button>
         </div>
         <!-- Quick Preset Pills -->
         <div class="quick-preset-row">
-          <span class="preset-label">快捷新增：</span>
+          <span class="preset-label">快捷：</span>
           <span class="preset-pill" onclick="quickAddTeacher('洪誌陽（副校長）')">副校長</span>
           <span class="preset-pill" onclick="quickAddTeacher('連傑（教務主任）')">教務主任</span>
           <span class="preset-pill" onclick="quickAddTeacher('辜漢宗（學務主任）')">學務主任</span>
@@ -1208,7 +1212,7 @@ def generate_html(months_data):
 
       <!-- Follow up note -->
       <div class="form-group">
-        <label class="form-label">💬 處置追蹤文字（可自由輸入與修改）：</label>
+        <label class="form-label">💬 處置追蹤文字（自由輸入備註）：</label>
         <textarea id="modalActionInput" class="form-textarea" placeholder="請填寫最新處置、回電情形或追蹤備註..."></textarea>
       </div>
 
@@ -1262,9 +1266,7 @@ def generate_html(months_data):
       applySavedSupervisorFeedbacks();
       render();
       
-      // Fetch live cloud database from Google Apps Script
       fetchCloudLiveSync();
-      // Auto-poll live sync every 20 seconds
       setInterval(fetchCloudLiveSync, 20000);
     }}
 
@@ -1373,7 +1375,6 @@ def generate_html(months_data):
       }}
     }}
 
-    /* 4-Way Tag Selection UI Handler */
     function selectTagOption(tag) {{
       selectedModalTag = tag;
       ['red', 'yellow', 'green', 'normal'].forEach(t => {{
@@ -1385,11 +1386,10 @@ def generate_html(months_data):
       }});
     }}
 
-    /* Interactive Mobile Teacher Chip Functions */
     function renderModalTeacherChips() {{
       const container = document.getElementById('modalTeacherChips');
       if (currentModalTeachers.length === 0) {{
-        container.innerHTML = `<span style="font-size:0.75rem; color:#94a3b8; font-style:italic;">尚未指定師長（請由下方輸入或點選快捷）</span>`;
+        container.innerHTML = `<span style="font-size:0.72rem; color:#94a3b8; font-style:italic;">尚未指定師長（請點快捷或下方輸入）</span>`;
         return;
       }}
       container.innerHTML = currentModalTeachers.map((t, idx) => `
@@ -1453,7 +1453,6 @@ def generate_html(months_data):
       document.getElementById('replyModal').style.display = 'none';
     }}
 
-    /* Submit with Real-Time Google Apps Script Background Transmission */
     function submitReply() {{
       const action = document.getElementById('modalActionInput').value.trim();
       const code = document.getElementById('modalDeptCodeSelect').value;
@@ -1492,12 +1491,12 @@ def generate_html(months_data):
       }})
       .then(resp => resp.json())
       .then(data => {{
-        if (badge) badge.innerText = '🟢 雲端同步完成';
-        setTimeout(() => {{ if (badge) badge.innerText = '🟢 雲端即時連線'; }}, 3000);
+        if (badge) badge.innerText = '🟢 雲端已同步';
+        setTimeout(() => {{ if (badge) badge.innerText = '🟢 雲端連線'; }}, 3000);
       }})
       .catch(err => {{
         console.warn('GAS sync offline fallback:', err);
-        if (badge) badge.innerText = '🟡 本地已保存（待連線）';
+        if (badge) badge.innerText = '🟡 本地已保存';
       }});
 
       alert('✓ 處置已儲存並即時同步至全校主管雲端！');
@@ -1548,7 +1547,6 @@ def generate_html(months_data):
       saved.forEach(fb => applyFeedbackToMemory(fb));
     }}
 
-    /* Real-Time Cloud Sync Pull */
     function fetchCloudLiveSync() {{
       fetch(GAS_SYNC_URL)
         .then(resp => resp.json())
@@ -1557,7 +1555,7 @@ def generate_html(months_data):
             cloudList.forEach(fb => applyFeedbackToMemory(fb));
             render();
             const badge = document.getElementById('cloudStatusBadge');
-            if (badge) badge.innerText = '🟢 雲端即時連線';
+            if (badge) badge.innerText = '🟢 雲端連線';
           }}
         }})
         .catch(err => {{
@@ -1570,7 +1568,6 @@ def generate_html(months_data):
       const records = mData.records;
       const keyCases = mData.key_cases;
 
-      // 1. Calculate and display Data Freshness Banner
       let maxDate = '';
       records.forEach(r => {{
         if (r.date && r.date > maxDate) maxDate = r.date;
@@ -1585,7 +1582,7 @@ def generate_html(months_data):
       const freshnessSubEl = document.getElementById("freshnessSubText");
       if (freshnessDateEl && maxDate) {{
         freshnessDateEl.innerText = maxDate;
-        freshnessSubEl.innerText = `（本月已收錄 ${{records.length}} 筆通話紀錄）`;
+        freshnessSubEl.innerText = `本月已收錄 ${{records.length}} 筆`;
       }}
 
       const redCount = keyCases.filter(r => r.level === 'red').length;
@@ -1628,7 +1625,7 @@ def generate_html(months_data):
         return true;
       }});
 
-      // Sort Newest to Oldest (倒序排列，最新優先)
+      // Sort Newest to Oldest
       filtered.sort((a, b) => {{
         const dA = (a.date || '').replace(/\\D/g, '');
         const dB = (b.date || '').replace(/\\D/g, '');
@@ -1647,8 +1644,8 @@ def generate_html(months_data):
       if (filtered.length === 0) {{
         container.innerHTML = `
           <div class="empty-state">
-            <div style="font-size:2rem;">📭</div>
-            <p>沒有符合條件的紀錄</p>
+            <div style="font-size:1.8rem;">📭</div>
+            <p style="font-size:0.85rem;">沒有符合條件的紀錄</p>
           </div>
         `;
         return;
@@ -1663,7 +1660,7 @@ def generate_html(months_data):
         const uniqueTeachers = Array.from(new Set(item.teachers || []));
         const teachersHtml = (uniqueTeachers.length > 0) ? `
           <div class="teachers-tags">
-            <span style="font-size:0.72rem; color:#64748b; font-weight:600;">👤 主責師長：</span>
+            <span style="font-size:0.68rem; color:#64748b; font-weight:600;">👤 主責師長：</span>
             ${{uniqueTeachers.map(t => `<span class="teacher-pill">${{t}}</span>`).join('')}}
           </div>
         ` : '';
@@ -1734,7 +1731,7 @@ def generate_html(months_data):
 """
     with open(OUTPUT_HTML, "w", encoding="utf-8") as f:
         f.write(html)
-    print(f"[✓] 成功產出包含最新收錄日期橫幅的主管追蹤儀表板：{OUTPUT_HTML}")
+    print(f"[✓] 成功產出極致手機專用排版儀表板：{OUTPUT_HTML}")
 
 def main():
     WEB_DIR.mkdir(parents=True, exist_ok=True)
