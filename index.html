@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>普台高級中學 — 護學會電話紀錄與事項追蹤</title>
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="theme-color" content="#1e3a8a">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #1e3a8a;
+      --primary-light: #2563eb;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      
+      --red-bg: #fef2f2;
+      --red-border: #fecaca;
+      --red-text: #b91c1c;
+
+      --yellow-bg: #fffbeb;
+      --yellow-border: #fde68a;
+      --yellow-text: #b45309;
+
+      --green-bg: #f0fdf4;
+      --green-border: #bbf7d0;
+      --green-text: #15803d;
+
+      --radius: 12px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.03);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: 'Noto Sans TC', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding-bottom: 70px;
+    }
+
+    /* Passcode Lock Screen Overlay */
+    #lockOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(15, 23, 42, 0.96);
+      backdrop-filter: blur(12px);
+      z-index: 9999;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .lock-card {
+      background: #ffffff;
+      width: 100%;
+      max-width: 360px;
+      padding: 28px 24px;
+      border-radius: 18px;
+      text-align: center;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+      animation: fadeIn 0.3s ease-out;
+    }
+
+    .lock-icon {
+      font-size: 2.8rem;
+      margin-bottom: 12px;
+    }
+
+    .lock-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 4px;
+    }
+
+    .lock-desc {
+      font-size: 0.82rem;
+      color: #64748b;
+      margin-bottom: 20px;
+    }
+
+    .lock-input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 2px solid #cbd5e1;
+      border-radius: 10px;
+      font-size: 1.05rem;
+      text-align: center;
+      letter-spacing: 2px;
+      margin-bottom: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .lock-input:focus {
+      border-color: #2563eb;
+    }
+
+    .lock-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.3);
+    }
+
+    .lock-btn:active {
+      transform: scale(0.98);
+    }
+
+    .lock-error {
+      font-size: 0.8rem;
+      color: #dc2626;
+      margin-top: 10px;
+      display: none;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-6px); }
+      40%, 80% { transform: translateX(6px); }
+    }
+
+    /* Header */
+    header {
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+      color: white;
+      padding: 16px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .school-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .badge-live {
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      font-size: 0.75rem;
+      padding: 2px 8px;
+      border-radius: 20px;
+      color: #93c5fd;
+    }
+
+    .search-wrapper {
+      position: relative;
+    }
+
+    .search-input {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.95);
+      border: none;
+      padding: 9px 14px 9px 36px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      color: #1e293b;
+      outline: none;
+    }
+
+    .search-input::placeholder {
+      color: #94a3b8;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #64748b;
+      font-size: 0.85rem;
+      pointer-events: none;
+    }
+
+    .stat-collapse-btn {
+      width: 100%;
+      background: #ffffff;
+      border: none;
+      border-bottom: 1px solid var(--border);
+      padding: 10px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--primary);
+      cursor: pointer;
+    }
+
+    .official-stats-panel {
+      background: #ffffff;
+      border-bottom: 1px solid var(--border);
+      padding: 10px 16px 14px 16px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+    }
+
+    .stat-chip {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      padding: 6px 4px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .stat-chip:active, .stat-chip.active {
+      background: #eff6ff;
+      border-color: #3b82f6;
+    }
+
+    .chip-code {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+    }
+
+    .chip-name {
+      font-size: 0.76rem;
+      font-weight: 600;
+      color: #1e293b;
+    }
+
+    .chip-count {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--primary-light);
+    }
+
+    .filter-tabs-wrapper {
+      background: #ffffff;
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 86px;
+      z-index: 90;
+      overflow-x: auto;
+      white-space: nowrap;
+      scrollbar-width: none;
+    }
+
+    .filter-tabs-wrapper::-webkit-scrollbar {
+      display: none;
+    }
+
+    .filter-tabs {
+      display: inline-flex;
+      gap: 6px;
+    }
+
+    .tab-btn {
+      background: #f1f5f9;
+      color: #475569;
+      border: 1px solid transparent;
+      padding: 5px 12px;
+      border-radius: 16px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .tab-btn.active {
+      background: var(--primary);
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    main {
+      padding: 12px 16px;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .card-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .case-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 14px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+    }
+
+    .case-card.highlight-red {
+      border-left: 4px solid #dc2626;
+      background: #fffafa;
+    }
+
+    .case-card.highlight-yellow {
+      border-left: 4px solid #d97706;
+      background: #fffdfa;
+    }
+
+    .case-card.highlight-green {
+      border-left: 4px solid #16a34a;
+      background: #fcfdfc;
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .code-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: #e2e8f0;
+      color: #334155;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 4px;
+    }
+
+    .code-badge.c1 { background: #dbeafe; color: #1e40af; }
+    .code-badge.c2 { background: #fce7f3; color: #9d174d; }
+    .code-badge.c3 { background: #fef3c7; color: #92400e; }
+    .code-badge.c4 { background: #e0e7ff; color: #3730a3; }
+    .code-badge.c8 { background: #ede9fe; color: #5b21b6; }
+    .code-badge.c9 { background: #ccfbf1; color: #115e59; }
+    .code-badge.c11 { background: #fae8ff; color: #86198f; }
+
+    .card-time {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .caller-name {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 4px;
+    }
+
+    .content-box {
+      font-size: 0.85rem;
+      color: #334155;
+      margin-bottom: 8px;
+    }
+
+    .action-box {
+      font-size: 0.8rem;
+      color: #475569;
+      background: #f8fafc;
+      padding: 6px 10px;
+      border-radius: 6px;
+      margin-bottom: 6px;
+      border-left: 2px solid #cbd5e1;
+    }
+
+    .follow-up-box {
+      font-size: 0.8rem;
+      color: #0c4a6e;
+      background: #f0f9ff;
+      padding: 6px 10px;
+      border-radius: 6px;
+      border: 1px dashed #7dd3fc;
+      margin-top: 6px;
+    }
+
+    .teachers-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 6px;
+    }
+
+    .teacher-pill {
+      font-size: 0.72rem;
+      background: #f1f5f9;
+      color: #1e293b;
+      padding: 1px 6px;
+      border-radius: 10px;
+      border: 1px solid #cbd5e1;
+    }
+
+    .card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 6px;
+      padding-top: 6px;
+      border-top: 1px solid #f1f5f9;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Passcode Lock Modal -->
+  <div id="lockOverlay">
+    <div class="lock-card" id="lockCard">
+      <div class="lock-icon">🏫</div>
+      <div class="lock-title">普台高級中學</div>
+      <div class="lock-desc">護學會電話紀錄追蹤系統</div>
+      <input type="password" id="passcodeInput" class="lock-input" placeholder="請輸入通關密碼" autofocus onkeydown="if(event.key==='Enter') verifyPasscode()">
+      <button class="lock-btn" onclick="verifyPasscode()">登入查看</button>
+      <div class="lock-error" id="lockError">密碼錯誤，請重新輸入</div>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header id="mainApp" style="display:none;">
+    <div class="header-top">
+      <div class="school-title">
+        <span>📞</span> 普台高中 護學會電話紀錄追蹤
+      </div>
+      <div class="badge-live">8月累計 318 筆</div>
+    </div>
+    <div class="search-wrapper">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="searchInput" class="search-input" placeholder="搜尋學生、來電事由、師長或分機..." oninput="handleSearch()">
+    </div>
+  </header>
+
+  <!-- Official 12 Codes Statistics Panel -->
+  <div id="appBody" style="display:none;">
+    <button class="stat-collapse-btn" onclick="toggleStats()">
+      <span>📊 護學會業務電話統計表（8月份）</span>
+      <span id="statArrow">▼</span>
+    </button>
+
+    <div class="official-stats-panel" id="statsPanel">
+      <div class="stat-chip" onclick="filterByCode('1')">
+        <div class="chip-code">1</div>
+        <div class="chip-name">教務處</div>
+        <div class="chip-count">82</div>
+      </div>
+      <div class="stat-chip" onclick="filterByCode('2')">
+        <div class="chip-code">2</div>
+        <div class="chip-name">學務處</div>
+        <div class="chip-count">56</div>
+      </div>
+      <div class="stat-chip" onclick="filterByCode('3')">
+        <div class="chip-code">3</div>
+        <div class="chip-name">總務處</div>
+        <div class="chip-count">6</div>
+      </div>
+      <div class="stat-chip" onclick="filterByCode('4')">
+        <div class="chip-code">4</div>
+        <div class="chip-name">輔導室</div>
+        <div class="chip-count">1</div>
+      </div>
+      <div class="stat-chip" onclick="filterByCode('5')">
+        <div class="chip-code">5</div>
+        <div class="chip-name">國際部</div>
+        <div class="chip-count">12</div>
+      </div>
+      <div class="stat-chip" onclick="filterByCode('6')">
+        <div class="chip-code">6</div>
+        <div class="chip-name">音樂中心</div>
+        <div class="chip-count">5</div>
+      </div>
+      <div class="stat-chip" onclick="filterByCode('7')">
+        <div class="chip-code">7</div>
+        <div class="chip-name">人事室</div>
+        <div class="chip-count">13</div>
+      </div>
+      <div class="stat-chip" onclick="filterByCode('8')">
+        <div class="chip-code">8</div>
+        <div class="chip-name">住宿處</div>
+        <div class="chip-count">30</div>
+      </div>
+      <div class="stat-chip" onclick="filterByCode('9')">
+        <div class="chip-code">9</div>
+        <div class="chip-name">國中導師</div>
+        <div class="chip-count">13</div>
+      </div>
+      <div class="stat-chip" onclick="filterByCode('10')">
+        <div class="chip-code">10</div>
+        <div class="chip-name">高中導師</div>
+        <div class="chip-count">2</div>
+      </div>
+      <div class="stat-chip" onclick="filterByCode('11')">
+        <div class="chip-code">11</div>
+        <div class="chip-name">招生</div>
+        <div class="chip-count">16</div>
+      </div>
+      <div class="stat-chip" onclick="filterByCode('12')">
+        <div class="chip-code">12</div>
+        <div class="chip-name">其他</div>
+        <div class="chip-count">82</div>
+      </div>
+    </div>
+
+    <!-- Filter Tabs (Official 12 Codes) -->
+    <div class="filter-tabs-wrapper">
+      <div class="filter-tabs">
+        <button class="tab-btn active" onclick="filterCategory('all', this)">全部 (318)</button>
+        <button class="tab-btn" onclick="filterCategory('red', this)">🔴 重點關懷 (1)</button>
+        <button class="tab-btn" onclick="filterCategory('yellow', this)">🟡 處室追蹤 (32)</button>
+        <button class="tab-btn" onclick="filterCategory('green', this)">🟢 已結案 (10)</button>
+        <button class="tab-btn" onclick="filterCategory('1', this)">1 教務處 (82)</button>
+        <button class="tab-btn" onclick="filterCategory('2', this)">2 學務處 (56)</button>
+        <button class="tab-btn" onclick="filterCategory('8', this)">8 住宿處 (30)</button>
+        <button class="tab-btn" onclick="filterCategory('9', this)">9 國中導師 (13)</button>
+        <button class="tab-btn" onclick="filterCategory('10', this)">10 高中導師 (2)</button>
+        <button class="tab-btn" onclick="filterCategory('11', this)">11 招生 (16)</button>
+        <button class="tab-btn" onclick="filterCategory('5', this)">5 國際部 (12)</button>
+        <button class="tab-btn" onclick="filterCategory('7', this)">7 人事室 (13)</button>
+        <button class="tab-btn" onclick="filterCategory('3', this)">3 總務處 (6)</button>
+        <button class="tab-btn" onclick="filterCategory('6', this)">6 音樂中心 (5)</button>
+        <button class="tab-btn" onclick="filterCategory('4', this)">4 輔導室 (1)</button>
+        <button class="tab-btn" onclick="filterCategory('12', this)">12 其他 (82)</button>
+      </div>
+    </div>
+
+    <!-- Content List -->
+    <main>
+      <div class="section-title">
+        <span id="listTitle">護學會每日電話紀錄清單</span>
+        <span style="font-size:0.75rem; color:#94a3b8;" id="matchCount">共 318 筆</span>
+      </div>
+
+      <div class="card-list" id="cardsContainer">
+        <!-- Injected via JS -->
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const CORRECT_PASS = "putai";
+
+    function checkAuth() {
+      const saved = localStorage.getItem("putai_auth_v2");
+      if (saved === "ok") {
+        unlockApp();
+      }
+    }
+
+    function verifyPasscode() {
+      const val = document.getElementById("passcodeInput").value.trim().toLowerCase();
+      if (val === CORRECT_PASS) {
+        localStorage.setItem("putai_auth_v2", "ok");
+        unlockApp();
+      } else {
+        const err = document.getElementById("lockError");
+        const card = document.getElementById("lockCard");
+        err.style.display = "block";
+        card.style.animation = "shake 0.3s";
+        setTimeout(() => { card.style.animation = ""; }, 300);
+      }
+    }
+
+    function unlockApp() {
+      document.getElementById("lockOverlay").style.display = "none";
+      document.getElementById("mainApp").style.display = "block";
+      document.getElementById("appBody").style.display = "block";
+      render();
+    }
+
+    const records = [{"date": "115.08.14", "code": "2", "dept_name": "學務處", "time": "9:12", "caller": "家長", "content": "請轉交通車老師。", "action": "轉11303", "handler": "水月", "level": "yellow", "level_text": "追蹤中", "teachers": ["張薏雯", "黎子菁", "陳怡婷"], "follow_up": ""}, {"date": "115.08.14", "code": "12", "dept_name": "其他", "time": "8:56", "caller": "轉出生吳欣穎媽媽", "content": "索取107學年繳費證明。", "action": "已請星修法師協助。", "handler": "水月", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.14", "code": "7", "dept_name": "人事室", "time": "8:47", "caller": "徐先生", "content": "請轉人事室。", "action": "轉11701。", "handler": "水月", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.14", "code": "2", "dept_name": "學務處", "time": "8:15", "caller": "江禮如爸爸", "content": "確定8/19交通車。", "action": "轉11303。", "handler": "水月", "level": "yellow", "level_text": "追蹤中", "teachers": ["張薏雯", "黎子菁", "陳怡婷"], "follow_up": ""}, {"date": "115.08.14", "code": "12", "dept_name": "其他", "time": "20:45", "caller": "國一甲何宥霖媽媽", "content": "洽未接來電。", "action": "已告知暑輔費用尚未處理。", "handler": "淑惠", "level": "yellow", "level_text": "追蹤中", "teachers": ["張薏雯", "黎子菁"], "follow_up": ""}, {"date": "115.08.14", "code": "2", "dept_name": "學務處", "time": "18:33", "caller": "國中家長", "content": "請轉學務處確認傳真。", "action": "轉11331，無人接聽，請明天再來電確認。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.14", "code": "1", "dept_name": "教務處", "time": "18:24", "caller": "家長", "content": "請轉國中註冊組。", "action": "轉11223。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.14", "code": "8", "dept_name": "住宿處", "time": "18:23", "caller": "家長", "content": "請轉國一女生宿舍。", "action": "轉54611。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.14", "code": "8", "dept_name": "住宿處", "time": "17:54", "caller": "國一甲劉孟晅爸爸", "content": "請轉國一女生宿舍。", "action": "轉54611。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.14", "code": "1", "dept_name": "教務處", "time": "16:20", "caller": "曾先生", "content": "請轉高中學務處。", "action": "轉11321。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.14", "code": "1", "dept_name": "教務處", "time": "14:52", "caller": "楊小姐", "content": "詢問試讀繳交保證金。", "action": "轉11221。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.14", "code": "2", "dept_name": "學務處", "time": "14:37", "caller": "家長", "content": "請轉學務處蔡老師。", "action": "轉11321，忙線中請稍後再撥。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.14", "code": "6", "dept_name": "音樂中心", "time": "14:27", "caller": "家長", "content": "請轉音樂中心。", "action": "轉32101。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.14", "code": "12", "dept_name": "其他", "time": "13:46", "caller": "國二甲江怡瑾媽媽", "content": "會先繳暑輔費用。", "action": "請先將2萬多月費先繳，計的傳繳費證明給導師。", "handler": "淑惠", "level": "yellow", "level_text": "追蹤中", "teachers": ["張家蓉", "林士桓"], "follow_up": ""}, {"date": "115.08.14", "code": "1", "dept_name": "教務處", "time": "12:44", "caller": "國中家長", "content": "請轉教務處更改通訊錄。", "action": "轉11223。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.14", "code": "1", "dept_name": "教務處", "time": "12:42", "caller": "國中家長", "content": "請轉教務處。", "action": "轉11223。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.14", "code": "11", "dept_name": "招生", "time": "12:05", "caller": "李小姐", "content": "詢問6升7入學管道。", "action": "依國小冬令儲備營說明。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.14", "code": "1", "dept_name": "教務處", "time": "11:32", "caller": "李先生", "content": "請轉國中註冊組。", "action": "轉11223。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.14", "code": "2", "dept_name": "學務處", "time": "11:15", "caller": "家長", "content": "請轉交通車老師。", "action": "轉11303", "handler": "淑惠", "level": "yellow", "level_text": "追蹤中", "teachers": ["張薏雯", "黎子菁", "陳怡婷"], "follow_up": ""}, {"date": "115.08.14", "code": "12", "dept_name": "其他", "time": "11:12", "caller": "黃小姐", "content": "洽詢國三入學。", "action": "已說明。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.14", "code": "11", "dept_name": "招生", "time": "11:07", "caller": "楊小姐", "content": "取消8/15參訪。", "action": "好的，歡迎再來電預約。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.14", "code": "2", "dept_name": "學務處", "time": "10:49", "caller": "高中家長", "content": "請轉學務處確認傳真。", "action": "轉11321。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.14", "code": "2", "dept_name": "學務處", "time": "10:36", "caller": "高中家長", "content": "請轉學務處確認傳真。", "action": "轉11321。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.14", "code": "2", "dept_name": "學務處", "time": "10:17", "caller": "國中家長", "content": "詢問社團相關事宜。", "action": "轉11321。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.14", "code": "12", "dept_name": "其他", "time": "", "caller": "學務處主 任", "content": "", "action": "教務處 主 任", "handler": "", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.13", "code": "12", "dept_name": "其他", "time": "9:21", "caller": "國一郭柏毅媽媽", "content": "洽未接來電。", "action": "轉11411無人接聽，請再留意手機，老師會再聯繫。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.13", "code": "1", "dept_name": "教務處", "time": "8:59", "caller": "蘇小姐", "content": "詢問國三入學事宜。", "action": "轉11223。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.13", "code": "1", "dept_name": "教務處", "time": "8:12", "caller": "家長", "content": "請轉國中註冊組。", "action": "轉11223。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.13", "code": "1", "dept_name": "教務處", "time": "8:11", "caller": "國中家長", "content": "詢問請假事宜。", "action": "轉11331。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.13", "code": "8", "dept_name": "住宿處", "time": "18:55", "caller": "國三己 劉穎心媽媽", "content": "請轉生輔師。", "action": "轉54100惠云老師接聽。", "handler": "水月", "level": "yellow", "level_text": "追蹤中", "teachers": ["傅永悌", "陳怡婷", "傅永悌"], "follow_up": ""}, {"date": "115.08.13", "code": "8", "dept_name": "住宿處", "time": "18:50", "caller": "家長", "content": "請轉國一男生宿舍，找生輔師。", "action": "轉53511。", "handler": "水月", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.13", "code": "12", "dept_name": "其他", "time": "16:32", "caller": "高二庚李紹呈媽媽", "content": "孩子沒打電話，請他下課後到警衛室會客有重要事。", "action": "已有通知學生了，只能等下課盡量通知。已通知。", "handler": "淑惠", "level": "yellow", "level_text": "追蹤中", "teachers": ["周漢羽"], "follow_up": ""}, {"date": "115.08.13", "code": "7", "dept_name": "人事室", "time": "16:14", "caller": "許先生", "content": "請轉人事室。", "action": "轉11702。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.13", "code": "12", "dept_name": "其他", "time": "15:43", "caller": "高二庚李紹呈媽媽", "content": "請轉班上，有事想找學生。", "action": "媽媽現在上課下一節課再通知學生回電。已通知請同學轉達借電話回電家長。", "handler": "淑惠", "level": "yellow", "level_text": "追蹤中", "teachers": ["周漢羽"], "follow_up": ""}, {"date": "115.08.13", "code": "1", "dept_name": "教務處", "time": "15:14", "caller": "國二家長", "content": "請轉註冊組。", "action": "轉11223。", "handler": "芳琪", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.13", "code": "6", "dept_name": "音樂中心", "time": "15:13", "caller": "國三家長", "content": "請音樂中心。", "action": "轉32110，千蒂已接聽。", "handler": "芳琪", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.13", "code": "12", "dept_name": "其他", "time": "15:05", "caller": "家長", "content": "詢問學務處傳真號碼。", "action": "已說明。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.13", "code": "1", "dept_name": "教務處", "time": "14:49", "caller": "家長", "content": "請轉國中註冊組。", "action": "轉11221。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.13", "code": "1", "dept_name": "教務處", "time": "14:28", "caller": "國二家長", "content": "請轉註冊組。", "action": "轉11223。", "handler": "芳琪", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.13", "code": "11", "dept_name": "招生", "time": "13:15", "caller": "蔡小姐0935-387699", "content": "洽詢降讀高一事宜(孩子-林芳毅原先讀明德高中資優班，因鼻子開刀，加上感染新冠肺炎缺課較多而跟不上課業，目前在家沒去學校上課。)", "action": "回覆:因正值行政單位午休中，先留下連絡電話，將請註冊組老師回電。(13:45告知欣怡)", "handler": "芳琪", "level": "green", "level_text": "已結案", "teachers": ["張月馨"], "follow_up": "註冊組同仁有對話過，請家長趕緊傳資料過來，但到目前為止沒有後續資料送件。"}, {"date": "115.08.13", "code": "2", "dept_name": "學務處", "time": "11:03", "caller": "國中家長", "content": "請轉學務處。", "action": "轉11331。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.13", "code": "2", "dept_name": "學務處", "time": "10:48", "caller": "國中家長", "content": "請轉學務處。", "action": "轉11331。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.13", "code": "12", "dept_name": "其他", "time": "10:45", "caller": "張先生", "content": "銀行優存。", "action": "詢問他是哪家金融業，請他勿騷擾，後來自己掛斷。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.13", "code": "12", "dept_name": "其他", "time": "", "caller": "學務處主 任", "content": "", "action": "教務處 主 任", "handler": "", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.12", "code": "1", "dept_name": "教務處", "time": "9:58", "caller": "全民中檢 陳先生", "content": "請轉周文彬老師。", "action": "轉11214文彬老師接聽。", "handler": "水月", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.12", "code": "2", "dept_name": "學務處", "time": "9:50", "caller": "國一乙家長", "content": "請轉負責交通車老師。", "action": "轉11303。", "handler": "水月", "level": "yellow", "level_text": "追蹤中", "teachers": ["張薏雯", "黎子菁", "陳怡婷"], "follow_up": ""}, {"date": "115.08.12", "code": "1", "dept_name": "教務處", "time": "9:45", "caller": "蝦皮賣家 黃小姐", "content": "請轉侯全保老師。", "action": "轉11230。", "handler": "水月", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.12", "code": "11", "dept_name": "招生", "time": "9:28", "caller": "台北麗山國小 丁組長", "content": "邀請參加9/11(淨五) 17:45-20:30升學博覽會。", "action": "好的，會參加。", "handler": "水月", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.12", "code": "1", "dept_name": "教務處", "time": "9:26", "caller": "家長", "content": "請轉國中註冊組。", "action": "轉11221。", "handler": "水月", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.12", "code": "12", "dept_name": "其他", "time": "9:00", "caller": "高一甲 林洺安媽媽", "content": "請轉達孩子中午請假外出。", "action": "9:05已通知。", "handler": "水月", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.12", "code": "12", "dept_name": "其他", "time": "8:42", "caller": "高一甲 林洺安媽媽", "content": "洽詢臨時請假事宜(中午外出)。", "action": "已將做法向媽媽說明，讓她自行決定。", "handler": "水月", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.12", "code": "8", "dept_name": "住宿處", "time": "20:01", "caller": "高一庚張如慧媽媽", "content": "晚自習是生輔師看班嗎?想送物品過去給孩子。", "action": "晚上可以物品交警衛室轉交住宿處即可。", "handler": "", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.12", "code": "8", "dept_name": "住宿處", "time": "19:04", "caller": "國一己卓劭宇媽媽", "content": "請轉國一男生有急事。", "action": "轉11412。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.12", "code": "7", "dept_name": "人事室", "time": "18:02", "caller": "廖先生", "content": "請轉人事室賴小姐。", "action": "轉11701", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.12", "code": "2", "dept_name": "學務處", "time": "16:59", "caller": "國一乙 洪福根媽媽", "content": "請轉負責交通車老師。", "action": "轉11303。", "handler": "水月", "level": "yellow", "level_text": "追蹤中", "teachers": ["張薏雯", "黎子菁", "陳怡婷"], "follow_up": ""}, {"date": "115.08.12", "code": "12", "dept_name": "其他", "time": "16:55", "caller": "國一戊 王夏若媽媽", "content": "帶孩子外出看醫生，會晚1小時回學校。", "action": "轉11411已告知家珍老師。", "handler": "水月", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.12", "code": "11", "dept_name": "招生", "time": "15:05", "caller": "楊麗美0911928011", "content": "預約8/15下午2點參觀。", "action": "已登錄校園行事曆。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.12", "code": "1", "dept_name": "教務處", "time": "14:47", "caller": "家長", "content": "請轉教務處國中註冊組。", "action": "轉11223。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.12", "code": "12", "dept_name": "其他", "time": "14:45", "caller": "陳小姐02-27299151", "content": "洽7/20捐款學校確認是否收到。", "action": "經跟會計室確認，已回覆陳小姐。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.12", "code": "1", "dept_name": "教務處", "time": "14:37", "caller": "家長", "content": "詢問國三入學考試。", "action": "轉11221。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.12", "code": "1", "dept_name": "教務處", "time": "14:36", "caller": "官先生", "content": "請轉教務處。", "action": "轉11223。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.12", "code": "2", "dept_name": "學務處", "time": "14:01", "caller": "國中家長", "content": "洽請假事宜。", "action": "轉11331。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.12", "code": "1", "dept_name": "教務處", "time": "13:11", "caller": "張先生", "content": "請轉註冊組。", "action": "轉11223。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.12", "code": "12", "dept_name": "其他", "time": "12:14", "caller": "高二庚 林子秦爸爸", "content": "請協助通知小孩，爸爸已到校門口接她(約12:00)。", "action": "12:16正要打電話給班導時，爸爸來電告知小孩已到校門口。", "handler": "水月", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.12", "code": "12", "dept_name": "其他", "time": "11:56", "caller": "國二乙 梁禕玲媽媽", "content": "洽未接來電。", "action": "因已是用餐時間，且導師也不在辦公室了，請媽媽再留意手機來電。", "handler": "水月", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.12", "code": "12", "dept_name": "其他", "time": "11:45", "caller": "國二甲 許明驊媽媽", "content": "確認傳真至護學會文件是否收到?", "action": "已收到。", "handler": "水月", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.12", "code": "1", "dept_name": "教務處", "time": "11:26", "caller": "家長", "content": "請轉高中註冊組。", "action": "轉11224。", "handler": "水月", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.12", "code": "2", "dept_name": "學務處", "time": "11:25", "caller": "家長", "content": "請轉負責交通車老師。", "action": "轉11303。", "handler": "水月", "level": "yellow", "level_text": "追蹤中", "teachers": ["張薏雯", "黎子菁", "陳怡婷"], "follow_up": ""}, {"date": "115.08.12", "code": "7", "dept_name": "人事室", "time": "10:57", "caller": "永豐銀行 郭小姐", "content": "照會在職人員。", "action": "轉11701育蓁老師接聽。", "handler": "水月", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.12", "code": "12", "dept_name": "其他", "time": "10:30- 11:35", "caller": "國二丁 鍾喜善媽媽", "content": "與漢宗主任、淑娟老師及云薰老師再家長會辦公室晤談。", "action": "提供場地。", "handler": "水月", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.12", "code": "12", "dept_name": "其他", "time": "", "caller": "學務處主 任", "content": "", "action": "教務處 主 任", "handler": "", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.11", "code": "2", "dept_name": "學務處", "time": "9:55", "caller": "家長", "content": "請轉健康中心。", "action": "轉11338。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.11", "code": "2", "dept_name": "學務處", "time": "9:24", "caller": "家長", "content": "請轉國中學務處。", "action": "轉11331。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.11", "code": "1", "dept_name": "教務處", "time": "9:20", "caller": "家長", "content": "請轉國中註冊組。", "action": "轉11223。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.11", "code": "1", "dept_name": "教務處", "time": "8:56", "caller": "家長", "content": "請轉國中註冊組。", "action": "轉11223。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.11", "code": "2", "dept_name": "學務處", "time": "18:37", "caller": "國一家長", "content": "洽詢請假事宜。", "action": "已說明。", "handler": "芳琪", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.11", "code": "5", "dept_name": "國際部", "time": "18:18", "caller": "國一丙家長", "content": "洽詢西檢事宜。", "action": "轉11910，福慧老師已接聽。", "handler": "芳琪", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.11", "code": "7", "dept_name": "人事室", "time": "17:36", "caller": "許老師", "content": "請轉人事室(申請文件)。", "action": "轉11702，無人接聽，請明日再來電。", "handler": "芳琪", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.11", "code": "2", "dept_name": "學務處", "time": "17:12", "caller": "高三庚江禮如爸爸", "content": "請轉交通車老師。", "action": "轉11303。", "handler": "淑惠", "level": "yellow", "level_text": "追蹤中", "teachers": ["張薏雯", "黎子菁", "陳怡婷"], "follow_up": ""}, {"date": "115.08.11", "code": "7", "dept_name": "人事室", "time": "16:56", "caller": "許小姐", "content": "請轉人事室。", "action": "轉11701。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.11", "code": "12", "dept_name": "其他", "time": "16:39", "caller": "國中家長", "content": "詢問中國信託身分證驗證碼。", "action": "已說明。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.11", "code": "7", "dept_name": "人事室", "time": "16:10", "caller": "陳小姐", "content": "請轉人事室賴小姐。", "action": "轉11701。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.11", "code": "1", "dept_name": "教務處", "time": "15:41", "caller": "家長", "content": "請轉教務處註冊組。", "action": "轉11222。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.11", "code": "1", "dept_name": "教務處", "time": "15:30", "caller": "家長", "content": "請轉國中註冊組。", "action": "轉11223。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.11", "code": "1", "dept_name": "教務處", "time": "15:15", "caller": "家長", "content": "請轉教務處申請兵役折抵。", "action": "轉11222。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.11", "code": "9", "dept_name": "國中部導師", "time": "15:12", "caller": "國二丙試讀生諺碩媽媽", "content": "洽未接來電。", "action": "轉24301。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.11", "code": "11", "dept_name": "招生", "time": "15:05", "caller": "陳旻錡女士0928388613", "content": "預約8/15下午2點蒞校參訪，孩子小六。", "action": "已登錄校園行事曆。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.11", "code": "11", "dept_name": "招生", "time": "14:50", "caller": "楊小姐", "content": "洽國中入學，孩子小五。", "action": "已說明。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.11", "code": "12", "dept_name": "其他", "time": "14:43", "caller": "王校長", "content": "請轉傳淇(朋友是明天來訪才對)。", "action": "轉11531。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.11", "code": "1", "dept_name": "教務處", "time": "14:12", "caller": "國三辛曾子洺媽媽", "content": "請轉教務處。", "action": "轉11221。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.11", "code": "12", "dept_name": "其他", "time": "13:54", "caller": "國二辛家長陳艾倫媽媽", "content": "確認是否有收到假單。", "action": "回覆:已收到，將通知艾倫領回。", "handler": "芳琪", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.11", "code": "1", "dept_name": "教務處", "time": "13:52", "caller": "高一家長", "content": "孩子忘記帶戶籍謄本回學校，應該傳真給哪個單位。", "action": "轉註冊組11224。", "handler": "芳琪", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.11", "code": "9", "dept_name": "國中部導師", "time": "13:37", "caller": "亞洲大學 蔡社工", "content": "請轉國三蔡老師(男老師)。", "action": "轉24402，昌運老師已接聽。", "handler": "芳琪", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.11", "code": "12", "dept_name": "其他", "time": "13:35", "caller": "普台小學 王校長", "content": "14:30帶朋友來參訪(孩子要讀國一、國二)出發前會再通知。", "action": "收到，謝謝校長。", "handler": "芳琪", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.11", "code": "2", "dept_name": "學務處", "time": "13:30", "caller": "崇德國中 曾護理師", "content": "請轉健康中心。", "action": "轉11338，由雅琴接聽。", "handler": "芳琪", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.11", "code": "2", "dept_name": "學務處", "time": "13:15", "caller": "國二辛家長", "content": "洽詢週末請假外出事宜。", "action": "已說明。", "handler": "芳琪", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.11", "code": "11", "dept_name": "招生", "time": "13:05", "caller": "江先生", "content": "洽詢升國二事宜。", "action": "已說明，但因家長尚未讓孩子知道要轉學，建議溝通後再來電。", "handler": "芳琪", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.11", "code": "1", "dept_name": "教務處", "time": "11:15", "caller": "柯小姐", "content": "請轉國中註冊組。", "action": "轉11223。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.11", "code": "1", "dept_name": "教務處", "time": "10:19", "caller": "家長", "content": "請轉國中註冊組。", "action": "轉11223。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.11", "code": "12", "dept_name": "其他", "time": "", "caller": "學務處主 任", "content": "", "action": "教務處 主 任", "handler": "", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.10", "code": "1", "dept_name": "教務處", "time": "9;07", "caller": "家長", "content": "請轉國中註冊組。", "action": "轉11223。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.10", "code": "1", "dept_name": "教務處", "time": "9:32", "caller": "家長", "content": "請轉國中註冊組。", "action": "轉11223。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.10", "code": "1", "dept_name": "教務處", "time": "9:32", "caller": "家長", "content": "請轉國中註冊組。", "action": "轉11221。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.10", "code": "1", "dept_name": "教務處", "time": "9:25", "caller": "國二辛宋鎬里媽媽", "content": "反映註冊二無法線上繳納。", "action": "好的，已轉達給欣融老師。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.10", "code": "7", "dept_name": "人事室", "time": "8:45", "caller": "陳先生", "content": "請轉人事室。", "action": "轉11701。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.10", "code": "1", "dept_name": "教務處", "time": "8:20", "caller": "家長", "content": "請轉國中註冊組。", "action": "轉11223。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.10", "code": "12", "dept_name": "其他", "time": "18:58", "caller": "國一甲家長", "content": "確認傳真文件至護學會是否收到?", "action": "已收到。", "handler": "水月", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.10", "code": "1", "dept_name": "教務處", "time": "18:33", "caller": "高一庚 邱若芹媽媽", "content": "詢問教務處傳真號碼。", "action": "已告知。", "handler": "水月", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.10", "code": "8", "dept_name": "住宿處", "time": "18:30", "caller": "國一男家長", "content": "請轉53511。", "action": "轉53511。", "handler": "水月", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.10", "code": "8", "dept_name": "住宿處", "time": "18:20", "caller": "國一男家長", "content": "請轉53511。", "action": "轉53511電話中，請稍後再來電。", "handler": "水月", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.10", "code": "12", "dept_name": "其他", "time": "17:00", "caller": "見依法師", "content": "請轉見岳法師。", "action": "轉11011。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.10", "code": "2", "dept_name": "學務處", "time": "16:15", "caller": "國一家長", "content": "請轉學務處(社團事宜)。", "action": "轉11321幸芳已接聽。", "handler": "芳琪", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.10", "code": "5", "dept_name": "國際部", "time": "15:47", "caller": "家長", "content": "請轉外語中心西語檢定。", "action": "轉11911。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.10", "code": "5", "dept_name": "國際部", "time": "15:47", "caller": "家長", "content": "請轉外語中心西語檢定。", "action": "轉11911。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.10", "code": "5", "dept_name": "國際部", "time": "15:15", "caller": "家長", "content": "請轉外語中心西語檢定。", "action": "轉11911。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.10", "code": "5", "dept_name": "國際部", "time": "15:10", "caller": "家長", "content": "請轉外語中心西語檢定。", "action": "轉11911。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.10", "code": "1", "dept_name": "教務處", "time": "15:01", "caller": "國一己家長楊閔勛媽媽", "content": "請接德培老師。(孩子參加南投縣政府舉辦之麥克松競賽，9月及10月要去大成國中參加工作坊等事宜)", "action": "轉11242後回覆:德培老師上課中(其實德培老師老師在辦公室，但因工作坊日期尚未出來，因此無法回答家長的問題)。", "handler": "芳琪", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.10", "code": "3", "dept_name": "總務處", "time": "14:59", "caller": "廠商 黃先生", "content": "請轉餐廳部吳小姐。", "action": "轉32016吳營養師接聽。", "handler": "水月", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.10", "code": "11", "dept_name": "招生", "time": "14:00", "caller": "劉先生", "content": "洽詢國二轉學事宜(孩子很難教，功課也不好，希望找住宿學校感化他)。", "action": "回覆:已無轉學生名額。", "handler": "芳琪", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.10", "code": "4", "dept_name": "輔導室", "time": "13:57", "caller": "南投縣教育處 蕭輔導員", "content": "請轉輔導室主任。", "action": "轉11600副主任接聽。", "handler": "水月", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.10", "code": "1", "dept_name": "教務處", "time": "13:45", "caller": "高一辛家長", "content": "洽詢退制服費事宜。", "action": "轉11224。", "handler": "芳琪", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.10", "code": "12", "dept_name": "其他", "time": "13:04", "caller": "普耕精舍 法聖師兄", "content": "請接傳道師兄。", "action": "報告組長後已轉接。", "handler": "芳琪", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.10", "code": "5", "dept_name": "國際部", "time": "11:37", "caller": "家長", "content": "請轉外語中心西語檢定。", "action": "轉11911。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.10", "code": "1", "dept_name": "教務處", "time": "11:23", "caller": "家長", "content": "洽APP相關事宜。", "action": "轉11224。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.10", "code": "11", "dept_name": "招生", "time": "11:01", "caller": "麗山國小丁組長", "content": "請轉蘇老師，邀請9/11晚上6:30招生博覽會。", "action": "好的，代為轉達。已轉達。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.10", "code": "5", "dept_name": "國際部", "time": "10:59", "caller": "家長", "content": "請轉外語中心西語檢定。", "action": "轉11911。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.10", "code": "12", "dept_name": "其他", "time": "10:51", "caller": "高中家長", "content": "詢問高中會有公告晚自習時間嗎?", "action": "經詢問高中返校一律晚自習。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.10", "code": "12", "dept_name": "其他", "time": "10:30", "caller": "國一家長", "content": "洽8/19請假事宜。", "action": "已說明。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.10", "code": "12", "dept_name": "其他", "time": "10:29", "caller": "家長", "content": "洽郵寄方式。", "action": "已說明。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.10", "code": "1", "dept_name": "教務處", "time": "10:12", "caller": "家長", "content": "洽APP相關事宜。", "action": "轉11224。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.10", "code": "12", "dept_name": "其他", "time": "", "caller": "學務處主 任", "content": "", "action": "教務處 主 任", "handler": "", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.09", "code": "8", "dept_name": "住宿處", "time": "20:57", "caller": "國三戊 楊子琦媽媽", "content": "洽詢未接來電。", "action": "經詢問的結果，轉宿舍54100。", "handler": "水月", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.09", "code": "8", "dept_name": "住宿處", "time": "20:22", "caller": "國一丙 陳柏銓媽媽", "content": "延後返校時間。", "action": "轉11412家珍老師接聽。", "handler": "水月", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.09", "code": "8", "dept_name": "住宿處", "time": "20:08", "caller": "家長", "content": "洽詢孩子今日搭交通車回到學校後電聯時間?", "action": "轉11412。", "handler": "水月", "level": "yellow", "level_text": "追蹤中", "teachers": ["張薏雯", "黎子菁", "陳怡婷"], "follow_up": ""}, {"date": "115.08.09", "code": "8", "dept_name": "住宿處", "time": "18:31", "caller": "轉學生家長", "content": "兩個孩子(國一和國二轉學生)今晚要請假，因轉宿舍無人接聽，只好轉辦公室。", "action": "轉11421。", "handler": "水月", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.09", "code": "8", "dept_name": "住宿處", "time": "18:20", "caller": "國一乙 陳淇奧媽媽", "content": "請轉住宿處的老師，交代生輔師孩子須打生長激素事宜。(因轉宿舍無人接聽，只好轉辦公室)", "action": "轉11421副主任接聽。", "handler": "水月", "level": "yellow", "level_text": "追蹤中", "teachers": ["陳怡婷", "田博文", "許維芬"], "follow_up": ""}, {"date": "115.08.09", "code": "12", "dept_name": "其他", "time": "17:50", "caller": "家長", "content": "詢問自接回校的時間?", "action": "已說明。", "handler": "水月", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.09", "code": "8", "dept_name": "住宿處", "time": "17:31", "caller": "高一甲 陳峟瑜媽媽", "content": "請轉住宿處，幫孩子晚上請假。", "action": "轉11421副主任接聽。", "handler": "水月", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.09", "code": "12", "dept_name": "其他", "time": "17:12", "caller": "試讀生家長", "content": "詢問自接回校的時間? 已在埔里鎮上用餐，等一下用完餐是否就可以送孩子回校。", "action": "可以。", "handler": "水月", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.09", "code": "12", "dept_name": "其他", "time": "", "caller": "學務處主 任", "content": "", "action": "教務處 主 任", "handler": "", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.07", "code": "12", "dept_name": "其他", "time": "15:58", "caller": "家長", "content": "詢問返校搭車時間。", "action": "已說明。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.07", "code": "12", "dept_name": "其他", "time": "15:37", "caller": "家長", "content": "詢問代收代辦相關事宜。", "action": "已說明。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.07", "code": "12", "dept_name": "其他", "time": "15:37", "caller": "家長", "content": "詢問普耕精舍車子還未到。", "action": "今日準時發車，請在稍後一下。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.07", "code": "12", "dept_name": "其他", "time": "15:17", "caller": "國一丙邱贊宇媽媽", "content": "報到的時候有將充電線給一個高高短髮老師轉交，孩子說沒收到。", "action": "老師休假了，會詢問清楚，請禮拜天晚上在至護學會詢問。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.07", "code": "7", "dept_name": "人事室", "time": "14:59", "caller": "陳先生", "content": "請轉人事室。", "action": "今日下午學校休假，請禮拜一再來電。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.07", "code": "12", "dept_name": "其他", "time": "14:53", "caller": "新生張淵媽媽", "content": "孩子都沒有接電話，不知有沒有上車。", "action": "學生都已離開了，請再撥看看。後來學生有回電家長。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.07", "code": "1", "dept_name": "教務處", "time": "13:55", "caller": "家長", "content": "洽詢校園APP登入事宜。", "action": "請於下周一再來電分機11224。", "handler": "水月", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.07", "code": "2", "dept_name": "學務處", "time": "13:54", "caller": "家長", "content": "洽詢如何下載請假單?", "action": "已引導至官網下載。", "handler": "水月", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.07", "code": "12", "dept_name": "其他", "time": "12:53", "caller": "國一戊宋芯樂媽媽", "content": "孩子的琴放在教室忘了拿，請老師協助，一定要帶回家。", "action": "孩子搭車車子快出發了，導師辦公室也無人接聽。後來請教務處蓉蓉老師協助，也順利上車。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.07", "code": "2", "dept_name": "學務處", "time": "12:16", "caller": "家長", "content": "請轉交通車老師。", "action": "轉11303。", "handler": "淑惠", "level": "yellow", "level_text": "追蹤中", "teachers": ["張薏雯", "黎子菁", "陳怡婷"], "follow_up": ""}, {"date": "115.08.07", "code": "2", "dept_name": "學務處", "time": "11:59", "caller": "家長", "content": "請轉交通車老師。", "action": "轉11303。", "handler": "淑惠", "level": "yellow", "level_text": "追蹤中", "teachers": ["張薏雯", "黎子菁", "陳怡婷"], "follow_up": ""}, {"date": "115.08.07", "code": "1", "dept_name": "教務處", "time": "11:43", "caller": "張小姐", "content": "請轉國中註冊組。", "action": "轉11223。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.07", "code": "1", "dept_name": "教務處", "time": "11:20", "caller": "國三丁 王有甫媽媽", "content": "有未接來電，應該是註冊組找我，孩子要辦轉出。", "action": "轉11221欣融老師接聽。", "handler": "水月", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.07", "code": "2", "dept_name": "學務處", "time": "11:12", "caller": "家長", "content": "請轉徐老師。", "action": "轉11303。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.07", "code": "12", "dept_name": "其他", "time": "11:07", "caller": "合庫 許先生", "content": "請轉會計室秦老師。", "action": "轉11011。", "handler": "芳琪", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.07", "code": "2", "dept_name": "學務處", "time": "10:57", "caller": "國中家長", "content": "請轉交通車老師。0", "action": "轉11303。", "handler": "芳琪", "level": "yellow", "level_text": "追蹤中", "teachers": ["張薏雯", "黎子菁", "陳怡婷"], "follow_up": ""}, {"date": "115.08.07", "code": "2", "dept_name": "學務處", "time": "10:10", "caller": "國一家長", "content": "洽詢孩子今日搭車返家精舍別", "action": "轉11303。", "handler": "芳琪", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.07", "code": "12", "dept_name": "其他", "time": "", "caller": "學務處主 任", "content": "", "action": "教務處 主 任", "handler": "", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.06", "code": "1", "dept_name": "教務處", "time": "8:31", "caller": "高中家長", "content": "請轉教務處補辦畢業證書。", "action": "轉11222", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.06", "code": "1", "dept_name": "教務處", "time": "8:20", "caller": "家長", "content": "請轉國中註冊組。", "action": "轉11223。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.06", "code": "2", "dept_name": "學務處", "time": "20:33", "caller": "國一新生家長", "content": "詢問交通車事宜。", "action": "請明早再來電11303。", "handler": "水月", "level": "yellow", "level_text": "追蹤中", "teachers": ["張薏雯", "黎子菁", "陳怡婷"], "follow_up": ""}, {"date": "115.08.06", "code": "12", "dept_name": "其他", "time": "19:36", "caller": "國二丙 黃禹騰媽媽", "content": "請孩子回電。", "action": "請世霖老師轉達。", "handler": "水月", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.06", "code": "2", "dept_name": "學務處", "time": "19:23", "caller": "國三乙 黃祤涵爸爸", "content": "取消返校交通車。", "action": "請明早再來電11303。", "handler": "水月", "level": "yellow", "level_text": "追蹤中", "teachers": ["張薏雯", "黎子菁", "陳怡婷"], "follow_up": ""}, {"date": "115.08.06", "code": "12", "dept_name": "其他", "time": "18:54", "caller": "國一乙 葉泰呈媽媽", "content": "請轉宿舍找小孩，因為已3天沒打電話回家。", "action": "轉到宿舍同學告知泰呈已離開宿舍前往教室，於是媽媽主動表示，那就不用再找小孩，反正明天就回家了。", "handler": "水月", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.06", "code": "2", "dept_name": "學務處", "time": "18:52", "caller": "家長", "content": "請轉負責交通車老師。", "action": "請明早再來電11303。", "handler": "水月", "level": "yellow", "level_text": "追蹤中", "teachers": ["張薏雯", "黎子菁", "陳怡婷"], "follow_up": ""}, {"date": "115.08.06", "code": "2", "dept_name": "學務處", "time": "18:47", "caller": "家長", "content": "確認交通車。", "action": "請明早再來電11303。", "handler": "水月", "level": "yellow", "level_text": "追蹤中", "teachers": ["張薏雯", "黎子菁", "陳怡婷"], "follow_up": ""}, {"date": "115.08.06", "code": "12", "dept_name": "其他", "time": "18:44", "caller": "國三乙 黃祤涵爸爸", "content": "請轉宿舍找小孩。", "action": "轉54100祤涵來接聽。", "handler": "水月", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.06", "code": "8", "dept_name": "住宿處", "time": "18:20", "caller": "國一男家長", "content": "請轉53511。", "action": "轉53511。", "handler": "水月", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.06", "code": "2", "dept_name": "學務處", "time": "16:53", "caller": "高中家長", "content": "請轉學務處。", "action": "轉11321。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.06", "code": "2", "dept_name": "學務處", "time": "16:28", "caller": "家長", "content": "請轉交通車老師。", "action": "轉11303。", "handler": "淑惠", "level": "yellow", "level_text": "追蹤中", "teachers": ["張薏雯", "黎子菁", "陳怡婷"], "follow_up": ""}, {"date": "115.08.06", "code": "1", "dept_name": "教務處", "time": "16:03", "caller": "家長請", "content": "轉高中註冊組", "action": "轉11222。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.06", "code": "1", "dept_name": "教務處", "time": "15:40", "caller": "新生家長", "content": "詢問APP事宜。", "action": "轉11224。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.06", "code": "10", "dept_name": "高中部導師", "time": "15:28", "caller": "高一黃馨霈媽媽", "content": "洽未接來電。", "action": "轉21301老師上課中，無人接聽，如有要事老師會再聯絡。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.06", "code": "1", "dept_name": "教務處", "time": "14:20", "caller": "家長", "content": "請轉高中註冊組。", "action": "轉11222。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.06", "code": "11", "dept_name": "招生", "time": "13:42", "caller": "台北林小姐", "content": "孩子升國三，因旅遊而認識普台畢業校友推薦普台教育，想讓孩子轉學。", "action": "已依轉學流程做說明。", "handler": "水月", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.06", "code": "2", "dept_name": "學務處", "time": "13:32", "caller": "家長", "content": "更改交通車。", "action": "轉11303。", "handler": "水月", "level": "yellow", "level_text": "追蹤中", "teachers": ["張薏雯", "黎子菁", "陳怡婷"], "follow_up": ""}, {"date": "115.08.06", "code": "1", "dept_name": "教務處", "time": "13:25", "caller": "家長", "content": "詢問校園APP登陸事宜。", "action": "正值午休時間，請13:30過後來電11224。", "handler": "水月", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.06", "code": "2", "dept_name": "學務處", "time": "13:23", "caller": "家長", "content": "更改交通車。", "action": "轉11303。", "handler": "水月", "level": "yellow", "level_text": "追蹤中", "teachers": ["張薏雯", "黎子菁", "陳怡婷"], "follow_up": ""}, {"date": "115.08.06", "code": "3", "dept_name": "總務處", "time": "13:22", "caller": "力菱機電 吳小姐", "content": "請轉絃銘組長。", "action": "正值午休時間，先留下電話，已傳訊息給絃銘組長。", "handler": "水月", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.06", "code": "12", "dept_name": "其他", "time": "12:09", "caller": "高二乙李慧霖媽媽", "content": "詢問暑輔繳費相關事宜。", "action": "已說明。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.06", "code": "9", "dept_name": "國中部導師", "time": "11:41", "caller": "國一丙邱柏勛媽媽", "content": "洽未接來電。", "action": "轉24202。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.06", "code": "12", "dept_name": "其他", "time": "11:28", "caller": "高二家長", "content": "詢問請假相關事宜。", "action": "已說明。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.06", "code": "10", "dept_name": "高中部導師", "time": "11:28", "caller": "高一黃郅涵爸爸", "content": "洽高一甲導師。", "action": "轉21301，老師上課。請植棟老師代轉達。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.06", "code": "9", "dept_name": "國中部導師", "time": "10:52", "caller": "高一胡曉瑜爸爸", "content": "洽未接來電。", "action": "轉21301，老師上課。請植棟老師代轉達。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.06", "code": "1", "dept_name": "教務處", "time": "10:49", "caller": "高中家長", "content": "請轉高中註冊組。", "action": "轉11222。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.06", "code": "12", "dept_name": "其他", "time": "", "caller": "學務處主 任", "content": "", "action": "教務處 主 任", "handler": "", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.05", "code": "2", "dept_name": "學務處", "time": "9:35", "caller": "家長", "content": "請轉交通車老師。", "action": "轉11303。", "handler": "淑惠", "level": "yellow", "level_text": "追蹤中", "teachers": ["張薏雯", "黎子菁", "陳怡婷"], "follow_up": ""}, {"date": "115.08.05", "code": "12", "dept_name": "其他", "time": "9:25", "caller": "家長", "content": "洽未接來電。", "action": "轉11411，老師已離開。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.05", "code": "1", "dept_name": "教務處", "time": "8:38", "caller": "宅便通", "content": "請轉教務處侯老師。", "action": "轉11230。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.05", "code": "12", "dept_name": "其他", "time": "18:57", "caller": "高一乙 余黛妍媽媽", "content": "請孩子回電。", "action": "已通知到孩子本人。", "handler": "水月", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.05", "code": "6", "dept_name": "音樂中心", "time": "18:54", "caller": "家長", "content": "請轉音樂中心。", "action": "轉32105。", "handler": "水月", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.05", "code": "12", "dept_name": "其他", "time": "18:45", "caller": "高一甲 黃郅涵爸爸", "content": "請孩子回電。", "action": "已透過正雄主任轉達。", "handler": "水月", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.05", "code": "12", "dept_name": "其他", "time": "18:43", "caller": "國三辛 劉妍希媽媽", "content": "確認郵寄的包裹是否收到?(昨天已簽收)", "action": "轉11412正雄主任代為處理。", "handler": "水月", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.05", "code": "8", "dept_name": "住宿處", "time": "18:37", "caller": "家長", "content": "請轉男生宿舍。", "action": "轉53100。", "handler": "水月", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.05", "code": "5", "dept_name": "國際部", "time": "17:28", "caller": "新生家長", "content": "請轉國際部。", "action": "轉11920，忙線中稍後再撥。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.05", "code": "5", "dept_name": "國際部", "time": "17:22", "caller": "國一戊黃以程媽媽", "content": "請轉國際部，孩子沒有就讀國際班意願想轉普通班。", "action": "轉11920。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.05", "code": "12", "dept_name": "其他", "time": "16:40", "caller": "國中家長", "content": "學生不舒服，不知現在如何。", "action": "轉11338。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.05", "code": "12", "dept_name": "其他", "time": "15:28", "caller": "國一甲家長", "content": "洽未接來電。", "action": "學校撥出都是這號碼，老師說會撥空再連絡請放心!", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.05", "code": "1", "dept_name": "教務處", "time": "14:51", "caller": "楊小姐", "content": "請轉國中註冊組。", "action": "轉11221。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.05", "code": "3", "dept_name": "總務處", "time": "14:43", "caller": "廠商", "content": "請轉王乙珊。", "action": "轉11513。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.05", "code": "1", "dept_name": "教務處", "time": "14:12", "caller": "家長", "content": "請轉國中註冊組。", "action": "轉11223。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.05", "code": "2", "dept_name": "學務處", "time": "13:52", "caller": "弘文中學 黃護理師", "content": "請轉健康中心校護。", "action": "轉11338，富美已接聽。", "handler": "芳琪", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.05", "code": "5", "dept_name": "國際部", "time": "13:32", "caller": "國二丙 石明濬爸爸", "content": "請轉國際部，欲了解考試未通過之原因。", "action": "轉11920青樺組長接聽。", "handler": "水月", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.05", "code": "1", "dept_name": "教務處", "time": "13:30", "caller": "校友 洪曉芸", "content": "請接教務主任…", "action": "不轉接，並表示有重要事情要忙。", "handler": "芳琪", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.05", "code": "1", "dept_name": "教務處", "time": "13:08", "caller": "張小姐", "content": "洽詢國一試讀生退保證金日期 。", "action": "回覆:需要時間進行統計、打支票，並於寄出前會電聯確認郵寄地址。", "handler": "芳琪", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.05", "code": "2", "dept_name": "學務處", "time": "12:52", "caller": "高一庚 馮程翔媽媽", "content": "請轉詹錫棋老師。", "action": "轉11340。", "handler": "水月", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.05", "code": "12", "dept_name": "其他", "time": "11:46", "caller": "國一己廖唯峻爸爸", "content": "索取繳費單。", "action": "已列印請學生帶回。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.05", "code": "11", "dept_name": "招生", "time": "11:03", "caller": "劉小姐", "content": "洽國中入學相關訊息，孩子小五。", "action": "已說明。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.05", "code": "2", "dept_name": "學務處", "time": "10:21", "caller": "家長", "content": "請轉交通車老師。", "action": "轉11303。", "handler": "淑惠", "level": "yellow", "level_text": "追蹤中", "teachers": ["張薏雯", "黎子菁", "陳怡婷"], "follow_up": ""}, {"date": "115.08.05", "code": "2", "dept_name": "學務處", "time": "10:08", "caller": "家長", "content": "請轉交通車老師。", "action": "轉11303。", "handler": "淑惠", "level": "yellow", "level_text": "追蹤中", "teachers": ["張薏雯", "黎子菁", "陳怡婷"], "follow_up": ""}, {"date": "115.08.05", "code": "12", "dept_name": "其他", "time": "", "caller": "學務處主 任", "content": "", "action": "教務處 主 任", "handler": "", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.04", "code": "6", "dept_name": "音樂中心", "time": "9:16", "caller": "國一戊姜予綸媽媽", "content": "請轉音樂中心。", "action": "請13:30之後再來電。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.04", "code": "1", "dept_name": "教務處", "time": "8:18", "caller": "國三朱永青爸爸", "content": "請轉男生宿舍老師。", "action": "轉11411，請世霖老師轉達。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.04", "code": "1", "dept_name": "教務處", "time": "8:12", "caller": "家長", "content": "請轉學務處確認假單", "action": "轉11331。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.04", "code": "8", "dept_name": "住宿處", "time": "20:44", "caller": "國一乙家長岡依澄媽媽", "content": "請接進宿舍(剛跟孩子掛完電話)。", "action": "轉54511。", "handler": "芳琪", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.04", "code": "2", "dept_name": "學務處", "time": "20:40", "caller": "陳詩榆老師", "content": "請轉健康中心。", "action": "轉11339，由富美接聽。", "handler": "芳琪", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.04", "code": "2", "dept_name": "學務處", "time": "19:23", "caller": "高一家長", "content": "索取傳真機號碼(錫棋老師要的家長同意書)。", "action": "已告知學務處傳真號碼。", "handler": "芳琪", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.04", "code": "8", "dept_name": "住宿處", "time": "18:46", "caller": "國家長", "content": "請轉男生宿舍。", "action": "轉53511。", "handler": "芳琪", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.04", "code": "8", "dept_name": "住宿處", "time": "18:38", "caller": "國家長", "content": "請轉男生宿舍。", "action": "轉53511。", "handler": "芳琪", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.04", "code": "8", "dept_name": "住宿處", "time": "18:33", "caller": "國三家長", "content": "請轉男生宿舍。", "action": "轉53100。", "handler": "芳琪", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.04", "code": "12", "dept_name": "其他", "time": "18:12", "caller": "國三甲家長張辛瑜媽媽", "content": "索取繳交暑期輔導費用資料。", "action": "以簡訊告知。", "handler": "芳琪", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.04", "code": "8", "dept_name": "住宿處", "time": "17:41", "caller": "高一家長", "content": "請轉男生宿舍。", "action": "轉51511。", "handler": "芳琪", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.04", "code": "11", "dept_name": "招生", "time": "17:38", "caller": "外校高三 蔡同學", "content": "想轉來讀國際班。", "action": "說明:未收高三轉學生。", "handler": "芳琪", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.04", "code": "2", "dept_name": "學務處", "time": "17:22", "caller": "國一家長", "content": "確認8/30是否有登記搭車。", "action": "回覆:請明早8點後再來電分機11303徐老師。", "handler": "芳琪", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.04", "code": "1", "dept_name": "教務處", "time": "16:32", "caller": "國一試讀生家長", "content": "洽詢保證金之退費方式。", "action": "已說明:支票下來後會電聯家長，確認郵寄地址後才會寄出。", "handler": "芳琪", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.04", "code": "12", "dept_name": "其他", "time": "16:07", "caller": "國三辛許喬善媽媽", "content": "索取暑輔費用繳費資料。", "action": "已簡訊通知。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.04", "code": "2", "dept_name": "學務處", "time": "16:06", "caller": "國中家長", "content": "請轉學務處。", "action": "轉11331。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.04", "code": "2", "dept_name": "學務處", "time": "16:00", "caller": "普仁診所護理師", "content": "看診學生已可接回學校。", "action": "已通知健康中心。", "handler": "芳琪", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.04", "code": "12", "dept_name": "其他", "time": "14:55", "caller": "國三丁家長方宸泰媽媽", "content": "索取繳交暑期輔導費用資料。", "action": "以簡訊告知。", "handler": "芳琪", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.04", "code": "2", "dept_name": "學務處", "time": "14:24", "caller": "國中家長", "content": "請轉安排交通車老師。", "action": "轉11303。", "handler": "芳琪", "level": "yellow", "level_text": "追蹤中", "teachers": ["張薏雯", "黎子菁", "陳怡婷"], "follow_up": ""}, {"date": "115.08.04", "code": "1", "dept_name": "教務處", "time": "14:11", "caller": "莊小姐", "content": "孩子已到新莊高中(高一)報到但這幾天看到普台簡介十分心動，想知道是否還有名額?", "action": "轉註冊組，請欣怡協助說明 。", "handler": "芳琪", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.04", "code": "12", "dept_name": "其他", "time": "14:03", "caller": "林小姐", "content": "取消今日參訪。", "action": "好的，歡迎來電預約。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.04", "code": "12", "dept_name": "其他", "time": "14:03", "caller": "國一乙洪語涔媽媽", "content": "有在APP留言老師沒看，小學可以訂飲料給全班喝，不知國中可以嗎?", "action": "現在新冠又有流行趨勢，安全起見不建議，國中規約全班部份會由導師統一處理，連同時電購部分也不行直接送來學校。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.04", "code": "1", "dept_name": "教務處", "time": "13:47", "caller": "魏小姐", "content": "洽詢降轉高一的報名表是哪一份?", "action": "想先了解轉學原因，但家長堅持只要知道下載報名表的位置，已進行說明，並請傳真後來電11224進行確認。", "handler": "芳琪", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.04", "code": "7", "dept_name": "人事室", "time": "13:37", "caller": "黃老師", "content": "請接人事主任。", "action": "報告主任後予轉接。", "handler": "芳琪", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.04", "code": "9", "dept_name": "國中部導師", "time": "13:08", "caller": "國二乙家長黃垣皓媽媽", "content": "有學校的未接電話，請接班級導師。", "action": "轉辦公室後回覆:老師政在班上陪學生午休，將請老師回電。(13:13轉告群展老師)", "handler": "芳琪", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.04", "code": "1", "dept_name": "教務處", "time": "12:10", "caller": "國中家長", "content": "請轉教務處註冊組。", "action": "轉11223。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.04", "code": "1", "dept_name": "教務處", "time": "12:05", "caller": "國中家長", "content": "請轉教務處註冊組。", "action": "轉11223。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.04", "code": "1", "dept_name": "教務處", "time": "11:45", "caller": "國中家長", "content": "請轉教務處註冊組。", "action": "轉11221。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.04", "code": "7", "dept_name": "人事室", "time": "10:52", "caller": "陳小姐", "content": "請轉人事室。", "action": "轉11701。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.04", "code": "1", "dept_name": "教務處", "time": "10:26", "caller": "家長", "content": "請轉教務處註冊組。", "action": "轉11223。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.04", "code": "6", "dept_name": "音樂中心", "time": "10:23", "caller": "家長", "content": "學生17:20至音樂中心面談，會不會影響吃飯時間。", "action": "不會供餐至18:30，詳請可洽音樂中心。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.04", "code": "9", "dept_name": "國中部導師", "time": "10:12", "caller": "國一甲楊蕬滎媽媽", "content": "洽未接來電。", "action": "轉24201。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.04", "code": "1", "dept_name": "教務處", "time": "10:01", "caller": "陳小姐", "content": "詢問國一入學。", "action": "轉11223。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.04", "code": "12", "dept_name": "其他", "time": "", "caller": "學務處主 任", "content": "", "action": "教務處 主 任", "handler": "", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.03", "code": "11", "dept_name": "招生", "time": "9:35", "caller": "林家盛先生", "content": "告知今日10:00參訪會晚到。", "action": "收到。", "handler": "水月", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.03", "code": "11", "dept_name": "招生", "time": "8:45", "caller": "台南家長", "content": "洽詢國三轉學。孩子功課不好，沒學好，想讓他轉學普台，聽朋友說普台管教很嚴格…", "action": "抱歉!國三生已額滿。", "handler": "水月", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.03", "code": "1", "dept_name": "教務處", "time": "8:42", "caller": "楊啟均姑姑", "content": "啟均試讀沒通過，可否再給一次機會。", "action": "轉11201。", "handler": "水月", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.03", "code": "1", "dept_name": "教務處", "time": "8:21", "caller": "國中家長", "content": "請轉註冊組。", "action": "轉11223。", "handler": "水月", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.03", "code": "1", "dept_name": "教務處", "time": "8:20", "caller": "家長", "content": "無法登陸校園APP。", "action": "轉11221。", "handler": "水月", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.03", "code": "1", "dept_name": "教務處", "time": "8:00", "caller": "國一甲 方郡旋媽媽", "content": "請轉註冊組，洽詢登陸校園 APP事宜。", "action": "轉11221電話中，請媽媽稍後來電。", "handler": "水月", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.03", "code": "8", "dept_name": "住宿處", "time": "19:02", "caller": "試讀生陳韋成媽媽", "content": "請轉怡婷老師。", "action": "轉11401。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.03", "code": "8", "dept_name": "住宿處", "time": "18:43", "caller": "家長", "content": "請轉國三男生宿舍。", "action": "轉53100。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.03", "code": "12", "dept_name": "其他", "time": "18:36", "caller": "國一己吳子晶媽媽", "content": "詢問APP。", "action": "轉11221。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.03", "code": "12", "dept_name": "其他", "time": "18:36", "caller": "高二新黃仁昊媽媽", "content": "索取暑輔費用繳費資料。", "action": "已簡訊通知。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.03", "code": "12", "dept_name": "其他", "time": "17:33", "caller": "國二丙試讀生 林諺碩媽媽", "content": "請通知小孩至警衛室拿外送員送達的一雙拖鞋(因孩子只帶了布鞋)。", "action": "因一時也找不到小孩，已請警衛室找住宿處協助處理。", "handler": "水月", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.03", "code": "9", "dept_name": "國中部導師", "time": "17:30", "caller": "國一丙 鍾采融媽媽", "content": "請轉導師。", "action": "轉24203佳玉老師接聽。", "handler": "水月", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.03", "code": "12", "dept_name": "其他", "time": "14:42", "caller": "國二丁家長 張佳暄爸爸", "content": "9月初就會把積欠的費用全部結清，不要沒經過家長同意就停止孩子的付費學習(數學課程) …看不到學校的慈悲為懷，外面補習班也不會這麼硬。尤其影響到孩子，造成她一直很焦慮。班級導師不應該阻止孩子搭車返家…", "action": "家長一直在抱怨，不講理，報告副校長此事，表示會主動電聯家長來校面談。", "handler": "芳琪", "level": "red", "level_text": "重點關懷", "teachers": ["洪誌陽", "吳淑娟", "葉致均", "洪誌陽", "吳淑娟", "葉致均"], "follow_up": "1. 確認 [[洪誌陽]] 副校長與家長到校面談之時間與協調共識。； 2. 協調教務處／出納組對於弱勢或暫時欠費學生之「受教權保障彈性處理機制」，避免直接停課引發爭議。； 3. 請國二丁班導師 [[吳淑娟]]、[[葉致均]] 配合輔導室關懷張生在校焦慮情緒。； ； ---； ； ## 🟡 二級列管事項（處室主任／組長／導師 專案追蹤）"}, {"date": "115.08.03", "code": "1", "dept_name": "教務處", "time": "14:31", "caller": "高二家長", "content": "請轉註冊組。", "action": "轉11224。", "handler": "芳琪", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.03", "code": "1", "dept_name": "教務處", "time": "14:23", "caller": "第14屆校友家長", "content": "申請補發畢業證書。", "action": "轉11222。", "handler": "芳琪", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.03", "code": "1", "dept_name": "教務處", "time": "14:07", "caller": "柯小姐", "content": "洽國二轉學相關事宜。", "action": "轉11221。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.03", "code": "11", "dept_name": "招生", "time": "14:07", "caller": "曾小姐", "content": "孩子高一讀高職，高二轉到專科學校但被退學，想轉到普台從高一重讀。", "action": "回覆:高一已額滿。", "handler": "芳琪", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.03", "code": "1", "dept_name": "教務處", "time": "13:52", "caller": "旭光高中特教組 徐組長", "content": "請接國中註冊組長(統計學生人數)。", "action": "轉11221，欣融已接聽。", "handler": "芳琪", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.03", "code": "12", "dept_name": "其他", "time": "13:48", "caller": "國一己周予樂媽媽", "content": "請轉國一英文數學老師，學生說都聽不懂。", "action": "已轉達給郁升老師回電家長。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.03", "code": "2", "dept_name": "學務處", "time": "13:37", "caller": "幸福藥局 張藥師", "content": "通知陳邦宇的藥已經可以領取。", "action": "已通知健康中心校護。", "handler": "芳琪", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.03", "code": "8", "dept_name": "住宿處", "time": "13:00", "caller": "國一家長", "content": "找宿舍的怡婷老師。", "action": "說明:宿舍老師上班時間是下午5點，請稍後再來電，家長接受。", "handler": "芳琪", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.03", "code": "5", "dept_name": "國際部", "time": "12:00", "caller": "家長", "content": "請轉Kiwi老師。", "action": "轉11926。", "handler": "水月", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.03", "code": "7", "dept_name": "人事室", "time": "11:53", "caller": "陳先生", "content": "請轉人事賴小姐。", "action": "轉11701。", "handler": "水月", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.03", "code": "12", "dept_name": "其他", "time": "10:19", "caller": "家長", "content": "詢問可不可以寄營養品給小孩。", "action": "可以。", "handler": "水月", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.03", "code": "1", "dept_name": "教務處", "time": "10:15", "caller": "曙光中學 許組長", "content": "請轉國中註冊組。", "action": "轉11221。", "handler": "水月", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.03", "code": "1", "dept_name": "教務處", "time": "10:11", "caller": "家長", "content": "請轉李蓉蓉老師。", "action": "轉11213。", "handler": "水月", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.03", "code": "12", "dept_name": "其他", "time": "", "caller": "學務處主 任", "content": "", "action": "教務處 主 任", "handler": "", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.02", "code": "12", "dept_name": "其他", "time": "9:05", "caller": "賴司機", "content": "師範大學校長一行已抵達博物館，接著會到普台高中。", "action": "謝謝，收到。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.02", "code": "3", "dept_name": "總務處", "time": "20:36", "caller": "陳詩榆老師", "content": "請轉警衛室。", "action": "轉11558。", "handler": "芳琪", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.02", "code": "8", "dept_name": "住宿處", "time": "20:02", "caller": "國一未錄取的學生家長 陳偉程媽媽", "content": "請接怡婷老師(有件事情孩子說的有些奇怪，想跟老師了解一下)。", "action": "轉11401，副主任不在辦公室 ，請媽媽22:00後打電話進宿舍，家長同意。", "handler": "芳琪", "level": "green", "level_text": "已結案", "teachers": ["張薏雯", "黎子菁", "羅可強"], "follow_up": "1. 確認學務處／導師室對於「離異家庭非監護方家長」之標準應對規範（在不違反法律與母方監護權前提下，建立安全且一致的溝通說帖）。； 2. 避免非監護方因資訊落差直接至校門口爭執或引發公文陳情。； ； ---； ； ## 🟢 三級列管事項（行政業務／生活醫療常規確認）"}, {"date": "115.08.02", "code": "12", "dept_name": "其他", "time": "19:37", "caller": "國二戊家長林依依媽媽", "content": "孩子今天沒打電話回家，不知道是發生什麼事?", "action": "請媽媽放心，將請依依抽空回電。(21:00請隨班的珀鶯老師通知學生打電話回家)", "handler": "芳琪", "level": "green", "level_text": "已結案", "teachers": ["李昕儒", "林肯編", "辜漢宗", "李光耀", "李昕儒", "林肯編"], "follow_up": "1. 請導師 [[李昕儒]]、[[林肯編]] 向英文老師還原手錶解鎖實情，主動聯繫家長化解被「做記號」之疑慮。； 2. 學務處／導師介入調查辱罵「胖子」之男同學，進行性平／反霸凌宣導與班級常規輔導。； 3. 輔導老師對林生進行心理支持與自信心建立。"}, {"date": "115.08.02", "code": "3", "dept_name": "總務處", "time": "19:16", "caller": "陳詩榆老師", "content": "請轉警衛室。", "action": "轉11558。", "handler": "芳琪", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.02", "code": "1", "dept_name": "教務處", "time": "19:08", "caller": "國一甲家長", "content": "洽詢加入校園APP的方式(孩子說沒有趕快加入會要愛校服務)。", "action": "說明:這需請教教務處老師，但因已是下班時間，請明天再來電分機11223，家長同意。", "handler": "芳琪", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.02", "code": "8", "dept_name": "住宿處", "time": "19:02", "caller": "國一家長", "content": "郵寄2個包裹，但孩子只收到1個，是只送達1個嗎?", "action": "轉接住宿處辦公室，請世霖老師協助查詢。", "handler": "芳琪", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.02", "code": "1", "dept_name": "教務處", "time": "18:23", "caller": "家長", "content": "洽詢校園APP登陸事宜。", "action": "請明天再來電註冊組。", "handler": "水月", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.02", "code": "5", "dept_name": "國際部", "time": "16:35", "caller": "國三戊家長石宇豪媽媽", "content": "洽詢11月份法檢事宜。", "action": "轉11911，由福慧老師代接 。", "handler": "芳琪", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.02", "code": "2", "dept_name": "學務處", "time": "16:07", "caller": "家長", "content": "更改交通車。", "action": "轉11303。", "handler": "水月", "level": "yellow", "level_text": "追蹤中", "teachers": ["張薏雯", "黎子菁", "陳怡婷"], "follow_up": ""}, {"date": "115.08.02", "code": "12", "dept_name": "其他", "time": "14:08", "caller": "高三己 邱怡婷媽媽", "content": "請通知孩子等一下下課至校門口會客。", "action": "已通知。", "handler": "水月", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.02", "code": "12", "dept_name": "其他", "time": "13:21", "caller": "試讀生 陳偉程爸爸", "content": "確認孩子是否已被媽媽接走?", "action": "經確認:是的，孩子已離校。", "handler": "水月", "level": "green", "level_text": "已結案", "teachers": ["張薏雯", "黎子菁", "羅可強"], "follow_up": "1. 確認學務處／導師室對於「離異家庭非監護方家長」之標準應對規範（在不違反法律與母方監護權前提下，建立安全且一致的溝通說帖）。； 2. 避免非監護方因資訊落差直接至校門口爭執或引發公文陳情。； ； ---； ； ## 🟢 三級列管事項（行政業務／生活醫療常規確認）"}, {"date": "115.08.02", "code": "12", "dept_name": "其他", "time": "12:13", "caller": "高二己家長邱浡熠媽媽", "content": "有要事請孩子回電。", "action": "已通知浡熠回電媽媽。", "handler": "芳琪", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.02", "code": "8", "dept_name": "住宿處", "time": "10:24", "caller": "高中家長", "content": "接傅家珍老師。", "action": "老師15:00才上班，請下午再來電。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.02", "code": "12", "dept_name": "其他", "time": "10:19", "caller": "國一丙家長胡筱彤姑姑", "content": "請接筱彤。", "action": "已說明電話無法轉進班上，會請筱彤回電(已轉達)。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.02", "code": "1", "dept_name": "教務處", "time": "10:09", "caller": "高三己家長 汪詳鑫姑姑", "content": "不參加8月的留校自習。", "action": "轉11222。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.02", "code": "12", "dept_name": "其他", "time": "", "caller": "學務處主 任", "content": "", "action": "教務處 主 任", "handler": "", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.01", "code": "1", "dept_name": "教務處", "time": "9:58", "caller": "國二甲 施采廷媽媽", "content": "請轉註冊組。", "action": "轉11221。", "handler": "水月", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.01", "code": "2", "dept_name": "學務處", "time": "9:32", "caller": "國一家長", "content": "更改交通車。", "action": "轉11303。", "handler": "水月", "level": "yellow", "level_text": "追蹤中", "teachers": ["張薏雯", "黎子菁", "陳怡婷"], "follow_up": ""}, {"date": "115.08.01", "code": "8", "dept_name": "住宿處", "time": "19:56", "caller": "國三家長", "content": "請轉男生宿舍。", "action": "轉53100。", "handler": "芳琪", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.01", "code": "8", "dept_name": "住宿處", "time": "19:39", "caller": "高二家長", "content": "請轉女生宿舍。", "action": "轉52311。", "handler": "芳琪", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.01", "code": "12", "dept_name": "其他", "time": "18:37", "caller": "家長", "content": "詢問外出回校時間?", "action": "建議最好21:00前，提醒也要以假單上時間為主。", "handler": "水月", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.01", "code": "3", "dept_name": "總務處", "time": "18:31", "caller": "國中家長", "content": "請接警衛室(孩子水壺放在警衛室忘記帶走)。", "action": "轉11558。", "handler": "芳琪", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.01", "code": "12", "dept_name": "其他", "time": "18:23", "caller": "國一試讀生家長", "content": "孩子沒通過試讀，洽詢明天接返家之時間。", "action": "已說明。", "handler": "芳琪", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.01", "code": "9", "dept_name": "國中部導師", "time": "18:12", "caller": "國一甲家長陳偉程爸爸", "content": "請接班級導師(今天一直有留言給老師，但都沒接到回電)。", "action": "轉24201後回覆:老師不在辦公室，會再提醒電聯。(後用Line通知薏雯老師，表示偉程父母離婚而監護人是媽媽所以不會電聯爸爸。已打電話通知爸爸:孩子的事老師有跟媽媽說清楚，想知道結果請改問媽媽)", "handler": "芳琪", "level": "green", "level_text": "已結案", "teachers": ["張薏雯", "黎子菁", "羅可強"], "follow_up": "1. 確認學務處／導師室對於「離異家庭非監護方家長」之標準應對規範（在不違反法律與母方監護權前提下，建立安全且一致的溝通說帖）。； 2. 避免非監護方因資訊落差直接至校門口爭執或引發公文陳情。； ； ---； ； ## 🟢 三級列管事項（行政業務／生活醫療常規確認）"}, {"date": "115.08.01", "code": "8", "dept_name": "住宿處", "time": "18:06", "caller": "國一家長", "content": "請轉男生宿舍。", "action": "轉53511。", "handler": "芳琪", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.01", "code": "9", "dept_name": "國中部導師", "time": "17:46", "caller": "國二戊家長林依依媽媽", "content": "請找導師。孩子上課時因看時間(小米手錶須解除鎖定而多花了一點時間)被英文老師誤會玩手錶，除了責罵還加罰站。下課在哭時又被男同學罵她胖子等等，希望老師能幫忙跟英文老師解釋，以免被做記號…", "action": "轉辦公室後回覆:已是用餐時間，老師不在辦公室，先加以留言，明天將請班導回電 。", "handler": "芳琪", "level": "green", "level_text": "已結案", "teachers": ["李昕儒", "林肯編", "辜漢宗", "李光耀", "李昕儒", "林肯編"], "follow_up": "1. 請導師 [[李昕儒]]、[[林肯編]] 向英文老師還原手錶解鎖實情，主動聯繫家長化解被「做記號」之疑慮。； 2. 學務處／導師介入調查辱罵「胖子」之男同學，進行性平／反霸凌宣導與班級常規輔導。； 3. 輔導老師對林生進行心理支持與自信心建立。"}, {"date": "115.08.01", "code": "12", "dept_name": "其他", "time": "16:29", "caller": "高二庚賴柚嘉爸爸", "content": "請通知17:30外出。", "action": "學生現在在活動中心競賽，可能無法通知。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.01", "code": "7", "dept_name": "人事室", "time": "16:20", "caller": "陳先生", "content": "請轉人事賴小姐。", "action": "轉11701。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.01", "code": "12", "dept_name": "其他", "time": "15:56", "caller": "高二家長", "content": "洽詢傍晚會客時間。", "action": "已說明。", "handler": "芳琪", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.01", "code": "2", "dept_name": "學務處", "time": "15:56", "caller": "國中畢業校友黃彥蓁", "content": "詢問畢業紀念冊。", "action": "轉11311。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.01", "code": "2", "dept_name": "學務處", "time": "15:14", "caller": "家長", "content": "請轉健康中心。", "action": "轉11338。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.01", "code": "2", "dept_name": "學務處", "time": "14:59", "caller": "家長", "content": "請轉健康中心。", "action": "轉11338。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.01", "code": "1", "dept_name": "教務處", "time": "14:34", "caller": "高中家長", "content": "請轉教務處註冊組。", "action": "轉11222。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.01", "code": "2", "dept_name": "學務處", "time": "14:20", "caller": "家長0", "content": "請轉交通車老師", "action": "轉11303。", "handler": "淑惠", "level": "yellow", "level_text": "追蹤中", "teachers": ["張薏雯", "黎子菁", "陳怡婷"], "follow_up": ""}, {"date": "115.08.01", "code": "1", "dept_name": "教務處", "time": "14:05", "caller": "家長", "content": "請轉國中註冊組。", "action": "轉11223。", "handler": "淑惠", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.01", "code": "9", "dept_name": "國中部導師", "time": "13:53", "caller": "國一甲家長陳偉程爸爸", "content": "請接班級導師。", "action": "轉24201後回覆:老師上課中，將請老師回電。", "handler": "芳琪", "level": "green", "level_text": "已結案", "teachers": ["張薏雯", "黎子菁", "羅可強"], "follow_up": "1. 確認學務處／導師室對於「離異家庭非監護方家長」之標準應對規範（在不違反法律與母方監護權前提下，建立安全且一致的溝通說帖）。； 2. 避免非監護方因資訊落差直接至校門口爭執或引發公文陳情。； ； ---； ； ## 🟢 三級列管事項（行政業務／生活醫療常規確認）"}, {"date": "115.08.01", "code": "2", "dept_name": "學務處", "time": "13:22", "caller": "國一戊家長周倚樂媽媽", "content": "請轉健康中心。", "action": "轉11338，富美已接聽。", "handler": "芳琪", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.01", "code": "9", "dept_name": "國中部導師", "time": "12:40", "caller": "國一甲家長陳偉程媽媽", "content": "請接班級導師。", "action": "轉24201後回覆:正值午休時段，老師在教室陪學生，將留言請老師回電。(12:45請傳礎老師協助轉達)", "handler": "芳琪", "level": "green", "level_text": "已結案", "teachers": ["張薏雯", "黎子菁", "羅可強"], "follow_up": "1. 確認學務處／導師室對於「離異家庭非監護方家長」之標準應對規範（在不違反法律與母方監護權前提下，建立安全且一致的溝通說帖）。； 2. 避免非監護方因資訊落差直接至校門口爭執或引發公文陳情。； ； ---； ； ## 🟢 三級列管事項（行政業務／生活醫療常規確認）"}, {"date": "115.08.01", "code": "9", "dept_name": "國中部導師", "time": "11:24", "caller": "國三丁 沈承毅媽媽", "content": "請轉導師。", "action": "轉導師辦公室無人接聽，請媽媽稍後再來電。", "handler": "水月", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.01", "code": "9", "dept_name": "國中部導師", "time": "11:06", "caller": "國一甲試讀生陳偉程媽媽", "content": "請轉導師。", "action": "轉導師辦公室無人接聽，請媽媽稍後再來電。", "handler": "水月", "level": "green", "level_text": "已結案", "teachers": ["張薏雯", "黎子菁", "羅可強"], "follow_up": "1. 確認學務處／導師室對於「離異家庭非監護方家長」之標準應對規範（在不違反法律與母方監護權前提下，建立安全且一致的溝通說帖）。； 2. 避免非監護方因資訊落差直接至校門口爭執或引發公文陳情。； ； ---； ； ## 🟢 三級列管事項（行政業務／生活醫療常規確認）"}, {"date": "115.08.01", "code": "2", "dept_name": "學務處", "time": "11:05", "caller": "國一家長", "content": "確認假單傳真是否收到?", "action": "轉11331。", "handler": "水月", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.01", "code": "1", "dept_name": "教務處", "time": "10:42", "caller": "國一甲試讀生陳偉程媽媽", "content": "詢問公告式讀錄取的時間。", "action": "轉11221欣蓉老師接聽。", "handler": "水月", "level": "green", "level_text": "已結案", "teachers": ["張薏雯", "黎子菁", "羅可強"], "follow_up": "1. 確認學務處／導師室對於「離異家庭非監護方家長」之標準應對規範（在不違反法律與母方監護權前提下，建立安全且一致的溝通說帖）。； 2. 避免非監護方因資訊落差直接至校門口爭執或引發公文陳情。； ； ---； ； ## 🟢 三級列管事項（行政業務／生活醫療常規確認）"}, {"date": "115.08.01", "code": "1", "dept_name": "教務處", "time": "10:35", "caller": "轉學生 洪誌陽媽媽", "content": "請轉註冊組。", "action": "轉11224。", "handler": "水月", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}, {"date": "115.08.01", "code": "2", "dept_name": "學務處", "time": "10:28", "caller": "家長", "content": "更改交通車。", "action": "轉11303。", "handler": "水月", "level": "yellow", "level_text": "追蹤中", "teachers": ["張薏雯", "黎子菁", "陳怡婷"], "follow_up": ""}, {"date": "115.08.01", "code": "12", "dept_name": "其他", "time": "", "caller": "學務處主 任", "content": "", "action": "教務處 主 任", "handler": "", "level": "normal", "level_text": "常規", "teachers": [], "follow_up": ""}];
+    let currentFilter = 'all';
+    let searchQuery = '';
+
+    function render() {
+      const container = document.getElementById('cardsContainer');
+      const filtered = records.filter(item => {
+        let matchCat = true;
+        if (currentFilter === 'red') matchCat = (item.level === 'red');
+        else if (currentFilter === 'yellow') matchCat = (item.level === 'yellow');
+        else if (currentFilter === 'green') matchCat = (item.level === 'green');
+        else if (currentFilter !== 'all') matchCat = (item.code === currentFilter);
+
+        let matchSearch = true;
+        if (searchQuery.trim()) {
+          const q = searchQuery.toLowerCase();
+          const fullText = (item.date + item.time + item.caller + item.content + item.action + item.dept_name + (item.teachers||[]).join(' ') + (item.follow_up||'')).toLowerCase();
+          matchSearch = fullText.includes(q);
+        }
+        return matchCat && matchSearch;
+      });
+
+      document.getElementById('matchCount').innerText = `共 ${filtered.length} 筆`;
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div style="font-size:2rem;">📭</div>
+            <p>沒有符合條件的電話紀錄</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filtered.map(item => {
+        const isRed = item.level === 'red';
+        const isYellow = item.level === 'yellow';
+        const isGreen = item.level === 'green';
+        const highlightClass = isRed ? 'highlight-red' : isYellow ? 'highlight-yellow' : isGreen ? 'highlight-green' : '';
+
+        const teachersHtml = (item.teachers && item.teachers.length > 0) ? `
+          <div class="teachers-tags">
+            <span style="font-size:0.72rem; color:#64748b; font-weight:600;">👤 主責師長：</span>
+            ${item.teachers.map(t => `<span class="teacher-pill">${t}</span>`).join('')}
+          </div>
+        ` : '';
+
+        const followUpHtml = item.follow_up ? `
+          <div class="follow-up-box">
+            <strong>💬 處置追蹤：</strong> ${item.follow_up}
+          </div>
+        ` : '';
+
+        return `
+          <div class="case-card ${highlightClass}">
+            <div class="card-top">
+              <span class="code-badge c${item.code}">
+                [${item.code}] ${item.dept_name}
+              </span>
+              <span class="card-time">📅 ${item.date} ${item.time}</span>
+            </div>
+
+            <div class="caller-name">
+              ${isRed ? '🔴 ' : isYellow ? '🟡 ' : isGreen ? '🟢 ' : ''}${item.caller}
+            </div>
+
+            <div class="content-box">
+              ${item.content}
+            </div>
+
+            <div class="action-box">
+              <strong>處理說明：</strong>${item.action}
+            </div>
+
+            ${teachersHtml}
+            ${followUpHtml}
+
+            <div class="card-footer">
+              <span>處置代號：${item.code} ${item.dept_name}</span>
+              <span>值勤：${item.handler || '護學會'}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function filterCategory(cat, btn) {
+      currentFilter = cat;
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      render();
+    }
+
+    function filterByCode(code) {
+      currentFilter = code;
+      document.querySelectorAll('.tab-btn').forEach(b => {
+        if (b.innerText.startsWith(code + ' ') || (code === 'all' && b.innerText.startsWith('全部'))) {
+          b.classList.add('active');
+        } else {
+          b.classList.remove('active');
+        }
+      });
+      render();
+    }
+
+    function handleSearch() {
+      searchQuery = document.getElementById('searchInput').value;
+      render();
+    }
+
+    function toggleStats() {
+      const panel = document.getElementById('statsPanel');
+      const arrow = document.getElementById('statArrow');
+      if (panel.style.display === 'none') {
+        panel.style.display = 'grid';
+        arrow.innerText = '▼';
+      } else {
+        panel.style.display = 'none';
+        arrow.innerText = '▶';
+      }
+    }
+
+    // Check auth on load
+    checkAuth();
+  </script>
+</body>
+</html>
