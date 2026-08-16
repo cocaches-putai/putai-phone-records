@@ -1198,15 +1198,14 @@ def generate_html(months_data):
         <!-- Quick Preset Pills -->
         <div class="quick-preset-row">
           <span class="preset-label">快捷：</span>
-          <span class="preset-pill" onclick="quickAddTeacher('洪誌陽（副校長）')">副校長</span>
-          <span class="preset-pill" onclick="quickAddTeacher('連傑（教務主任）')">教務主任</span>
-          <span class="preset-pill" onclick="quickAddTeacher('辜漢宗（學務主任）')">學務主任</span>
-          <span class="preset-pill" onclick="quickAddTeacher('張月馨（教務副主任）')">月馨副主任</span>
-          <span class="preset-pill" onclick="quickAddTeacher('陳怡婷（住宿副主任）')">住宿副主任</span>
-          <span class="preset-pill" onclick="quickAddTeacher('羅可強（生輔組長）')">生輔組長</span>
-          <span class="preset-pill" onclick="quickAddTeacher('出納組')">出納組</span>
-          <span class="preset-pill" onclick="quickAddTeacher('國中註冊組')">註冊組</span>
-          <span class="preset-pill" onclick="quickAddTeacher('輔導室')">輔導室</span>
+          <span class="preset-pill" onclick="quickAddTeacher('校長')">校長</span>
+          <span class="preset-pill" onclick="quickAddTeacher('副校長')">副校長</span>
+          <span class="preset-pill" onclick="quickAddTeacher('教務處主任')">教務處主任</span>
+          <span class="preset-pill" onclick="quickAddTeacher('教務處副主任')">教務處副主任</span>
+          <span class="preset-pill" onclick="quickAddTeacher('學務處主任')">學務處主任</span>
+          <span class="preset-pill" onclick="quickAddTeacher('輔導室副主任')">輔導室副主任</span>
+          <span class="preset-pill" onclick="quickAddTeacher('住宿處主任')">住宿處主任</span>
+          <span class="preset-pill" onclick="quickAddTeacher('住宿處副主任')">住宿處副主任</span>
         </div>
       </div>
 
