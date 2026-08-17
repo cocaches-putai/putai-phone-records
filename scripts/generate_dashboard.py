@@ -1510,9 +1510,16 @@ def generate_html(months_data):
       if (!mData) return;
 
       let foundKey = mData.key_cases.find(c => c.id === fb.caseId);
+      if (!foundKey && fb.caseId && fb.caseId.startsWith('RAW-')) {{
+        let rawRec = mData.records.find(r => r.id === fb.caseId);
+        if (rawRec) {{
+          foundKey = mData.key_cases.find(c => c.caller === rawRec.caller || (c.content && rawRec.content && (c.content.includes(rawRec.content.slice(0, 8)) || rawRec.content.includes(c.content.slice(0, 8)))));
+        }}
+      }}
+
       if (foundKey) {{
         if (fb.status === 'normal') {{
-          mData.key_cases = mData.key_cases.filter(c => c.id !== fb.caseId);
+          mData.key_cases = mData.key_cases.filter(c => c.id !== foundKey.id);
         }} else {{
           foundKey.level = fb.status;
           foundKey.level_text = (fb.status === 'red') ? '重點關懷' : (fb.status === 'yellow') ? '處室追蹤' : '已結案';
