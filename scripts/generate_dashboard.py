@@ -209,6 +209,9 @@ def generate_html(months_data):
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>普台高中 — 護學會電話紀錄追蹤</title>
   <meta name="robots" content="noindex, nofollow, noarchive">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="theme-color" content="#0f172a">
@@ -1547,7 +1550,7 @@ def generate_html(months_data):
     }}
 
     function fetchCloudLiveSync() {{
-      fetch(GAS_SYNC_URL)
+      fetch(GAS_SYNC_URL + '?t=' + new Date().getTime())
         .then(resp => resp.json())
         .then(cloudList => {{
           if (Array.isArray(cloudList) && cloudList.length > 0) {{
