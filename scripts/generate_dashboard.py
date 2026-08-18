@@ -1086,7 +1086,7 @@ def generate_html(months_data):
     <!-- View Switcher -->
     <div class="view-switcher-bar">
       <div class="switch-group">
-        <button class="switch-btn active" id="btnViewKey" onclick="switchView('key')">🎯 關鍵追蹤 (<span id="countKey">0</span>)</button>
+        <button class="switch-btn active" id="btnViewKey" onclick="switchView('key')">🎯 關鍵待辦 (<span id="countKey">0</span>)</button>
         <button class="switch-btn" id="btnViewAll" onclick="switchView('all')">📋 全部明細 (<span id="countAll">0</span>)</button>
       </div>
     </div>
@@ -1287,7 +1287,7 @@ def generate_html(months_data):
       resetStatStyles();
       document.getElementById("btnViewKey").classList.add("active");
       document.getElementById("btnViewAll").classList.remove("active");
-      document.getElementById("listTitle").innerText = '關鍵追蹤事項清單';
+      document.getElementById("listTitle").innerText = '關鍵待辦事項清單（🔴重點關懷 / 🟡處室追蹤）';
       render();
     }}
 
@@ -1298,7 +1298,7 @@ def generate_html(months_data):
       resetStatStyles();
       document.getElementById("btnViewKey").classList.toggle("active", view === 'key');
       document.getElementById("btnViewAll").classList.toggle("active", view === 'all');
-      document.getElementById("listTitle").innerText = (view === 'key') ? '關鍵追蹤事項清單' : '全部通話紀錄明細';
+      document.getElementById("listTitle").innerText = (view === 'key') ? '關鍵待辦事項清單（🔴重點關懷 / 🟡處室追蹤）' : '全部通話紀錄明細';
       render();
     }}
 
@@ -1317,7 +1317,7 @@ def generate_html(months_data):
       if (currentStatusFilter === status) {{
         currentStatusFilter = null;
         resetStatStyles();
-        document.getElementById("listTitle").innerText = '關鍵追蹤事項清單';
+        document.getElementById("listTitle").innerText = '關鍵待辦事項清單（🔴重點關懷 / 🟡處室追蹤）';
       }} else {{
         currentStatusFilter = status;
         resetStatStyles();
@@ -1330,7 +1330,7 @@ def generate_html(months_data):
           document.getElementById('listTitle').innerText = '🟡 處室追蹤事項清單';
         }} else if (status === 'green') {{
           document.getElementById('qStatGreen').classList.add('active-green');
-          document.getElementById('listTitle').innerText = '🟢 已結案事項清單';
+          document.getElementById('listTitle').innerText = '🟢 已結案歷史紀錄清單';
         }}
       }}
       render();
@@ -1597,8 +1597,9 @@ def generate_html(months_data):
       const redCount = keyCases.filter(r => r.level === 'red').length;
       const yellowCount = keyCases.filter(r => r.level === 'yellow').length;
       const greenCount = keyCases.filter(r => r.level === 'green').length;
+      const activePendingCount = redCount + yellowCount;
 
-      document.getElementById("countKey").innerText = keyCases.length;
+      document.getElementById("countKey").innerText = activePendingCount;
       document.getElementById("countAll").innerText = records.length;
       document.getElementById("statMonthTotal").innerText = records.length;
       document.getElementById("statMonthRed").innerText = redCount;
@@ -1620,7 +1621,21 @@ def generate_html(months_data):
         </div>
       `).join('');
 
-      let sourceList = (currentView === 'key') ? keyCases : records;
+      let sourceList = [];
+      if (currentView === 'key') {{
+        if (currentStatusFilter === 'green') {{
+          sourceList = keyCases.filter(item => item.level === 'green');
+        }} else if (currentStatusFilter === 'red') {{
+          sourceList = keyCases.filter(item => item.level === 'red');
+        }} else if (currentStatusFilter === 'yellow') {{
+          sourceList = keyCases.filter(item => item.level === 'yellow');
+        }} else {{
+          // Default Option A: ONLY Active Pending Cases (🔴 + 🟡)
+          sourceList = keyCases.filter(item => item.level === 'red' || item.level === 'yellow');
+        }}
+      }} else {{
+        sourceList = records;
+      }}
       
       const filtered = sourceList.filter(item => {{
         if (currentStatusFilter && item.level !== currentStatusFilter) return false;
@@ -1651,12 +1666,22 @@ def generate_html(months_data):
 
       const container = document.getElementById("cardsContainer");
       if (filtered.length === 0) {{
-        container.innerHTML = `
-          <div class="empty-state">
-            <div style="font-size:1.8rem;">📭</div>
-            <p style="font-size:0.85rem;">沒有符合條件的紀錄</p>
-          </div>
-        `;
+        if (currentView === 'key' && !currentStatusFilter && !searchQuery.trim()) {{
+          container.innerHTML = `
+            <div class="empty-state">
+              <div style="font-size:2.2rem;">🎉</div>
+              <p style="font-weight:700; color:#15803d; font-size:0.95rem; margin-top:6px;">本月無待追蹤事項（全數處理完畢）</p>
+              <p style="font-size:0.75rem; color:#64748b; margin-top:4px;">可點擊上方【🟢 已結案】查看已結案處置紀錄</p>
+            </div>
+          `;
+        }} else {{
+          container.innerHTML = `
+            <div class="empty-state">
+              <div style="font-size:1.8rem;">📭</div>
+              <p style="font-size:0.85rem;">沒有符合條件的紀錄</p>
+            </div>
+          `;
+        }}
         return;
       }}
 
