@@ -735,6 +735,25 @@ def generate_html(months_data):
       line-height: 1.4;
     }}
 
+    .badge-new-update {{
+      background: linear-gradient(135deg, #1d4ed8 0%, #7c3aed 100%);
+      color: #ffffff;
+      font-size: 0.62rem;
+      font-weight: 700;
+      padding: 1px 5px;
+      border-radius: 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      box-shadow: 0 1px 3px rgba(37,99,235,0.3);
+      letter-spacing: 0.2px;
+    }}
+
+    .case-card.has-recent-update {{
+      border-top: 2px solid #3b82f6;
+      box-shadow: 0 2px 6px rgba(37, 99, 235, 0.1);
+    }}
+
     .follow-up-box {{
       font-size: 0.8rem;
       color: #0c4a6e;
@@ -744,6 +763,35 @@ def generate_html(months_data):
       border: 1px dashed #7dd3fc;
       margin-top: 5px;
       line-height: 1.4;
+    }}
+
+    .follow-up-box.recent-updated {{
+      background: #f0f7ff;
+      border: 1.5px solid #60a5fa;
+      box-shadow: 0 1px 4px rgba(37, 99, 235, 0.08);
+    }}
+
+    .follow-up-header {{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 3px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #0369a1;
+    }}
+
+    .follow-up-time-tag {{
+      font-size: 0.63rem;
+      color: #1d4ed8;
+      background: #dbeafe;
+      padding: 1px 5px;
+      border-radius: 4px;
+      font-weight: 600;
+      border: 1px solid #bfdbfe;
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
     }}
 
     .follow-up-box.pending {{
@@ -1096,6 +1144,7 @@ def generate_html(months_data):
     <div class="view-switcher-bar">
       <div class="switch-group">
         <button class="switch-btn active" id="btnViewKey" onclick="switchView('key')">🎯 關鍵待辦 (<span id="countKey">0</span>)</button>
+        <button class="switch-btn" id="btnViewRecent" onclick="switchView('recent')">🔥 最新回報 (<span id="countRecent">0</span>)</button>
         <button class="switch-btn" id="btnViewAll" onclick="switchView('all')">📋 全部明細 (<span id="countAll">0</span>)</button>
       </div>
     </div>
@@ -1288,6 +1337,50 @@ def generate_html(months_data):
       `).join('');
     }}
 
+    function getCaseUpdateMeta(item) {{
+      let isRecent = false;
+      let timeBadge = '';
+      let activityScore = item.date ? item.date.replace(/\D/g, '') + (item.time || '').replace(/\D/g, '').padEnd(4, '0') : '0000000000';
+
+      // 1. Check explicit timestamp
+      if (item.timestamp || item.last_updated) {{
+        const ts = new Date(item.timestamp || item.last_updated);
+        if (!isNaN(ts.getTime())) {{
+          const now = new Date();
+          const diffHours = (now - ts) / (1000 * 60 * 60);
+          const month = (ts.getMonth() + 1).toString().padStart(2, '0');
+          const day = ts.getDate().toString().padStart(2, '0');
+          const hours = ts.getHours().toString().padStart(2, '0');
+          const mins = ts.getMinutes().toString().padStart(2, '0');
+
+          timeBadge = `${{month}}/${{day}} ${{hours}}:${{mins}}`;
+          if (item.updated_by) timeBadge += ` 由${{item.updated_by}}更新`;
+          else if (item.teachers && item.teachers.length > 0) timeBadge += ` 由${{item.teachers[0]}}更新`;
+          else timeBadge += ` 由主管回報`;
+
+          if (diffHours >= 0 && diffHours <= 96) {{
+            isRecent = true;
+          }}
+          activityScore = '115' + month + day + hours + mins;
+        }}
+      }}
+
+      // 2. Check text-based date pattern e.g. 115.08.18 or 115.08.19
+      if (item.follow_up) {{
+        const m = item.follow_up.match(/115\.(\d{{2}})\.(\d{{2}})/);
+        if (m) {{
+          const mStr = `${{m[1]}}/${{m[2]}}`;
+          if (!timeBadge) timeBadge = `${{mStr}} 回報`;
+          if (parseInt(m[2]) >= 17) {{
+            isRecent = true;
+            activityScore = '115' + m[1] + m[2] + '2359';
+          }}
+        }}
+      }}
+
+      return {{ isRecent, timeBadge, activityScore }};
+    }}
+
     function changeMonth(m) {{
       currentMonth = m;
       currentStatusFilter = null;
@@ -1295,6 +1388,7 @@ def generate_html(months_data):
       currentView = 'key';
       resetStatStyles();
       document.getElementById("btnViewKey").classList.add("active");
+      document.getElementById("btnViewRecent").classList.remove("active");
       document.getElementById("btnViewAll").classList.remove("active");
       document.getElementById("listTitle").innerText = '關鍵待辦事項清單（🔴重點關懷 / 🟡處室追蹤）';
       render();
@@ -1306,8 +1400,16 @@ def generate_html(months_data):
       currentCodeFilter = null;
       resetStatStyles();
       document.getElementById("btnViewKey").classList.toggle("active", view === 'key');
+      document.getElementById("btnViewRecent").classList.toggle("active", view === 'recent');
       document.getElementById("btnViewAll").classList.toggle("active", view === 'all');
-      document.getElementById("listTitle").innerText = (view === 'key') ? '關鍵待辦事項清單（🔴重點關懷 / 🟡處室追蹤）' : '全部通話紀錄明細';
+
+      if (view === 'key') {{
+        document.getElementById("listTitle").innerText = '關鍵待辦事項清單（🔴重點關懷 / 🟡處室追蹤）';
+      }} else if (view === 'recent') {{
+        document.getElementById("listTitle").innerText = '🔥 最新回報進度事項（近 3 日有更新）';
+      }} else {{
+        document.getElementById("listTitle").innerText = '全部通話紀錄明細';
+      }}
       render();
     }}
 
@@ -1321,6 +1423,7 @@ def generate_html(months_data):
       currentView = 'key';
       currentCodeFilter = null;
       document.getElementById("btnViewKey").classList.add("active");
+      document.getElementById("btnViewRecent").classList.remove("active");
       document.getElementById("btnViewAll").classList.remove("active");
 
       if (currentStatusFilter === status) {{
@@ -1538,6 +1641,10 @@ def generate_html(months_data):
           if (fb.action !== undefined) {{
             foundKey.follow_up = fb.action;
           }}
+          foundKey.last_updated = fb.timestamp || new Date().toISOString();
+          if (fb.teachers && fb.teachers.length > 0) {{
+            foundKey.updated_by = fb.teachers[0];
+          }}
         }}
       }} else if (fb.status !== 'normal') {{
         let rawRec = mData.records.find(r => r.id === fb.caseId);
@@ -1553,7 +1660,9 @@ def generate_html(months_data):
             content: rawRec.content,
             action: rawRec.action,
             teachers: fb.teachers ? Array.from(new Set(fb.teachers)) : [],
-            follow_up: fb.action || ''
+            follow_up: fb.action || '',
+            last_updated: fb.timestamp || new Date().toISOString(),
+            updated_by: (fb.teachers && fb.teachers.length > 0) ? fb.teachers[0] : '處室主管'
           }};
           mData.key_cases.push(newCase);
         }}
@@ -1608,7 +1717,11 @@ def generate_html(months_data):
       const greenCount = keyCases.filter(r => r.level === 'green').length;
       const activePendingCount = redCount + yellowCount;
 
+      const recentUpdatedCases = keyCases.filter(k => getCaseUpdateMeta(k).isRecent || (k.follow_up && k.follow_up.trim().length > 0));
+      const recentHighlightCount = keyCases.filter(k => getCaseUpdateMeta(k).isRecent).length;
+
       document.getElementById("countKey").innerText = activePendingCount;
+      document.getElementById("countRecent").innerText = recentHighlightCount;
       document.getElementById("countAll").innerText = records.length;
       document.getElementById("statMonthTotal").innerText = records.length;
       document.getElementById("statMonthRed").innerText = redCount;
@@ -1642,6 +1755,8 @@ def generate_html(months_data):
           // Default Option A: ONLY Active Pending Cases (🔴 + 🟡)
           sourceList = keyCases.filter(item => item.level === 'red' || item.level === 'yellow');
         }}
+      }} else if (currentView === 'recent') {{
+        sourceList = recentUpdatedCases;
       }} else {{
         sourceList = records;
       }}
@@ -1658,15 +1773,18 @@ def generate_html(months_data):
         return true;
       }});
 
-      // Sort Newest to Oldest
+      // Sort: Items with recent updates (isRecent) float to top, followed by activity score
       filtered.sort((a, b) => {{
-        const dA = (a.date || '').replace(/\\D/g, '');
-        const dB = (b.date || '').replace(/\\D/g, '');
-        if (dA !== dB) return dB.localeCompare(dA);
-        
-        const tA = (a.time || '').replace(/\\D/g, '').padEnd(4, '0');
-        const tB = (b.time || '').replace(/\\D/g, '').padEnd(4, '0');
-        if (tA !== tB) return tB.localeCompare(tA);
+        const metaA = getCaseUpdateMeta(a);
+        const metaB = getCaseUpdateMeta(b);
+
+        if (metaA.isRecent !== metaB.isRecent) {{
+          return metaA.isRecent ? -1 : 1;
+        }}
+
+        const scoreA = metaA.activityScore || (a.date || '').replace(/\\D/g, '') + (a.time || '').replace(/\\D/g, '').padEnd(4, '0');
+        const scoreB = metaB.activityScore || (b.date || '').replace(/\\D/g, '') + (b.time || '').replace(/\\D/g, '').padEnd(4, '0');
+        if (scoreA !== scoreB) return scoreB.localeCompare(scoreA);
         
         return (b.id || '').localeCompare(a.id || '');
       }});
@@ -1681,6 +1799,14 @@ def generate_html(months_data):
               <div style="font-size:2.2rem;">🎉</div>
               <p style="font-weight:700; color:#15803d; font-size:0.95rem; margin-top:6px;">本月無待追蹤事項（全數處理完畢）</p>
               <p style="font-size:0.75rem; color:#64748b; margin-top:4px;">可點擊上方【🟢 已結案】查看已結案處置紀錄</p>
+            </div>
+          `;
+        }} else if (currentView === 'recent' && !searchQuery.trim()) {{
+          container.innerHTML = `
+            <div class="empty-state">
+              <div style="font-size:2rem;">⏳</div>
+              <p style="font-weight:700; color:#1e40af; font-size:0.92rem; margin-top:6px;">近 3 日尚無主管新增回報處置</p>
+              <p style="font-size:0.75rem; color:#64748b; margin-top:4px;">主管在卡片點擊【🏷️ 編輯處室與師長】填寫後即會在此高亮呈現</p>
             </div>
           `;
         }} else {{
@@ -1700,6 +1826,10 @@ def generate_html(months_data):
         const isGreen = item.level === 'green';
         const highlightClass = isRed ? 'highlight-red' : isYellow ? 'highlight-yellow' : isGreen ? 'highlight-green' : '';
 
+        const meta = getCaseUpdateMeta(item);
+        const hasRecentClass = meta.isRecent ? 'has-recent-update' : '';
+        const recentBadgeHtml = meta.isRecent ? `<span class="badge-new-update">✨ 最新進度</span>` : '';
+
         const uniqueTeachers = Array.from(new Set(item.teachers || []));
         const teachersHtml = (uniqueTeachers.length > 0) ? `
           <div class="teachers-tags">
@@ -1711,14 +1841,22 @@ def generate_html(months_data):
         let followUpHtml = '';
         if (item.follow_up) {{
           followUpHtml = `
-            <div class="follow-up-box">
-              <strong>💬 處置追蹤：</strong> ${{item.follow_up}}
+            <div class="follow-up-box ${{meta.isRecent ? 'recent-updated' : ''}}">
+              <div class="follow-up-header">
+                <span>💬 處置追蹤進度</span>
+                ${{meta.timeBadge ? `<span class="follow-up-time-tag">🕒 ${{meta.timeBadge}}</span>` : ''}}
+              </div>
+              <div style="font-size:0.8rem; line-height:1.45;">${{item.follow_up}}</div>
             </div>
           `;
         }} else if (isRed || isYellow) {{
           followUpHtml = `
             <div class="follow-up-box pending">
-              <strong>⏳ 處置追蹤：</strong> 尚未有處室主管／導師回報（請點右下方設定標籤回報）
+              <div class="follow-up-header">
+                <span>⏳ 處置追蹤進度</span>
+                <span class="follow-up-time-tag" style="color:#b45309; background:#fef3c7; border-color:#fde68a;">待回報</span>
+              </div>
+              <div style="font-size:0.78rem;">尚未有處室主管／導師回報（請點右下方設定標籤回報）</div>
             </div>
           `;
         }}
@@ -1734,12 +1872,15 @@ def generate_html(months_data):
         `;
 
         return `
-          <div class="case-card ${{highlightClass}}">
+          <div class="case-card ${{highlightClass}} ${{hasRecentClass}}">
             <div class="card-top">
               <span class="code-badge c${{item.code}}">
                 [${{item.code}}] ${{item.dept_name}}
               </span>
-              <span class="card-time">📅 ${{item.date}} ${{item.time || ''}}</span>
+              <div style="display:flex; align-items:center; gap:4px;">
+                ${{recentBadgeHtml}}
+                <span class="card-time">📅 ${{item.date}} ${{item.time || ''}}</span>
+              </div>
             </div>
 
             <div class="caller-name">
