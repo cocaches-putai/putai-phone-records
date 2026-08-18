@@ -1342,7 +1342,16 @@ def generate_html(months_data):
       let timeBadge = '';
       let activityScore = item.date ? item.date.replace(/\D/g, '') + (item.time || '').replace(/\D/g, '').padEnd(4, '0') : '0000000000';
 
-      // 1. Check explicit timestamp
+      // 1. Extract reporter from text header e.g. 【教務主任 連傑回報 115.08.18】
+      let parsedReporter = '';
+      if (item.follow_up) {{
+        const reporterMatch = item.follow_up.match(/【(.*?)(?:回報|實際回報|更新|處理)/);
+        if (reporterMatch) {{
+          parsedReporter = reporterMatch[1].trim();
+        }}
+      }}
+
+      // 2. Check explicit timestamp
       if (item.timestamp || item.last_updated) {{
         const ts = new Date(item.timestamp || item.last_updated);
         if (!isNaN(ts.getTime())) {{
@@ -1354,9 +1363,8 @@ def generate_html(months_data):
           const mins = ts.getMinutes().toString().padStart(2, '0');
 
           timeBadge = `${{month}}/${{day}} ${{hours}}:${{mins}}`;
-          if (item.updated_by) timeBadge += ` 由${{item.updated_by}}更新`;
-          else if (item.teachers && item.teachers.length > 0) timeBadge += ` 由${{item.teachers[0]}}更新`;
-          else timeBadge += ` 由主管回報`;
+          const reporter = parsedReporter || item.updated_by || '連傑主任';
+          timeBadge += ` 由${{reporter}}更新`;
 
           if (diffHours >= 0 && diffHours <= 96) {{
             isRecent = true;
@@ -1365,12 +1373,13 @@ def generate_html(months_data):
         }}
       }}
 
-      // 2. Check text-based date pattern e.g. 115.08.18 or 115.08.19
+      // 3. Check text-based date pattern e.g. 115.08.18 or 115.08.19
       if (item.follow_up) {{
         const m = item.follow_up.match(/115\.(\d{{2}})\.(\d{{2}})/);
         if (m) {{
           const mStr = `${{m[1]}}/${{m[2]}}`;
-          if (!timeBadge) timeBadge = `${{mStr}} 回報`;
+          const reporter = parsedReporter || item.updated_by || '教務主任 連傑';
+          if (!timeBadge) timeBadge = `${{mStr}} 由${{reporter}}回報`;
           if (parseInt(m[2]) >= 17) {{
             isRecent = true;
             activityScore = '115' + m[1] + m[2] + '2359';
@@ -1537,30 +1546,41 @@ def generate_html(months_data):
       }}
     }}
 
-    function openReplyModal(caseId, caseName, teachersArray, currentFollowUp, currentLevel, currentCode, currentDeptName) {{
-      activeCaseId = caseId;
-      document.getElementById('modalCaseName').innerText = `📋 案件：${{caseName}}`;
+    function openReplyModalById(caseId) {{
+      const mData = monthsData[currentMonth] || {{ records: [], key_cases: [] }};
+      let item = mData.key_cases.find(c => c.id === caseId);
+      if (!item) {{
+        item = mData.records.find(r => r.id === caseId);
+      }}
+      if (!item) return;
+
+      activeCaseId = item.id;
+      document.getElementById('modalCaseName').innerText = `📋 案件：${{item.caller}}`;
       
-      currentModalTeachers = Array.from(new Set(teachersArray || []));
+      currentModalTeachers = Array.from(new Set(item.teachers || []));
       renderModalTeacherChips();
       document.getElementById('newTeacherInput').value = '';
 
-      document.getElementById('modalActionInput').value = currentFollowUp || '';
+      document.getElementById('modalActionInput').value = item.follow_up || '';
       
       const codeSelect = document.getElementById('modalDeptCodeSelect');
-      codeSelect.value = currentCode || '12';
+      codeSelect.value = item.code || '12';
       
       let subDept = '';
-      if (currentDeptName) {{
-        const parts = currentDeptName.split('/');
+      if (item.dept_name) {{
+        const parts = item.dept_name.split('/');
         if (parts.length > 1) {{
           subDept = parts.slice(1).join('/').trim();
         }}
       }}
       document.getElementById('modalSubDeptInput').value = subDept;
 
-      selectTagOption(currentLevel || 'yellow');
+      selectTagOption(item.level || 'yellow');
       document.getElementById('replyModal').style.display = 'flex';
+    }}
+
+    function openReplyModal(caseId, caseName, teachersArray, currentFollowUp, currentLevel, currentCode, currentDeptName) {{
+      openReplyModalById(caseId);
     }}
 
     function closeReplyModal() {{
@@ -1583,7 +1603,8 @@ def generate_html(months_data):
         teachers: currentModalTeachers,
         action: action,
         status: selectedModalTag,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
+        updated_by: '連傑（教務主任）'
       }};
 
       let allFeedbacks = JSON.parse(localStorage.getItem('putai_supervisor_feedbacks') || '[]');
@@ -1861,12 +1882,8 @@ def generate_html(months_data):
           `;
         }}
 
-        const safeFollowUp = (item.follow_up || '').replace(/'/g, "\\'");
-        const safeDeptName = (item.dept_name || '').replace(/'/g, "\\'");
-        const teachersJsonStr = JSON.stringify(uniqueTeachers).replace(/"/g, '&quot;');
-
         const replyButtonHtml = `
-          <button class="btn-reply" onclick="openReplyModal('${{item.id}}', '${{item.caller}}', ${{teachersJsonStr}}, '${{safeFollowUp}}', '${{item.level}}', '${{item.code}}', '${{safeDeptName}}')">
+          <button class="btn-reply" onclick="openReplyModalById('${{item.id}}')">
             🏷️ 編輯處室與師長
           </button>
         `;
