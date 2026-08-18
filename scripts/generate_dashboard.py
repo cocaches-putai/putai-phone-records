@@ -130,7 +130,13 @@ def parse_tracking_markdown():
     return months_cases
 
 def parse_all_docx():
-    files = sorted([f for f in glob.glob(str(CLIPPINGS_DIR / "115.*.docx")) if "_" not in f])
+    all_files = set(glob.glob(str(CLIPPINGS_DIR / "115.*.docx")))
+    if (BASE_DIR / "web" / "Clippings").exists():
+        all_files.update(glob.glob(str(BASE_DIR / "web" / "Clippings" / "115.*.docx")))
+    if (SCRIPT_DIR.parent / "Clippings").exists():
+        all_files.update(glob.glob(str(SCRIPT_DIR.parent / "Clippings" / "115.*.docx")))
+
+    files = sorted([f for f in all_files if "_" not in os.path.basename(f)])
     months_data = {}
     structured_cases = parse_tracking_markdown()
     
