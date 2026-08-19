@@ -27,9 +27,21 @@ TOKEN_PATH = BASE_DIR / 'token.json'
 
 
 def authenticate(auth_only=False):
-    """Authenticates the user with Gmail API using OAuth 2.0."""
+    """Authenticates the user with Gmail API using OAuth 2.0 (supports File and Cloud Env var)."""
     creds = None
-    if TOKEN_PATH.exists():
+
+    # 1. Check Cloud Environment Variable (GitHub Actions)
+    if os.environ.get('GMAIL_TOKEN_JSON'):
+        try:
+            token_info = json.loads(os.environ['GMAIL_TOKEN_JSON'])
+            creds = Credentials.from_authorized_user_info(token_info, SCOPES)
+            print("[✓] 成功從雲端安全變數載入 Gmail 憑證。")
+        except Exception as e:
+            print(f"[!] 從環境變數讀取 GMAIL_TOKEN_JSON 失敗: {e}")
+            creds = None
+
+    # 2. Check Local File (Mac execution)
+    if not creds and TOKEN_PATH.exists():
         try:
             creds = Credentials.from_authorized_user_file(str(TOKEN_PATH), SCOPES)
         except Exception as e:
@@ -40,17 +52,21 @@ def authenticate(auth_only=False):
         if creds and creds.expired and creds.refresh_token:
             try:
                 creds.refresh(Request())
-                with open(TOKEN_PATH, 'w', encoding='utf-8') as token_file:
-                    token_file.write(creds.to_json())
+                if TOKEN_PATH.parent.exists():
+                    with open(TOKEN_PATH, 'w', encoding='utf-8') as token_file:
+                        token_file.write(creds.to_json())
                 print("[✓] 憑證已自動刷新成功。")
             except Exception as e:
-                print(f"[!] 憑證刷新失敗: {e}，正在開啟瀏覽器重新驗證...")
-                creds = None
+                print(f"[!] 憑證刷新失敗: {e}")
+                if os.environ.get('CI'):
+                    return None
 
         if not creds:
             if not CREDENTIALS_PATH.exists():
                 print(f"[X] 找不到憑證檔案：{CREDENTIALS_PATH}")
                 print("請確認 credentials.json 已放置在專案目錄下。")
+                if os.environ.get('CI'):
+                    return None
                 sys.exit(1)
 
             flow = InstalledAppFlow.from_client_secrets_file(
