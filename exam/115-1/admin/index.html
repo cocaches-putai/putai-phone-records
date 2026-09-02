@@ -304,11 +304,11 @@
           </div>
 
           <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-1">
-            <div class="font-black text-rose-700 text-sm flex items-center gap-1.5">
-              <span>班級均分 ＆ 各科表現</span>
+            <div class="font-black text-blue-700 text-sm flex items-center gap-1.5">
+              <span>📈 各科均分 ＆ 組別表現</span>
             </div>
             <p class="text-slate-600 leading-relaxed text-[11.5px]">
-              盤點本班國文、英文、數A、自/社各科班錯率最高之 3 道題目，標註本班主要誤選之誘答選項與正解。
+              綜覽該班國文、英文（校正分）、數 A 與分科（自然/社會）之單科平均得分與組別總分，掌握班級學科優劣勢。
             </p>
           </div>
 
@@ -2078,11 +2078,10 @@
       if (tabId === 'classes') switchClassView(currentClassViewName);
       if (tabId === 'g2') renderG2View();
       if (tabId === 'reg') renderRegView(currentRegView);
-      if (tabId === 'scatter') renderScatterPlot();
+      if (tabId === 'scatter') { renderScatterPlot(); filterScatterList('Q1'); }
       if (tabId === 'roster') switchRosterDomainCategory(currentRosterDomain);
       
-      if (tabId === 'items') { renderDomainBriefingCard();
-      renderClassSpecificHeatmapBanner(); renderSubTopicFilters(); renderItems(); }
+      if (tabId === 'items') { currentItemFilter = 'all'; currentItemSubTopicFilter = 'sub-all'; renderDomainBriefingCard(); renderClassSpecificHeatmapBanner(); renderSubTopicFilters(); renderItems(); }
       if (tabId === 'schools') renderSchools();
       if (tabId === 'search') applySearchFilters();
     }
