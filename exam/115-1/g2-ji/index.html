@@ -50,7 +50,7 @@
             <span>高二己 班級學力數據導航單</span>
             <span class="text-[11px] bg-blue-500/30 text-blue-300 px-2 py-0.5 rounded-full border border-blue-400/30 font-normal">自然組 ｜ 實測 24人</span>
           </h1>
-          <p class="text-xs text-slate-400">班級成績分析 ｜ 學生名冊 ｜ 偏科破口 ＆ 門檻壓線</p>
+          <p class="text-xs text-slate-400">班級成績分析 ｜ 學生名冊 ｜ 學力型態雷達 ＆ 門檻壓線</p>
         </div>
       </div>
 
@@ -63,7 +63,7 @@
           <span>👥 2. 全班名冊 ＆ 作答穿透</span>
         </button>
         <button onclick="switchTab('triage')" id="tabBtn-triage" class="nav-tab px-3.5 py-2 rounded-xl transition text-slate-300 hover:text-white flex items-center gap-1.5">
-          <span>⚡ 3. 偏科破口 ＆ 門檻壓線</span>
+          <span>🧭 3. 學力型態 ＆ 門檻壓線</span>
         </button>
       </div>
       
@@ -380,7 +380,7 @@
             <button onclick="filterStudentTier('all')" class="s-tier-chip px-2.5 py-1 rounded-lg font-bold bg-slate-900 text-white" id="sTier-all">全班 (24)</button>
             <button onclick="filterStudentTier('tier1')" class="s-tier-chip px-2.5 py-1 rounded-lg font-bold bg-amber-50 text-amber-800 border border-amber-200" id="sTier-tier1">🌟 拔尖 (0)</button>
             <button onclick="filterStudentTier('tier2')" class="s-tier-chip px-2.5 py-1 rounded-lg font-bold bg-blue-50 text-blue-800 border border-blue-200" id="sTier-tier2">🚀 前標 (0)</button>
-            <button onclick="filterStudentTier('bottleneck')" class="s-tier-chip px-2.5 py-1 rounded-lg font-bold bg-purple-50 text-purple-800 border border-purple-200" id="sTier-bottleneck">⚡ 偏科破口 (17)</button>
+            <button onclick="filterStudentTier('bottleneck')" class="s-tier-chip px-2.5 py-1 rounded-lg font-bold bg-purple-50 text-purple-800 border border-purple-200" id="sTier-bottleneck">🧭 學力型態 (17)</button>
             <button onclick="filterStudentTier('near')" class="s-tier-chip px-2.5 py-1 rounded-lg font-bold bg-emerald-50 text-emerald-800 border border-emerald-200" id="sTier-near">🎯 門檻壓線 (10)</button>
             <button onclick="filterStudentTier('tier4')" class="s-tier-chip px-2.5 py-1 rounded-lg font-bold bg-rose-50 text-rose-800 border border-rose-200" id="sTier-tier4">🚨 基礎扎根 (22)</button>
           </div>
@@ -604,38 +604,149 @@
       }).join('');
     }
 
-        function renderTriageModules() {
+        var currentProfileFilter = 'all';
+
+    function filterProfileType(pType) {
+      currentProfileFilter = pType;
+      document.querySelectorAll('.p-filter-chip').forEach(b => {
+        b.className = 'p-filter-chip px-2.5 py-1 rounded-lg font-bold bg-slate-100 text-slate-700 hover:bg-slate-200';
+      });
+      const act = document.getElementById('pFilter-' + pType);
+      if (act) act.className = 'p-filter-chip px-2.5 py-1 rounded-lg font-bold bg-slate-900 text-white shadow-sm';
+      renderTriageModules();
+    }
+
+    function computeStudentAcademicProfile(s) {
+      const c_lvl = s.chi ? s.chi.level : 0;
+      const e_lvl = s.eng ? (s.eng.corr_level || s.eng.orig_level || s.eng.level || 0) : 0;
+      const m_lvl = s.mathA ? s.mathA.level : 0;
+      const s_lvl = (s[specKey] && s[specKey].level) ? s[specKey].level : 0;
+      
+      const subjs = [
+        { key: 'chi', name: '國文', lvl: c_lvl },
+        { key: 'eng', name: '英文', lvl: e_lvl },
+        { key: 'mathA', name: '數A', lvl: m_lvl },
+        { key: specKey, name: specCol, lvl: s_lvl }
+      ];
+      
+      const lvls = subjs.map(x => x.lvl);
+      const mean = lvls.reduce((a, b) => a + b, 0) / 4.0;
+      const maxL = Math.max(...lvls);
+      const minL = Math.min(...lvls);
+      const diff = maxL - minL;
+      
+      const topSubjObj = subjs.find(x => x.lvl === maxL) || subjs[0];
+      const botSubjObj = subjs.find(x => x.lvl === minL) || subjs[subjs.length - 1];
+
+      const langAvg = (c_lvl + e_lvl) / 2.0;
+      const sciAvg = (m_lvl + s_lvl) / 2.0;
+
+      let code = 'balanced';
+      let title = '🛡️ 均質均衡型（全科均衡）';
+      let badgeCls = 'bg-emerald-100 text-emerald-900 border-emerald-300';
+      let cardBorder = 'border-emerald-200 bg-emerald-50/40';
+      let advice = `4 科成績均衡（最高 ${maxL} 級 ｜ 最低 ${minL} 級，落差 ≤ 3 級分）；無顯著偏科，建議維持日常全科複習節奏，齊頭並進衝標！`;
+
+      if (diff >= 4) {
+        if (Math.abs(langAvg - sciAvg) >= 3.5) {
+          code = 'skew';
+          title = '⚖️ 文理偏斜型（2強2弱）';
+          badgeCls = 'bg-blue-100 text-blue-900 border-blue-300';
+          cardBorder = 'border-blue-200 bg-blue-50/40';
+          advice = `${langAvg > sciAvg ? '語文科（國英均 ' + langAvg.toFixed(1) + ' 級）顯著領先數理科（均 ' + sciAvg.toFixed(1) + ' 級）' : '數理科（均 ' + sciAvg.toFixed(1) + ' 級）顯著領先語文科（均 ' + langAvg.toFixed(1) + ' 級）'}；建議對焦目標大學校系採計組合，優先鞏固關鍵採計科目！`;
+        } else if (maxL >= mean + 2.5 && lvls.filter(l => l <= mean - 1.0).length >= 2) {
+          code = 'solo';
+          title = '🌟 單科拔尖型（1強3弱）';
+          badgeCls = 'bg-amber-100 text-amber-900 border-amber-300';
+          cardBorder = 'border-amber-200 bg-amber-50/40';
+          advice = `<b>${topSubjObj.name}（${maxL}級）</b>表現卓越突出，但其餘 3 科均需基礎扎根；避免誤判為「只有一科弱」，建議借力使力，將強科成功經驗遷移至各科基本盤！`;
+        } else if (minL <= mean - 2.5 && lvls.filter(l => l >= mean + 1.0).length >= 2) {
+          code = 'bottle';
+          title = '⚡ 單科瓶頸型（3強1弱）';
+          badgeCls = 'bg-purple-100 text-purple-900 border-purple-300';
+          cardBorder = 'border-purple-200 bg-purple-50/40';
+          advice = `3 科優勢表現成熟，唯獨 <b>${botSubjObj.name}（${minL}級）</b>拉低總級分；建議挪出 20% 強科時間專攻該瓶頸科核心題型，二模總級分即能顯著躍進！`;
+        } else if (Math.abs(langAvg - sciAvg) >= 2.0) {
+          code = 'skew';
+          title = '⚖️ 文理偏斜型（2強2弱）';
+          badgeCls = 'bg-blue-100 text-blue-900 border-blue-300';
+          cardBorder = 'border-blue-200 bg-blue-50/40';
+          advice = `${langAvg > sciAvg ? '語文科優於數理科' : '數理科優於語文科'}；建議依據目標採計組合策略調配複習比重！`;
+        } else {
+          code = 'bottle';
+          title = '⚡ 單科瓶頸型（3強1弱）';
+          badgeCls = 'bg-purple-100 text-purple-900 border-purple-300';
+          cardBorder = 'border-purple-200 bg-purple-50/40';
+          advice = `適度平衡各科複習時間，優先強化 <b>${botSubjObj.name}（${minL}級）</b> 基本觀念，總級分提升效益更佳！`;
+        }
+      }
+
+      return {
+        code,
+        title,
+        badgeCls,
+        cardBorder,
+        advice,
+        subjs,
+        maxL,
+        minL,
+        diff,
+        topSubj: topSubjObj.name,
+        botSubj: botSubjObj.name
+      };
+    }
+
+    function renderTriageModules() {
       const bContainer = document.getElementById('bottleneckCardsContainer');
       if (bContainer) {
-        const bList = students.filter(s => s.is_bottleneck);
-        bContainer.innerHTML = bList.map(s => `
-          <div class="p-3.5 bg-purple-50/60 rounded-2xl border border-purple-200 space-y-1.5 text-xs">
-            <div class="flex justify-between items-center">
-              <span class="font-black text-purple-950 text-sm cursor-pointer hover:underline" onclick="openStudentModalByName('${s.name}')">${s.seat}號 ${s.name} (${s.tot_lvl}級分)</span>
-              <span class="badge badge-purple font-black">瓶頸: ${s.bot_subj}</span>
+        let list = students.map(s => ({ student: s, profile: computeStudentAcademicProfile(s) }));
+        if (currentProfileFilter !== 'all') {
+          list = list.filter(item => item.profile.code === currentProfileFilter);
+        }
+
+        bContainer.innerHTML = list.map(item => {
+          const s = item.student;
+          const p = item.profile;
+          return `
+            <div class="p-4 rounded-2xl border ${p.cardBorder} space-y-2 text-xs transition shadow-2xs hover:shadow-sm">
+              <div class="flex flex-wrap justify-between items-center gap-1.5 border-b border-slate-200/60 pb-2">
+                <span class="font-black text-slate-900 text-sm cursor-pointer hover:text-blue-600 flex items-center gap-1" onclick="openStudentModalByName('${s.name}')">
+                  <span>${s.seat} 號 ${s.name}</span>
+                  <span class="text-xs font-mono text-slate-500 font-normal">(${s.tot_lvl} 級分)</span>
+                </span>
+                <span class="px-2 py-0.5 rounded-full text-[10.5px] font-black border ${p.badgeCls}">${p.title}</span>
+              </div>
+
+              <!-- 4-Subject Level Pill Matrix -->
+              <div class="grid grid-cols-4 gap-1.5 text-center text-xs py-1">
+                ${p.subjs.map(sub => `
+                  <div class="p-1.5 bg-white/90 rounded-xl border ${sub.lvl === p.maxL ? 'border-amber-300 ring-1 ring-amber-200' : (sub.lvl === p.minL ? 'border-rose-300 bg-rose-50/50' : 'border-slate-200')}">
+                    <div class="text-[10px] text-slate-400 leading-none">${sub.name}</div>
+                    <div class="font-black text-slate-900 text-xs mt-1">${sub.lvl} <span class="text-[9px] font-normal text-slate-400">級</span></div>
+                  </div>
+                `).join('')}
+              </div>
+
+              <!-- Educational Guidance Box -->
+              <div class="text-[11px] text-slate-700 bg-white/80 p-2.5 rounded-xl border border-slate-200/80 leading-relaxed">
+                💡 <b>導師輔導備忘</b>：${p.advice}
+              </div>
             </div>
-            <div class="text-xs text-purple-900 flex justify-between">
-              <span>優勢科: <b>${s.top_subj}</b></span>
-              <span class="text-rose-700 font-black">破口科: <b>${s.bot_subj}</b></span>
-            </div>
-            <div class="text-[11px] text-purple-800 bg-white/70 p-2 rounded-xl border border-purple-100">
-              💡 <b>建議方向</b>：適度調配複習比重，補強弱科基本題型，提升全卷均衡度！
-            </div>
-          </div>
-        `).join('') || '<div class="text-xs text-slate-400 p-2">無顯著單科破口學生</div>';
+          `;
+        }).join('') || '<div class="text-xs text-slate-400 p-4 text-center col-span-2">此學力型態分類下無學生</div>';
       }
 
       const nContainer = document.getElementById('nearStandardCardsContainer');
       if (nContainer) {
         const nList = students.filter(s => (s.near_standards && s.near_standards.length) > 0 || (45 <= s.tot_lvl && s.tot_lvl < 48));
         nContainer.innerHTML = nList.map(s => `
-          <div class="p-3.5 bg-amber-50/60 rounded-2xl border border-amber-200 space-y-1.5 text-xs">
+          <div class="p-3.5 bg-amber-50/60 rounded-2xl border border-amber-200 space-y-1.5 text-xs shadow-2xs">
             <div class="flex justify-between items-center">
               <span class="font-black text-amber-950 text-sm cursor-pointer hover:underline" onclick="openStudentModalByName('${s.name}')">${s.seat}號 ${s.name} (${s.tot_lvl}級分)</span>
               <span class="badge badge-amber font-black">差 1 級衝標</span>
             </div>
-            <div class="text-xs text-amber-900">
-              ${(s.near_standards || []).map(t => `<div>🎯 <b>${t}</b></div>`).join('') || `<div>🎯 <b>4科總分差 1~3 級分躍進 48 級拔尖</b></div>`}
+            <div class="text-xs text-amber-900 space-y-1">
+              ${(s.near_standards || []).map(t => `<div class="bg-white/80 p-1.5 rounded-lg border border-amber-200/60">🎯 <b>${t}</b></div>`).join('') || `<div class="bg-white/80 p-1.5 rounded-lg border border-amber-200/60">🎯 <b>4科總分差 1~3 級分躍進 48 級拔尖</b></div>`}
             </div>
           </div>
         `).join('') || '<div class="text-xs text-slate-400 p-2">無門檻壓線學生</div>';
