@@ -375,14 +375,23 @@
             <p class="text-xs text-slate-400 mt-0.5">點擊學生姓名或「🔍 診斷卡」按鈕，立即展開 4 科 🟢/🔴 作答明細網格</p>
           </div>
 
-          <div class="flex flex-wrap items-center gap-1.5 text-xs">
-            <span class="text-slate-400 font-bold">梯隊快篩：</span>
-            <button onclick="filterStudentTier('all')" class="s-tier-chip px-2.5 py-1 rounded-lg font-bold bg-slate-900 text-white" id="sTier-all">全班 (28)</button>
-            <button onclick="filterStudentTier('tier1')" class="s-tier-chip px-2.5 py-1 rounded-lg font-bold bg-amber-50 text-amber-800 border border-amber-200" id="sTier-tier1">🌟 拔尖 (4)</button>
-            <button onclick="filterStudentTier('tier2')" class="s-tier-chip px-2.5 py-1 rounded-lg font-bold bg-blue-50 text-blue-800 border border-blue-200" id="sTier-tier2">🚀 前標 (9)</button>
-            <button onclick="filterStudentTier('bottleneck')" class="s-tier-chip px-2.5 py-1 rounded-lg font-bold bg-purple-50 text-purple-800 border border-purple-200" id="sTier-bottleneck">🧭 學力型態 (25)</button>
-            <button onclick="filterStudentTier('near')" class="s-tier-chip px-2.5 py-1 rounded-lg font-bold bg-emerald-50 text-emerald-800 border border-emerald-200" id="sTier-near">🎯 門檻壓線 (22)</button>
-            <button onclick="filterStudentTier('tier4')" class="s-tier-chip px-2.5 py-1 rounded-lg font-bold bg-rose-50 text-rose-800 border border-rose-200" id="sTier-tier4">🚨 基礎扎根 (2)</button>
+          <div class="flex flex-col sm:flex-row flex-wrap items-start sm:items-center gap-2 text-xs">
+            <div class="flex flex-wrap items-center gap-1">
+              <span class="text-slate-400 font-bold text-[11px]">梯隊篩選：</span>
+              <button onclick="filterStudentTier('all')" class="s-tier-chip px-2.5 py-1 rounded-lg font-bold bg-slate-900 text-white shadow-sm" id="sTier-all">全班</button>
+              <button onclick="filterStudentTier('tier1')" class="s-tier-chip px-2.5 py-1 rounded-lg font-bold bg-amber-50 text-amber-800 border border-amber-200" id="sTier-tier1">🌟 拔尖</button>
+              <button onclick="filterStudentTier('tier2')" class="s-tier-chip px-2.5 py-1 rounded-lg font-bold bg-blue-50 text-blue-800 border border-blue-200" id="sTier-tier2">🚀 前標</button>
+              <button onclick="filterStudentTier('tier3')" class="s-tier-chip px-2.5 py-1 rounded-lg font-bold bg-emerald-50 text-emerald-800 border border-emerald-200" id="sTier-tier3">⚖️ 均標</button>
+              <button onclick="filterStudentTier('tier4')" class="s-tier-chip px-2.5 py-1 rounded-lg font-bold bg-rose-50 text-rose-800 border border-rose-200" id="sTier-tier4">🚨 扎根</button>
+            </div>
+            <div class="flex flex-wrap items-center gap-1 border-t sm:border-t-0 sm:border-l border-slate-200 sm:pl-2 pt-1.5 sm:pt-0">
+              <span class="text-purple-600 font-bold text-[11px]">🧭 型態篩選：</span>
+              <button onclick="filterStudentTier('p_bottle')" class="s-tier-chip px-2.5 py-1 rounded-lg font-bold bg-purple-50 text-purple-800 border border-purple-200" id="sTier-p_bottle">⚡ 3強1弱(單科瓶頸)</button>
+              <button onclick="filterStudentTier('p_solo')" class="s-tier-chip px-2.5 py-1 rounded-lg font-bold bg-amber-50 text-amber-800 border border-amber-200" id="sTier-p_solo">🌟 1強3弱(單科拔尖)</button>
+              <button onclick="filterStudentTier('p_skew')" class="s-tier-chip px-2.5 py-1 rounded-lg font-bold bg-blue-50 text-blue-800 border border-blue-200" id="sTier-p_skew">⚖️ 2強2弱(文理偏斜)</button>
+              <button onclick="filterStudentTier('p_balanced')" class="s-tier-chip px-2.5 py-1 rounded-lg font-bold bg-emerald-50 text-emerald-800 border border-emerald-200" id="sTier-p_balanced">🛡️ 均質均衡型</button>
+              <button onclick="filterStudentTier('near')" class="s-tier-chip px-2.5 py-1 rounded-lg font-bold bg-amber-50 text-amber-900 border border-amber-300" id="sTier-near">🎯 差1級衝標</button>
+            </div>
           </div>
         </div>
 
@@ -398,7 +407,7 @@
                 <th class="p-3">英文</th>
                 <th class="p-3">數A</th>
                 <th class="p-3">社會</th>
-                <th class="p-3 text-purple-700 font-black">優勢 ➔ 瓶頸科</th>
+                <th class="p-3 text-purple-700 font-black">學力型態 ＆ 4科縮影</th>
                 <th class="p-3">操作</th>
               </tr>
             </thead>
@@ -561,9 +570,13 @@
 
       if (currentStudentTierFilter === 'tier1') list = list.filter(s => s.tot_lvl >= 48);
       else if (currentStudentTierFilter === 'tier2') list = list.filter(s => 40 <= s.tot_lvl && s.tot_lvl < 48);
-      else if (currentStudentTierFilter === 'bottleneck') list = list.filter(s => s.is_bottleneck);
-      else if (currentStudentTierFilter === 'near') list = list.filter(s => (s.near_standards && s.near_standards.length) > 0 || (45 <= s.tot_lvl && s.tot_lvl < 48));
+      else if (currentStudentTierFilter === 'tier3') list = list.filter(s => 30 <= s.tot_lvl && s.tot_lvl < 40);
       else if (currentStudentTierFilter === 'tier4') list = list.filter(s => s.tot_lvl < 30);
+      else if (currentStudentTierFilter === 'p_bottle') list = list.filter(s => computeStudentAcademicProfile(s).code === 'bottle');
+      else if (currentStudentTierFilter === 'p_solo') list = list.filter(s => computeStudentAcademicProfile(s).code === 'solo');
+      else if (currentStudentTierFilter === 'p_skew') list = list.filter(s => computeStudentAcademicProfile(s).code === 'skew');
+      else if (currentStudentTierFilter === 'p_balanced') list = list.filter(s => computeStudentAcademicProfile(s).code === 'balanced');
+      else if (currentStudentTierFilter === 'near') list = list.filter(s => (s.near_standards && s.near_standards.length) > 0 || (45 <= s.tot_lvl && s.tot_lvl < 48));
 
       const badge = document.getElementById('studentRosterCountBadge');
       if (badge) badge.innerText = `${list.length} 人`;
@@ -572,32 +585,25 @@
       if (!tbody) return;
 
       tbody.innerHTML = list.map(s => {
-        let triageBadge = '<span class="badge badge-slate">⚪ 均標</span>';
-        if (s.triage_code === 'P1') triageBadge = '<span class="badge badge-rose">🔴 P1 緊急</span>';
-        else if (s.triage_code === 'P2') triageBadge = '<span class="badge badge-amber">🟡 P2 衝刺</span>';
-        else if (s.triage_code === 'P3') triageBadge = '<span class="badge badge-green">🟢 P3 頂尖</span>';
-
-                let pacingBadge = '<span class="badge badge-emerald">🟢 穩健</span>';
-        if (s.pacing_warnings && s.pacing_warnings.length > 0) {
-          const pListStr = s.pacing_warnings.map(pw => `${pw.subj_name} (${pw.label})`).join('、');
-          pacingBadge = `<span class="badge badge-rose font-bold" title="${pListStr}">⚠️ ${s.pacing_warnings.length}科待提醒</span>`;
-        }
+        const p = computeStudentAcademicProfile(s);
+        const e_lvl = s.eng ? (s.eng.corr_level || s.eng.orig_level || s.eng.level || 0) : 0;
+        const s_lvl = (s[specKey] && s[specKey].level) ? s[specKey].level : 0;
 
         return `
-          <tr class="hover:bg-slate-50 border-b border-slate-100">
+          <tr class="hover:bg-slate-50 border-b border-slate-100 transition">
             <td class="p-3 text-slate-500 font-bold">${s.seat} 號</td>
             <td class="p-3 font-black text-blue-700 cursor-pointer hover:underline text-sm" onclick="openStudentModalByName('${s.name}')">${s.name}</td>
             <td class="p-3 bg-amber-50/50 font-black text-amber-900 text-sm">${s.tot_lvl} 級分</td>
             <td class="p-3 font-black text-slate-900">${s.tot_score} 分</td>
-            <td class="p-3 font-bold">${s.chi.level}級</td>
-            <td class="p-3 font-bold">${s.eng.corr_level}級</td>
-            <td class="p-3 font-bold">${s.mathA.level}級</td>
-            <td class="p-3 font-bold">${s[specKey].level}級</td>
-            <td class="p-3 font-bold text-xs">
-              <span class="text-emerald-700 font-black">🌟 ${s.top_subj}</span> ➔ <span class="text-rose-700 font-black">🚨 ${s.bot_subj}</span>
+            <td class="p-3 font-bold ${s.chi.level === p.maxL ? 'text-amber-800 font-black bg-amber-50/30' : (s.chi.level === p.minL ? 'text-rose-700 font-black bg-rose-50/30' : '')}">${s.chi.level}級</td>
+            <td class="p-3 font-bold ${e_lvl === p.maxL ? 'text-amber-800 font-black bg-amber-50/30' : (e_lvl === p.minL ? 'text-rose-700 font-black bg-rose-50/30' : '')}">${e_lvl}級</td>
+            <td class="p-3 font-bold ${s.mathA.level === p.maxL ? 'text-amber-800 font-black bg-amber-50/30' : (s.mathA.level === p.minL ? 'text-rose-700 font-black bg-rose-50/30' : '')}">${s.mathA.level}級</td>
+            <td class="p-3 font-bold ${s_lvl === p.maxL ? 'text-amber-800 font-black bg-amber-50/30' : (s_lvl === p.minL ? 'text-rose-700 font-black bg-rose-50/30' : '')}">${s_lvl}級</td>
+            <td class="p-3 text-xs">
+              <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md font-black border text-[11px] ${p.badgeCls}">${p.title}</span>
             </td>
             <td class="p-3">
-              <button onclick="openStudentModalByName('${s.name}')" class="px-2.5 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded-lg text-xs font-bold hover:bg-blue-100">🔍 診斷卡</button>
+              <button onclick="openStudentModalByName('${s.name}')" class="px-2.5 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded-lg text-xs font-bold hover:bg-blue-100 shadow-2xs">🔍 診斷卡</button>
             </td>
           </tr>
         `;
@@ -697,6 +703,25 @@
     }
 
     function renderTriageModules() {
+      // Update Tab 3 Filter Chip Counts
+      const allProfiles = students.map(s => computeStudentAcademicProfile(s));
+      const cntBottle = allProfiles.filter(p => p.code === 'bottle').length;
+      const cntSolo = allProfiles.filter(p => p.code === 'solo').length;
+      const cntSkew = allProfiles.filter(p => p.code === 'skew').length;
+      const cntBalanced = allProfiles.filter(p => p.code === 'balanced').length;
+
+      const elAll = document.getElementById('pFilter-all');
+      const elBottle = document.getElementById('pFilter-bottle');
+      const elSolo = document.getElementById('pFilter-solo');
+      const elSkew = document.getElementById('pFilter-skew');
+      const elBalanced = document.getElementById('pFilter-balanced');
+
+      if (elAll) elAll.innerText = `全部型態 (${students.length})`;
+      if (elBottle) elBottle.innerText = `⚡ 單科瓶頸 (${cntBottle})`;
+      if (elSolo) elSolo.innerText = `🌟 單科拔尖 (${cntSolo})`;
+      if (elSkew) elSkew.innerText = `⚖️ 文理偏斜 (${cntSkew})`;
+      if (elBalanced) elBalanced.innerText = `🛡️ 均質均衡 (${cntBalanced})`;
+
       const bContainer = document.getElementById('bottleneckCardsContainer');
       if (bContainer) {
         let list = students.map(s => ({ student: s, profile: computeStudentAcademicProfile(s) }));
