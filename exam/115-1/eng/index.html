@@ -146,6 +146,74 @@
             <span class="badge badge-blue">均標: 7 級</span>
           </div>
         </div>
+
+
+      <!-- Section 1.5: Subject Specific Five Standards & Grade Step Table -->
+      <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm space-y-3">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-slate-100 pb-2.5">
+          <div>
+            <h4 class="text-sm font-black text-slate-900 flex items-center gap-2">
+              <span>📑 【英文科 五標級分門檻、分數換算 ＆ 級距標準表】</span>
+            </h4>
+            <p class="text-xs text-slate-400 mt-0.5">提供高三應屆常模與高二越級檢測五標門檻、級距計算值（滿分 100 分）</p>
+          </div>
+          <div class="flex items-center gap-2 text-xs font-bold text-slate-700 bg-slate-100 px-3 py-1 rounded-xl">
+            <span>📐 本考科計算級距：</span>
+            <span class="font-mono font-black text-blue-700 bg-white px-2 py-0.5 rounded border border-slate-200">6.00 分 / 級</span>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-xs text-left">
+            <thead class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
+              <tr>
+                <th class="p-3">常模年段樣本</th>
+                <th class="p-3 text-center bg-blue-50 text-blue-900 font-black">頂標 (P88)</th>
+                <th class="p-3 text-center text-indigo-900">前標 (P75)</th>
+                <th class="p-3 text-center bg-emerald-50 text-emerald-900 font-black">均標 (P50)</th>
+                <th class="p-3 text-center text-slate-600">後標 (P25)</th>
+                <th class="p-3 text-center text-slate-500">底標 (P12)</th>
+                <th class="p-3 text-center bg-amber-50 text-amber-900 font-black">普台年段實測均分</th>
+                <th class="p-3 text-center">級距基準</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+              <tr class="hover:bg-slate-50 transition">
+                <td class="p-3 font-bold text-slate-900 flex items-center gap-1.5">
+                  <span class="px-2 py-0.5 bg-blue-100 text-blue-900 rounded font-black text-[10px]">高三</span>
+                  <span>高三應屆常模矩陣</span>
+                </td>
+                <td class="p-3 text-center font-mono font-bold text-blue-800 bg-blue-50/50">12 級 <span class="text-[10px] text-slate-500 font-normal">(≥66.0分)</span></td>
+                <td class="p-3 text-center font-mono font-bold text-indigo-700 bg-indigo-50/30">10 級 <span class="text-[10px] text-slate-500 font-normal">(≥54.0分)</span></td>
+                <td class="p-3 text-center font-mono font-bold text-emerald-800 bg-emerald-50/50">8 級 <span class="text-[10px] text-slate-500 font-normal">(≥42.0分)</span></td>
+                <td class="p-3 text-center font-mono text-slate-600">5 級 <span class="text-[10px] text-slate-400 font-normal">(≥24.0分)</span></td>
+                <td class="p-3 text-center font-mono text-slate-500">3 級 <span class="text-[10px] text-slate-400 font-normal">(≥12.0分)</span></td>
+                <td class="p-3 text-center font-mono font-black text-amber-900 bg-amber-50/40" id="stdCardG3Avg">載入中...</td>
+                <td class="p-3 text-center font-mono font-bold text-slate-700">6.00 分/級</td>
+              </tr>
+              <tr class="hover:bg-slate-50 transition">
+                <td class="p-3 font-bold text-slate-900 flex items-center gap-1.5">
+                  <span class="px-2 py-0.5 bg-emerald-100 text-emerald-900 rounded font-black text-[10px]">高二</span>
+                  <span>高二越級檢測常模</span>
+                </td>
+                <td class="p-3 text-center font-mono font-bold text-blue-800 bg-blue-50/50">11 級 <span class="text-[10px] text-slate-500 font-normal">(≥60.0分)</span></td>
+                <td class="p-3 text-center font-mono font-bold text-indigo-700 bg-indigo-50/30">9 級 <span class="text-[10px] text-slate-500 font-normal">(≥48.0分)</span></td>
+                <td class="p-3 text-center font-mono font-bold text-emerald-800 bg-emerald-50/50">7 級 <span class="text-[10px] text-slate-500 font-normal">(≥36.0分)</span></td>
+                <td class="p-3 text-center font-mono text-slate-600">4 級 <span class="text-[10px] text-slate-400 font-normal">(≥18.0分)</span></td>
+                <td class="p-3 text-center font-mono text-slate-500">3 級 <span class="text-[10px] text-slate-400 font-normal">(≥12.0分)</span></td>
+                <td class="p-3 text-center font-mono font-black text-amber-900 bg-amber-50/40" id="stdCardG2Avg">載入中...</td>
+                <td class="p-3 text-center font-mono font-bold text-slate-700">6.00 分/級</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="p-3 bg-slate-50 rounded-2xl border border-slate-200 text-[11px] text-slate-600 flex flex-wrap items-center justify-between gap-2">
+          <span>💡 <b>級距與級分換算</b>：本考科級距為 <b>6.00 分</b>。考生原始得分 ÷ 6.00 ＝ 換算級分（無條件進位至整數，最高 15 級分）。</span>
+          <span class="text-slate-400 font-mono">五標門檻為該標別之最低累積百分位級分</span>
+        </div>
+      </div>
+    
         <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
           <div onclick="filterStudentTierAndSwitchTab('top')" id="cardStd-top" class="std-card cursor-pointer bg-white hover:bg-amber-50/50 p-4 rounded-2xl border-2 border-amber-200 shadow-sm text-center transition-all hover:scale-105" title="點擊直接切換至學生名冊查看頂標名單">
             <div class="text-[11px] font-black text-amber-700">🌟 頂標 (P88)</div>
@@ -478,7 +546,28 @@
       return allStudents.filter(s => s.cohort === currentGlobalCohort);
     }
 
+    
+    function updateSubjectStandardsTable() {
+      const g3Stus = allStudents.filter(s => s.grade === 12 || s.class.startsWith('高三'));
+      const g2Stus = allStudents.filter(s => s.grade === 11 || s.class.startsWith('高二'));
+
+      const elG3 = document.getElementById('stdCardG3Avg');
+      const elG2 = document.getElementById('stdCardG2Avg');
+
+      if (elG3 && g3Stus.length > 0) {
+        const avgScore = (g3Stus.reduce((a, b) => a + (b.subj_score || 0), 0) / g3Stus.length).toFixed(1);
+        const avgLvl = (g3Stus.reduce((a, b) => a + (b.subj_lvl || 0), 0) / g3Stus.length).toFixed(1);
+        elG3.innerText = `${avgScore}分 (${avgLvl}級)`;
+      }
+      if (elG2 && g2Stus.length > 0) {
+        const avgScore = (g2Stus.reduce((a, b) => a + (b.subj_score || 0), 0) / g2Stus.length).toFixed(1);
+        const avgLvl = (g2Stus.reduce((a, b) => a + (b.subj_lvl || 0), 0) / g2Stus.length).toFixed(1);
+        elG2.innerText = `${avgScore}分 (${avgLvl}級)`;
+      }
+    }
+    
     function renderOverview() {
+      updateSubjectStandardsTable();
       const stus = getCohortStudents();
       const total = stus.length;
       if (total === 0) return;
