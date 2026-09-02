@@ -50,7 +50,7 @@
             <span>高二甲 班級學力數據導航單</span>
             <span class="text-[11px] bg-blue-500/30 text-blue-300 px-2 py-0.5 rounded-full border border-blue-400/30 font-normal">社會組 ｜ 實測 20人</span>
           </h1>
-          <p class="text-xs text-slate-400">班級成績分析 ｜ 學生名冊 ｜ 偏科破口 ＆ 晤談導航</p>
+          <p class="text-xs text-slate-400">班級成績分析 ｜ 學生名冊 ｜ 偏科破口 ＆ 門檻壓線</p>
         </div>
       </div>
 
@@ -63,7 +63,7 @@
           <span>👥 2. 全班名冊 ＆ 作答穿透</span>
         </button>
         <button onclick="switchTab('triage')" id="tabBtn-triage" class="nav-tab px-3.5 py-2 rounded-xl transition text-slate-300 hover:text-white flex items-center gap-1.5">
-          <span>⚡ 3. 偏科破口 ＆ 晤談導航</span>
+          <span>⚡ 3. 偏科破口 ＆ 門檻壓線</span>
         </button>
       </div>
       
@@ -277,10 +277,8 @@
                 <th class="p-3">國文</th>
                 <th class="p-3">英文</th>
                 <th class="p-3">數A</th>
-                <th class="p-3">自然</th>
+                <th class="p-3">社會</th>
                 <th class="p-3 text-purple-700 font-black">優勢 ➔ 瓶頸科</th>
-                <th class="p-3">晤談優先序</th>
-                <th class="p-3">考場節奏</th>
                 <th class="p-3">操作</th>
               </tr>
             </thead>
@@ -290,19 +288,19 @@
       </div>
     </div>
 
-    <!-- ==================== TAB 3: BOTTLENECK & MENTORING TRIAGE ==================== -->
+    <!-- ==================== TAB 3: BOTTLENECK & JUMP POTENTIAL ==================== -->
     <div id="tabContent-triage" class="tab-pane space-y-5 hidden">
       
       <!-- Top Purpose Banner for Tab 3 -->
       <div class="p-4 bg-gradient-to-r from-purple-950 via-slate-900 to-indigo-950 text-white rounded-3xl shadow-sm border border-purple-800/80 space-y-2">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-2 font-black text-sm text-yellow-300">
-            <span>💡 【偏科破口與晤談導航：班導師 2 週行動排程指南】</span>
+            <span>💡 【偏科破口與門檻躍升診斷：班級學力精準輔導指南】</span>
           </div>
-          <span class="text-[11px] bg-purple-500/30 text-purple-200 px-2.5 py-0.5 rounded-full font-bold border border-purple-400/30">行動方針 ➔ 分流晤談</span>
+          <span class="text-[11px] bg-purple-500/30 text-purple-200 px-2.5 py-0.5 rounded-full font-bold border border-purple-400/30">客觀學力 ➔ 精準輔導</span>
         </div>
         <p class="text-xs leading-relaxed text-purple-100/90">
-          本頁整合四大實戰決策模組：<b>① 時間再分配效益</b>（挪出 20% 強科時間救破口科）、<b>② 壓線生最高投報率</b>（差 1 題衝標群）、<b>③ P1~P4 晤談分流排程</b>（減輕導師負擔，2 週內分批面談）、<b>④ 考場節奏與失誤型別</b>（非學科知識問題，而是審題與心理調適）。
+          本頁整合兩大客觀決策模組：<b>① 全班偏科破口分析</b>（挪出 20% 強科時間專攻破口科基本盤）、<b>② 五標門檻「壓線生」名單</b>（差 1 題 / 差 1 級分衝標群），協助導師客觀掌握學生學習瓶頸與躍升潛力！
         </p>
       </div>
 
@@ -311,11 +309,10 @@
         <div class="flex justify-between items-start border-b border-slate-100 pb-3">
           <div>
             <h4 class="text-sm font-black text-slate-900 flex items-center gap-2">
-              <span>⚡ 【全班偏科破口 ＆ 關鍵救援名單】</span>
-              <span class="badge badge-purple">12 人偏科明顯</span>
+              <span>⚡ 【全班偏科破口 ＆ 關鍵支援名單】</span>
             </h4>
             <p class="text-xs text-slate-500 mt-1">
-              <b>導師操作心法</b>：學生常因「讀強科有成就感」而逃避弱科。導師可引導其<b>「挪出 20% 強科時間專攻破口科核心基本題」</b>，二模總級分成長效益最高！
+              <b>導師操作心法</b>：學生常因「讀強科有成就感」而逃避弱科。導師可引導其<b>「挪出 20% 強科時間專攻破口科核心基本題」</b>，總級分成長效益最高！
             </p>
           </div>
         </div>
@@ -324,13 +321,12 @@
         </div>
       </div>
 
-      <!-- Module 2: 🎯 五標門檻「壓線生」名單 (Option A) -->
+      <!-- Module 2: 🎯 五標門檻「壓線生」名單 -->
       <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm space-y-3">
         <div class="flex justify-between items-start border-b border-slate-100 pb-3">
           <div>
             <h4 class="text-sm font-black text-slate-900 flex items-center gap-2">
               <span>🎯 【五標門檻「壓線生」名單（差 1 題 / 差 1 級分衝標群）】</span>
-              <span class="badge badge-amber">8 人具躍升潛力</span>
             </h4>
             <p class="text-xs text-slate-500 mt-1">
               <b>導師操作心法</b>：這是<b>「激勵投報率最高的名單」</b>！這群學生只差 1 級分就能跨過頂標或前標門檻，早自習或課後給予一句肯定與信心，二模最易顯著進步。
@@ -338,62 +334,6 @@
           </div>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-3" id="nearStandardCardsContainer">
-          <!-- Populated by JS -->
-        </div>
-      </div>
-
-      <!-- Module 3: 📋 1-on-1 個別晤談優先序分流表 (Option B) -->
-      <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm space-y-3">
-        <div class="border-b border-slate-100 pb-3">
-          <h4 class="text-sm font-black text-slate-900 flex items-center gap-2">
-            <span>📋 【班級 1-on-1 個別晤談優先序分流表】</span>
-          </h4>
-          <p class="text-xs text-slate-500 mt-1">
-            <b>導師操作心法</b>：導師時間寶貴，建議依 <b>P1 ➔ P2 ➔ P3 ➔ P4</b> 優先序於 2 週內排定早修、自習或午休個別晤談行事曆，避免漫無目的面談。
-          </p>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
-          <div class="p-4 bg-rose-50/70 rounded-2xl border border-rose-200 space-y-2">
-            <div class="font-black text-rose-900 flex justify-between"><span>🔴 第 1 優先 (緊急搶救)</span><span class="badge badge-rose">14人</span></div>
-            <p class="text-[11px] text-rose-800">總級 &lt;30分 或 破口嚴重</p>
-            <div class="text-xs space-y-1 pt-1" id="triageP1List"></div>
-          </div>
-
-          <div class="p-4 bg-amber-50/70 rounded-2xl border border-amber-200 space-y-2">
-            <div class="font-black text-amber-900 flex justify-between"><span>🟡 第 2 優先 (關鍵衝刺)</span><span class="badge badge-amber">5人</span></div>
-            <p class="text-[11px] text-amber-800">40~47 級分 / 差 1~2 級分上拔尖</p>
-            <div class="text-xs space-y-1 pt-1 max-h-48 overflow-y-auto" id="triageP2List"></div>
-          </div>
-
-          <div class="p-4 bg-emerald-50/70 rounded-2xl border border-emerald-200 space-y-2">
-            <div class="font-black text-emerald-900 flex justify-between"><span>🟢 第 3 優先 (頂尖肯定)</span><span class="badge badge-green">0人</span></div>
-            <p class="text-[11px] text-emerald-800">48 級分以上拔尖群</p>
-            <div class="text-xs space-y-1 pt-1 max-h-48 overflow-y-auto" id="triageP3List"></div>
-          </div>
-
-          <div class="p-4 bg-slate-100 rounded-2xl border border-slate-200 space-y-2">
-            <div class="font-black text-slate-800 flex justify-between"><span>⚪ 第 4 優先 (均標常態)</span><span class="badge badge-slate">6人</span></div>
-            <p class="text-[11px] text-slate-600">30~39 級分常態穩健群</p>
-            <div class="text-xs space-y-1 pt-1 max-h-48 overflow-y-auto" id="triageP4List"></div>
-          </div>
-        </div>
-      </div>
-
-                  <!-- Module 4: ⏱️ 考場作答節奏與失誤型別分析 (Option D) -->
-      <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm space-y-3">
-        <div class="border-b border-slate-100 pb-3 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
-          <div>
-            <h4 class="text-sm font-black text-slate-900 flex items-center gap-2">
-              <span>⏱️ 【各考科 考場作答節奏 ＆ 粗心/時間不足診斷表】</span>
-              <span id="pacingWarnCountBadge" class="badge badge-rose">檢測中</span>
-            </h4>
-            <p class="text-xs text-slate-500 mt-1">
-              <b>導師操作心法</b>：依據各考科真實作答軌跡精準診斷。卷尾崩盤者輔導「考場配速與合理放題」，開局連錯者輔導「審題圈關鍵字防急躁」。
-            </p>
-          </div>
-          <span class="text-[11px] bg-slate-100 text-slate-600 px-2.5 py-1 rounded-lg font-bold">分科精確診斷</span>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5" id="pacingCardsContainer">
           <!-- Populated by JS -->
         </div>
       </div>
@@ -513,8 +453,6 @@
             <td class="p-3 font-bold text-xs">
               <span class="text-emerald-700 font-black">🌟 ${s.top_subj}</span> ➔ <span class="text-rose-700 font-black">🚨 ${s.bot_subj}</span>
             </td>
-            <td class="p-3">${triageBadge}</td>
-            <td class="p-3">${pacingBadge}</td>
             <td class="p-3">
               <button onclick="openStudentModalByName('${s.name}')" class="px-2.5 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded-lg text-xs font-bold hover:bg-blue-100">🔍 診斷卡</button>
             </td>
@@ -523,7 +461,7 @@
       }).join('');
     }
 
-    function renderTriageModules() {
+        function renderTriageModules() {
       const bContainer = document.getElementById('bottleneckCardsContainer');
       if (bContainer) {
         const bList = students.filter(s => s.is_bottleneck);
@@ -538,7 +476,7 @@
               <span class="text-rose-700 font-black">破口科: <b>${s.bot_subj}</b></span>
             </div>
             <div class="text-[11px] text-purple-800 bg-white/70 p-2 rounded-xl border border-purple-100">
-              💡 <b>導師策略</b>：挪出 20% 強科自習時間，專攻破口科基本盤，總級分最快躍升！
+              💡 <b>導師建議</b>：挪出 20% 強科自習時間，專攻破口科基本盤，總級分最快躍升！
             </div>
           </div>
         `).join('') || '<div class="text-xs text-slate-400 p-2">無顯著單科破口學生</div>';
@@ -559,89 +497,6 @@
           </div>
         `).join('') || '<div class="text-xs text-slate-400 p-2">無門檻壓線學生</div>';
       }
-
-      const p1Box = document.getElementById('triageP1List');
-      if (p1Box) {
-        const p1s = students.filter(s => s.triage_code === 'P1');
-        p1Box.innerHTML = p1s.map(s => `
-          <div class="flex justify-between items-center bg-white p-1.5 rounded-lg border border-rose-100 cursor-pointer hover:bg-rose-50" onclick="openStudentModalByName('${s.name}')">
-            <span class="font-bold text-rose-950">${s.seat}號 ${s.name}</span>
-            <span class="font-black text-rose-700">${s.tot_lvl}級分</span>
-          </div>
-        `).join('') || '<div class="text-[11px] text-slate-400">無 P1 學生</div>';
-      }
-
-      const p2Box = document.getElementById('triageP2List');
-      if (p2Box) {
-        const p2s = students.filter(s => s.triage_code === 'P2');
-        p2Box.innerHTML = p2s.map(s => `
-          <div class="flex justify-between items-center bg-white p-1.5 rounded-lg border border-amber-100 cursor-pointer hover:bg-amber-50" onclick="openStudentModalByName('${s.name}')">
-            <span class="font-bold text-amber-950">${s.seat}號 ${s.name}</span>
-            <span class="font-black text-amber-700">${s.tot_lvl}級分</span>
-          </div>
-        `).join('') || '<div class="text-[11px] text-slate-400">無 P2 學生</div>';
-      }
-
-      const p3Box = document.getElementById('triageP3List');
-      if (p3Box) {
-        const p3s = students.filter(s => s.triage_code === 'P3');
-        p3Box.innerHTML = p3s.map(s => `
-          <div class="flex justify-between items-center bg-white p-1.5 rounded-lg border border-emerald-100 cursor-pointer hover:bg-emerald-50" onclick="openStudentModalByName('${s.name}')">
-            <span class="font-bold text-emerald-950">${s.seat}號 ${s.name}</span>
-            <span class="font-black text-emerald-700">${s.tot_lvl}級分</span>
-          </div>
-        `).join('') || '<div class="text-[11px] text-slate-400">無 P3 學生</div>';
-      }
-
-      const p4Box = document.getElementById('triageP4List');
-      if (p4Box) {
-        const p4s = students.filter(s => s.triage_code === 'P4');
-        p4Box.innerHTML = p4s.map(s => `
-          <div class="flex justify-between items-center bg-white p-1.5 rounded-lg border border-slate-200 cursor-pointer hover:bg-slate-50" onclick="openStudentModalByName('${s.name}')">
-            <span class="font-bold text-slate-800">${s.seat}號 ${s.name}</span>
-            <span class="font-black text-slate-600">${s.tot_lvl}級分</span>
-          </div>
-        `).join('') || '<div class="text-[11px] text-slate-400">無 P4 學生</div>';
-      }
-
-      const pacBox = document.getElementById('pacingCardsContainer');
-      if (pacBox) {
-        let warnCount = 0;
-        let cardsHtml = '';
-        students.forEach(s => {
-          if (s.pacing_warnings && s.pacing_warnings.length > 0) {
-            s.pacing_warnings.forEach(pw => {
-              warnCount++;
-              const isTime = pw.status === 'warn_time';
-              const bColor = isTime ? 'border-rose-200 bg-rose-50/30' : 'border-amber-200 bg-amber-50/30';
-              const tagColor = isTime ? 'bg-rose-100 text-rose-800 border-rose-300' : 'bg-amber-100 text-amber-800 border-amber-300';
-              
-              cardsHtml += `
-                <div class="p-4 rounded-2xl border ${bColor} space-y-2 text-xs hover:shadow-md transition">
-                  <div class="flex justify-between items-center">
-                    <div class="flex items-center gap-2">
-                      <span class="font-black text-slate-900 text-sm cursor-pointer hover:text-blue-700 hover:underline" onclick="openStudentModalByName('${s.name}')">${s.seat}號 ${s.name}</span>
-                      <span class="px-2 py-0.5 rounded-md font-bold text-[11px] bg-slate-100 text-slate-700 border border-slate-200">${pw.subj_name}</span>
-                    </div>
-                    <span class="font-black px-2 py-0.5 rounded-full text-[11px] border ${tagColor}">${pw.label}</span>
-                  </div>
-                  <div class="p-2 bg-white/80 rounded-xl border border-slate-100 text-slate-700 leading-relaxed">
-                    <b>🔍 作答事證</b>：${pw.detail}
-                  </div>
-                  <div class="text-[11px] text-blue-900 font-medium bg-blue-50/80 p-2 rounded-xl border border-blue-100">
-                    <b>🗣️ 晤談處方</b>：${pw.rx}
-                  </div>
-                </div>
-              `;
-            });
-          }
-        });
-
-        const badge = document.getElementById('pacingWarnCountBadge');
-        if (badge) badge.innerText = `${warnCount} 人次需提醒作答節奏`;
-
-        pacBox.innerHTML = cardsHtml || '<div class="text-xs text-slate-400 p-4 col-span-2 text-center bg-slate-50 rounded-2xl border border-slate-200">🎉 全班各考科作答節奏均屬穩健，無卷尾崩盤或前段急躁現象！</div>';
-      }
     }
 
     function openStudentModalByName(name) {
@@ -650,16 +505,14 @@
       currentModalStudent = s;
       currentModalSubj = 'chi';
 
-      const header = document.getElementById('modalHeaderContent');
+            const header = document.getElementById('modalHeaderContent');
       header.innerHTML = `
         <div class="flex items-center gap-3">
           <span class="text-xl font-black">${cName} ${s.seat} 號 ${s.name}</span>
           <span class="badge badge-amber text-xs font-black">4科總級分 ${s.tot_lvl} 級分 (${s.tot_score}分)</span>
-          <span class="badge badge-blue text-xs font-black">${s.triage_label}</span>
         </div>
-        <p class="text-xs text-blue-200">優勢科: <b>${s.top_subj}</b> ｜ 瓶頸科: <b>${s.bot_subj}</b> ｜ 晤談焦點: ${s.triage_focus}</p>
+        <p class="text-xs text-blue-200">優勢科: <b>${s.top_subj}</b> ｜ 瓶頸科: <b>${s.bot_subj}</b></p>
       `;
-
       renderModalBody();
       document.getElementById('studentModal').classList.remove('hidden');
     }
@@ -750,9 +603,9 @@
     function closeModalOnBackdrop(e) { if (e.target.id === 'studentModal') closeModal(); }
 
     function downloadClassCSV() {
-      let csv = '班級,座號,姓名,4科總級分,總得分,國文級分,英文級分,數A級分,自然,優勢科,瓶頸科,晤談優先序,作答節奏\n';
+      let csv = '班級,座號,姓名,4科總級分,總得分,國文級分,英文級分,數A級分,社會,優勢科,瓶頸科\n';
       students.forEach(s => {
-        csv += `${cName},${s.seat},${s.name},${s.tot_lvl},${s.tot_score},${s.chi.level},${s.eng.corr_level},${s.mathA.level},${s[specKey].level},${s.top_subj},${s.bot_subj},${s.triage_code},${s.pacing_type}\n`;
+        csv += `${cName},${s.seat},${s.name},${s.tot_lvl},${s.tot_score},${s.chi.level},${s.eng.corr_level},${s.mathA.level},${s[specKey].level},${s.top_subj},${s.bot_subj}\n`;
       });
       const blob = new Blob(["\uFEFF" + csv], { type: 'text/csv;charset=utf-8;' });
       const link = document.createElement("a");
