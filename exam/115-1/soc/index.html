@@ -1335,11 +1335,12 @@
       } else {
         if (bAuto) bAuto.className = 'px-2.5 py-1 rounded-lg font-bold bg-blue-600 text-white shadow-sm transition flex items-center gap-1';
       }
-      localStorage.setItem('putai_preferred_layout_mode', mode);
+      try { if (typeof localStorage !== 'undefined') localStorage.setItem('putai_preferred_layout_mode', mode); } catch(e){}
     }
 
     // Auto restore preferred layout mode
-    const savedLayout = localStorage.getItem('putai_preferred_layout_mode');
+    let savedLayout = null;
+try { if (typeof localStorage !== 'undefined') savedLayout = localStorage.getItem('putai_preferred_layout_mode'); } catch(e){}
     if (savedLayout && ['auto', 'mobile', 'desktop'].includes(savedLayout)) {
       setLayoutMode(savedLayout);
     }
