@@ -678,18 +678,26 @@
       const okPct = totalQ > 0 ? ((okQ / totalQ) * 100).toFixed(1) : 0;
 
       const cellsHtml = grid.map(g => {
+        const info = getReadableAnswerInfo(g, null);
+        const pNum = g.paper_q ? `紙本第 ${g.paper_q} 題` : `第 ${g.q} 題`;
+        const topicInfo = g.topic ? ` ｜ ${g.topic}` : '';
+        const domainInfo = g.domain ? ` [${g.domain}]` : '';
+        
         if (g.ok) {
+          const displayStud = (g.stud === 'M' || !g.stud || g.stud === '-') ? '✓' : g.stud;
           return `
-            <div class="grid-cell grid-cell-ok" title="第 ${g.q} 題: 答對 (劃記 ${g.stud || '正解'})">
+            <div class="grid-cell grid-cell-ok" title="${pNum}${domainInfo}${topicInfo} ｜ ${info.studLabel}">
               <span class="text-[9px] text-emerald-600 font-normal">#${g.q}</span>
-              <span class="font-black text-emerald-800 text-[11px]">${g.stud || 'O'}</span>
+              <span class="font-black text-emerald-800 text-[11px]">${displayStud}</span>
             </div>
           `;
         } else {
+          const displayStud = (!g.stud || g.stud === '-' || g.stud === ' ') ? '未' : (g.stud === 'M' ? '多' : g.stud);
+          const displayDiff = (g.diff === 'X' || !g.diff) ? '' : g.diff;
           return `
-            <div class="grid-cell grid-cell-wrong" title="第 ${g.q} 題: 答錯 (劃記 ${g.stud || '未答'} ↳ 正解 ${g.diff})">
+            <div class="grid-cell grid-cell-wrong" title="${pNum}${domainInfo}${topicInfo} ｜ ❌ 劃記: ${info.studLabel} ↳ 正解: ${info.ansLabel}">
               <span class="text-[9px] text-rose-500 font-normal">#${g.q}</span>
-              <span class="font-black text-rose-700 text-[11px]">${g.stud || '✕'}<span class="text-[9px] text-amber-600 font-bold">${g.diff}</span></span>
+              <span class="font-black text-rose-700 text-[11px]">${displayStud}<span class="text-[9px] text-amber-600 font-bold">${displayDiff}</span></span>
             </div>
           `;
         }
