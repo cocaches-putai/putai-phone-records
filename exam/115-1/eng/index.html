@@ -466,9 +466,9 @@
       if (g.ok) {
         studLabel = realAns ? `${realAns} (命中正解)` : '命中正解';
       } else if (!g.stud || g.stud === '-' || g.stud === ' ') {
-        studLabel = '未作答';
+        studLabel = '未作答(空白)';
       } else if (g.stud === 'M') {
-        studLabel = isMulti ? '多選劃記' : '複選劃記';
+        studLabel = isMulti ? '多選未全對' : '多重劃記';
       } else {
         studLabel = `${g.stud}`;
       }
@@ -884,7 +884,7 @@
             ${tierBadge}
             ${groupInfo}
           </div>
-          <p class="text-xs text-blue-200 mt-1">${s.cohort} ｜ ${s.track} ｜ 4科總級分 ${s.tot_lvl} 級分 (均總分 ${s.tot_score}分)</p>
+          <p class="text-xs text-blue-200 mt-1">${s.cohort} ｜ ${s.track} ｜ 4科總級分 ${s.tot_lvl} 級分 ${s.tot_score ? `(總得分 ${s.tot_score}分)` : ""}</p>
         `;
       }
 
