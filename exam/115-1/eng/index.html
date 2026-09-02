@@ -838,27 +838,43 @@
       if (!s) return;
       currentModalStudent = s;
 
+      const lvl = s.subj_lvl || 0;
+      let tierBadge = '<span class="badge badge-slate text-xs font-bold">後標區間</span>';
+      if (lvl >= 12) tierBadge = '<span class="badge badge-amber text-xs font-black">🏆 達全國頂標 (≥12級)</span>';
+      else if (lvl >= 10) tierBadge = '<span class="badge badge-blue text-xs font-black">🌟 達全國前標 (≥10級)</span>';
+      else if (lvl >= 8) tierBadge = '<span class="badge badge-emerald text-xs font-black">⚖️ 達全國均標 (≥8級)</span>';
+      else if (lvl < 3) tierBadge = '<span class="badge badge-rose text-xs font-black">🚨 需補救 (底標以下)</span>';
+
+      let groupInfo = '';
+      if (sId === 'eng') {
+        groupInfo = `<span class="px-2 py-0.5 bg-blue-500/30 text-blue-100 rounded text-[11px] font-bold">英文分組: ${s.eng_group || s.class} (任課: ${s.eng_teacher || '-'})</span>`;
+      } else if (sId === 'mathA') {
+        groupInfo = `<span class="px-2 py-0.5 bg-purple-500/30 text-purple-100 rounded text-[11px] font-bold">數學分組: ${s.math_group || s.class} (任課: ${s.math_teacher || '-'})</span>`;
+      }
+
       const header = document.getElementById('modalHeaderContent');
       if (header) {
         header.innerHTML = `
-          <div class="flex items-center gap-3">
+          <div class="flex flex-wrap items-center gap-2.5">
             <span class="text-xl font-black">${s.class} ${s.seat} 號 ${s.name}</span>
             <span class="badge badge-amber text-xs font-black">${sName} ${s.subj_lvl} 級分 (${s.subj_score}分)</span>
-            <span class="badge badge-blue text-xs font-black">${s.subj_tier_label}</span>
+            ${tierBadge}
+            ${groupInfo}
           </div>
-          <p class="text-xs text-blue-200">${s.cohort} ｜ ${s.track} ｜ 4科總級分 ${s.tot_lvl} 級分</p>
+          <p class="text-xs text-blue-200 mt-1">${s.cohort} ｜ ${s.track} ｜ 4科總級分 ${s.tot_lvl} 級分 (均總分 ${s.tot_score}分)</p>
         `;
       }
 
       const grid = s.subj_data.grid || [];
       const totalQ = grid.length;
       const okQ = grid.filter(g => g.ok).length;
+      const wrongList = grid.filter(g => !g.ok);
       const wrongQ = totalQ - okQ;
       const okPct = totalQ > 0 ? Math.round((okQ / totalQ) * 100) : 0;
 
       let cellsHtml = grid.map(g => {
         const cls = g.ok ? 'grid-cell-ok' : 'grid-cell-wrong';
-        const label = g.ok ? '✅ 答對' : `❌ 劃記: ${g.stud || '未填'}`;
+        const label = g.ok ? '✅ 答對' : `❌ 劃記: ${g.stud || '未填'} (正解: ${g.diff})`;
         const pNum = g.paper_q ? `紙本第 ${g.paper_q} 題` : `第 ${g.q} 題`;
         const topicInfo = g.topic ? ` ｜ ${g.topic}` : '';
         const titleStr = `${pNum} [${g.domain || '試題'}]${topicInfo} ｜ ${label}`;
@@ -866,7 +882,7 @@
         return `
           <div class="grid-cell ${cls}" title="${titleStr}">
             <span class="text-[9px] text-slate-400 leading-none">#${g.q}</span>
-            <span class="leading-none mt-0.5">${g.stud || '-'}</span>
+            <span class="leading-none mt-0.5 font-bold">${g.stud || '-'}</span>
           </div>
         `;
       }).join('');
@@ -881,11 +897,11 @@
             </div>
             <div class="p-2.5 bg-blue-50/70 rounded-xl border border-blue-200">
               <span class="text-blue-700 text-[11px] font-bold">國寫知性題</span>
-              <div class="font-black text-blue-950 text-sm mt-0.5">${s.subj_data.reading || 0} / 25 分</div>
+              <div class="font-black text-blue-950 text-sm mt-0.5">${s.subj_data.w1 || s.subj_data.reading || 0} / 25 分</div>
             </div>
             <div class="p-2.5 bg-purple-50/70 rounded-xl border border-purple-200">
               <span class="text-purple-700 text-[11px] font-bold">國寫情意題</span>
-              <div class="font-black text-purple-950 text-sm mt-0.5">${s.subj_data.writing || 0} / 25 分</div>
+              <div class="font-black text-purple-950 text-sm mt-0.5">${s.subj_data.w2 || s.subj_data.writing || 0} / 25 分</div>
             </div>
           </div>
         `;
@@ -894,7 +910,7 @@
           <div class="grid grid-cols-3 gap-2 text-center text-xs">
             <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200">
               <span class="text-slate-400 text-[11px]">選擇題得分</span>
-              <div class="font-black text-slate-900 text-sm mt-0.5">${s.subj_data.corr_choice || 0} 分</div>
+              <div class="font-black text-slate-900 text-sm mt-0.5">${s.subj_data.corr_choice || s.subj_data.choice || 0} 分</div>
             </div>
             <div class="p-2.5 bg-blue-50/70 rounded-xl border border-blue-200">
               <span class="text-blue-700 text-[11px] font-bold">中譯英翻譯</span>
@@ -919,7 +935,6 @@
                 <span class="px-2 py-0.5 bg-purple-200/70 text-purple-900 font-bold rounded-md text-[10px]">選填題真題整合</span>
               </div>
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-                <!-- Q14 -->
                 <div class="p-2.5 bg-white rounded-xl border ${fis.q14.is_correct ? 'border-emerald-200 bg-emerald-50/30' : 'border-slate-200'} space-y-1">
                   <div class="flex justify-between items-center">
                     <span class="font-bold text-slate-800 text-[11px]">選填 A (第 14 題) 雙重根式</span>
@@ -929,7 +944,6 @@
                   <div class="text-[9.5px] text-slate-400">劃記: ${fis.q14.blanks}</div>
                 </div>
 
-                <!-- Q15 -->
                 <div class="p-2.5 bg-white rounded-xl border ${fis.q15.is_correct ? 'border-emerald-200 bg-emerald-50/30' : 'border-slate-200'} space-y-1">
                   <div class="flex justify-between items-center">
                     <span class="font-bold text-slate-800 text-[11px]">選填 B (第 15 題) 多項式餘式</span>
@@ -939,7 +953,6 @@
                   <div class="text-[9.5px] text-slate-400">劃記: ${fis.q15.blanks}</div>
                 </div>
 
-                <!-- Q16 -->
                 <div class="p-2.5 bg-white rounded-xl border ${fis.q16.is_correct ? 'border-emerald-200 bg-emerald-50/30' : 'border-slate-200'} space-y-1">
                   <div class="flex justify-between items-center">
                     <span class="font-bold text-slate-800 text-[11px]">選填 C (第 16 題) 圓與切線求圓心</span>
@@ -949,7 +962,6 @@
                   <div class="text-[9.5px] text-slate-400">劃記: ${fis.q16.blanks}</div>
                 </div>
 
-                <!-- Q17 -->
                 <div class="p-2.5 bg-white rounded-xl border ${fis.q17.is_correct ? 'border-emerald-200 bg-emerald-50/30' : 'border-slate-200'} space-y-1">
                   <div class="flex justify-between items-center">
                     <span class="font-bold text-slate-800 text-[11px]">選填 D (第 17 題) 常用對數估算</span>
@@ -995,6 +1007,37 @@
         `;
       }
 
+      let wrongListHtml = '';
+      if (wrongList.length > 0) {
+        wrongListHtml = `
+          <div class="p-4 bg-rose-50/50 rounded-2xl border border-rose-200 space-y-2.5">
+            <div class="flex justify-between items-center text-xs">
+              <span class="font-black text-rose-900 flex items-center gap-1.5">
+                <span>🚨 【本生失分錯題 ＆ 待補強概念清單（共 ${wrongList.length} 題）】：</span>
+              </span>
+              <span class="text-[11px] text-rose-700 font-bold">點擊題目可對照考點</span>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+              ${wrongList.map(wg => `
+                <div class="p-2 bg-white rounded-xl border border-rose-100 flex items-start gap-2 shadow-2xs">
+                  <span class="px-1.5 py-0.5 bg-rose-100 text-rose-800 font-mono font-black text-[10px] rounded shrink-0">#${wg.q}</span>
+                  <div class="space-y-0.5 min-w-0">
+                    <div class="font-bold text-slate-800 text-[11px] truncate" title="${wg.topic || '試題概念'}">${wg.topic || '試題概念'}</div>
+                    <div class="text-[10px] text-slate-500">學生劃記: <b class="text-rose-600 font-mono">${wg.stud || '未填'}</b> ｜ 正解: <b class="text-emerald-700 font-mono">${wg.diff || '-'}</b> ${wg.domain ? '(' + wg.domain + ')' : ''}</div>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      } else {
+        wrongListHtml = `
+          <div class="p-3.5 bg-emerald-50 rounded-2xl border border-emerald-200 text-xs text-emerald-800 font-bold text-center">
+            🌟 太棒了！全卷選擇與讀卡題目全對，無失分題目！
+          </div>
+        `;
+      }
+
       const content = document.getElementById('modalContent');
       content.innerHTML = `
         <div class="space-y-4">
@@ -1012,6 +1055,8 @@
               ${cellsHtml || '<div class="text-xs text-slate-400 py-2">無作答明細</div>'}
             </div>
           </div>
+
+          ${wrongListHtml}
         </div>
       `;
 
