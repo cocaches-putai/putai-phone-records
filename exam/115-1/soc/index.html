@@ -471,6 +471,36 @@
   </div>
 
 <script>
+
+    function getReadableAnswerInfo(g, qListRef) {
+      const qNum = g.paper_q || g.q;
+      const item = (qListRef && qListRef.length) ? qListRef.find(it => String(it.paper_q || it.q) === String(qNum) || String(it.q) === String(g.q)) : null;
+      
+      let realAns = (item && item.ans) ? item.ans : (g.diff && g.diff !== 'X' ? g.diff : '');
+      const isMulti = (item && item.q_type === 'multi') || (g.domain && g.domain.includes('多選'));
+      
+      let studLabel = g.stud;
+      if (g.ok) {
+        studLabel = realAns ? `✅ 正解 (${realAns})` : '✅ 正解';
+      } else if (!g.stud || g.stud === '-' || g.stud === ' ') {
+        studLabel = '⬜ 未作答(空白)';
+      } else if (g.stud === 'M') {
+        studLabel = isMulti ? '⚠️ 多選未全對(複選)' : '⚠️ 雙重劃記(塗改未淨)';
+      } else {
+        studLabel = `${g.stud}`;
+      }
+
+      let ansLabel = realAns || (isMulti ? '多選標準正解' : (g.diff || '標準解答'));
+
+      return {
+        studLabel,
+        ansLabel,
+        realAns,
+        isMulti
+      };
+    }
+
+
     var currentTab = 'overview';
     var currentGlobalCohort = '高三';
 
@@ -962,7 +992,8 @@
 
       let cellsHtml = grid.map(g => {
         const cls = g.ok ? 'grid-cell-ok' : 'grid-cell-wrong';
-        const label = g.ok ? '✅ 答對' : `❌ 劃記: ${g.stud || '未填'} (正解: ${g.diff})`;
+        const info = getReadableAnswerInfo(g, typeof qList !== 'undefined' ? qList : null);
+        const label = g.ok ? `✅ 答對 (正解: ${info.ansLabel})` : `❌ 劃記: ${info.studLabel} ↳ 正解: ${info.ansLabel}`;
         const pNum = g.paper_q ? `紙本第 ${g.paper_q} 題` : `第 ${g.q} 題`;
         const topicInfo = g.topic ? ` ｜ ${g.topic}` : '';
         const titleStr = `${pNum} [${g.domain || '試題'}]${topicInfo} ｜ ${label}`;
@@ -1111,7 +1142,10 @@
                   <span class="px-1.5 py-0.5 bg-rose-100 text-rose-800 font-mono font-black text-[10px] rounded shrink-0">#${wg.q}</span>
                   <div class="space-y-0.5 min-w-0">
                     <div class="font-bold text-slate-800 text-[11px] truncate" title="${wg.topic || '試題概念'}">${wg.topic || '試題概念'}</div>
-                    <div class="text-[10px] text-slate-500">學生劃記: <b class="text-rose-600 font-mono">${wg.stud || '未填'}</b> ｜ 正解: <b class="text-emerald-700 font-mono">${wg.diff || '-'}</b> ${wg.domain ? '(' + wg.domain + ')' : ''}</div>
+                    <div class="text-[10px] text-slate-500">${(() => {
+                    const info = getReadableAnswerInfo(wg, typeof qList !== 'undefined' ? qList : null);
+                    return `學生劃記: <b class="text-rose-600 font-bold">${info.studLabel}</b> ｜ 正解: <b class="text-emerald-700 font-bold font-mono">${info.ansLabel}</b>`;
+                  })()} ${wg.domain ? '(' + wg.domain + ')' : ''}</div>
                   </div>
                 </div>
               `).join('')}
