@@ -914,6 +914,41 @@
       link.click();
     }
 
+    
+    function getStudentsForOption(qNum, optKey, isMulti) {
+      const stus = getCohortStudents().filter(s => s.subj_data && s.subj_data.grid && s.subj_data.grid.length > 0);
+      const cleanKey = String(optKey).trim().toUpperCase();
+
+      return stus.filter(s => {
+        let g = null;
+        if (sId === 'mathA' && typeof qNum === 'number' && qNum <= 8) {
+          g = s.subj_data.grid[qNum];
+        } else {
+          g = s.subj_data.grid.find(item => String(item.paper_q) === String(qNum) || String(item.q) === String(qNum));
+        }
+        if (!g) return false;
+        const ans = String(g.stud || '').trim().toUpperCase();
+        if (cleanKey === '未答') {
+          return ans === '未答' || ans === '-' || ans === '' || ans === 'NONE' || ans === '未';
+        }
+        if (isMulti) {
+          return ans.includes(cleanKey);
+        }
+        return ans === cleanKey;
+      });
+    }
+
+    function toggleOptionStudentList(qId, optKey) {
+      const domId = `optList_${qId}_${optKey.replace(/[^a-zA-Z0-9_-]/g, '_')}`;
+      const el = document.getElementById(domId);
+      if (!el) return;
+      if (el.classList.contains('hidden')) {
+        el.classList.remove('hidden');
+      } else {
+        el.classList.add('hidden');
+      }
+    }
+
     function renderItems() {
       const container = document.getElementById('itemsCardsContainer');
       if (!container) return;
@@ -931,10 +966,11 @@
         else if (it.tag === 'win' || it.diff >= 5) quadBadge = '<span class="badge badge-blue">🌟 優勢題 (領先全國)</span>';
 
         const pNum = it.paper_q ? `紙本第 ${it.paper_q} 題` : `第 ${it.q} 題`;
+        const qIdKey = it.paper_q || it.q;
         const domainBadge = it.domain ? `<span class="px-2 py-0.5 bg-blue-50 text-blue-800 border border-blue-200 rounded-md text-[10px] font-bold">${it.domain}</span>` : '';
         const topicText = it.topic ? `<div class="text-xs font-semibold text-slate-700 mt-1 leading-snug">📌 <b>題幹情境</b>：${it.topic}</div>` : '';
 
-        // Fill-in questions (e.g. in Math)
+        // Fill-in blanks (for Math)
         if (it.q_type === 'fill_in' && it.blanks && it.blanks.length > 0) {
           const qTypeBadge = `<span class="px-2 py-0.5 bg-purple-100 text-purple-900 border border-purple-300 rounded-md text-[10px] font-bold">📐 選填題（共 ${it.blanks.length} 格空格）</span>`;
           
@@ -962,15 +998,30 @@
               }
 
               const displayK = (k === '-' ? '負號 -' : (k === '未答' ? '未劃記' : `數字 ${k}`));
+              const matchedStus = getStudentsForOption(b.q, k, false);
+              const listDomId = `optList_${b.q}_${String(k).replace(/[^a-zA-Z0-9_-]/g, '_')}`;
+
+              let stuChips = matchedStus.map(s => `
+                <span onclick="openStudentModal('${s.name}')" class="inline-block px-1.5 py-0.5 bg-white border border-slate-200 hover:border-blue-400 hover:text-blue-700 rounded text-[10px] text-slate-700 cursor-pointer shadow-2xs font-medium">
+                  ${s.class.replace('高三','3').replace('高二','2')} ${s.name}
+                </span>
+              `).join('');
 
               return `
-                <div class="space-y-0.5 text-[10.5px]">
-                  <div class="flex justify-between ${textColor}">
-                    <span>${displayK} <span class="text-[10px] font-normal">${suffix}</span></span>
+                <div class="space-y-1 text-[10.5px]">
+                  <div class="flex justify-between items-center ${textColor}">
+                    <span class="flex items-center gap-1">
+                      <span>${displayK} <span class="text-[10px] font-normal">${suffix}</span></span>
+                      ${matchedStus.length > 0 ? `<button onclick="toggleOptionStudentList('${b.q}', '${k}')" class="text-[10px] text-blue-600 hover:text-blue-800 font-bold underline cursor-pointer ml-1">👥 名單 (${matchedStus.length}人)</button>` : ''}
+                    </span>
                     <span class="font-bold font-mono">${pct}%</span>
                   </div>
                   <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
                     <div class="${barBg} h-1.5 rounded-full" style="width: ${Math.min(100, Math.max(pct > 0 ? 3 : 0, pct))}%"></div>
+                  </div>
+                  <div id="${listDomId}" class="hidden p-2 bg-slate-50 border border-purple-200 rounded-xl space-y-1">
+                    <div class="text-[10px] font-bold text-slate-500">選填劃記「${displayK}」之學生名單（點擊看診斷卡）：</div>
+                    <div class="flex flex-wrap gap-1 max-h-32 overflow-y-auto">${stuChips || '<span class="text-slate-400">無</span>'}</div>
                   </div>
                 </div>
               `;
@@ -1018,8 +1069,8 @@
               <!-- Individual Blanks Multi-column Grid -->
               <div class="space-y-1.5">
                 <div class="text-xs font-black text-slate-700 flex justify-between items-center">
-                  <span>📊 【各空格獨立劃記分佈 ＆ 誘答數字拆解】：</span>
-                  <span class="text-[11px] text-purple-700 font-normal">綠色為標準答案 ｜ 紅色為主要誘答</span>
+                  <span>📊 【各空格獨立劃記分佈 ＆ 誘答名單穿透】：</span>
+                  <span class="text-[11px] text-purple-700 font-normal">點擊「👥 名單」可直接展開該選項學生</span>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-${Math.min(4, it.blanks.length)} gap-2.5 pt-1">
                   ${blanksHtml}
@@ -1042,6 +1093,14 @@
           optBars = optKeys.map(k => {
             const pct = opts[k] || 0;
             const isCorrectOption = correctKeys.includes(k);
+            const matchedStus = getStudentsForOption(qIdKey, k, true);
+            const listDomId = `optList_${qIdKey}_${String(k).replace(/[^a-zA-Z0-9_-]/g, '_')}`;
+
+            let stuChips = matchedStus.map(s => `
+              <span onclick="openStudentModal('${s.name}')" class="inline-block px-1.5 py-0.5 bg-white border border-slate-200 hover:border-blue-400 hover:text-blue-700 rounded text-[10px] text-slate-700 cursor-pointer shadow-2xs font-medium">
+                ${s.class.replace('高三','3').replace('高二','2')} ${s.name}
+              </span>
+            `).join('');
 
             let barBg = 'bg-slate-200';
             let textColor = 'text-slate-700 font-medium';
@@ -1075,11 +1134,18 @@
             return `
               <div class="space-y-1 text-[11px]">
                 <div class="flex justify-between items-center ${textColor}">
-                  <span>選項 ${k} ${labelSuffix}</span>
+                  <span class="flex items-center gap-1">
+                    <span>選項 ${k} ${labelSuffix}</span>
+                    ${matchedStus.length > 0 ? `<button onclick="toggleOptionStudentList('${qIdKey}', '${k}')" class="text-[10px] text-blue-600 hover:text-blue-800 font-bold underline cursor-pointer ml-1">👥 名單 (${matchedStus.length}人)</button>` : ''}
+                  </span>
                   <span class="font-bold font-mono">${pct}%</span>
                 </div>
                 <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
                   <div class="${barBg} h-2 rounded-full transition-all" style="width: ${Math.min(100, Math.max(pct > 0 ? 3 : 0, pct))}%"></div>
+                </div>
+                <div id="${listDomId}" class="hidden p-2 bg-slate-50 border border-slate-200 rounded-xl space-y-1">
+                  <div class="text-[10px] font-bold text-slate-500">劃記選項「${k}」之學生名單（共 ${matchedStus.length} 人，點擊看診斷卡）：</div>
+                  <div class="flex flex-wrap gap-1 max-h-32 overflow-y-auto">${stuChips || '<span class="text-slate-400">無</span>'}</div>
                 </div>
               </div>
             `;
@@ -1099,6 +1165,15 @@
           optBars = Object.entries(opts).map(([k, pct]) => {
             const isRight = (String(k).trim().toUpperCase() === ansStr);
             const isTrap = (String(k).trim().toUpperCase() === String(topTrap).trim().toUpperCase() && !isRight && pct >= 12);
+            const matchedStus = getStudentsForOption(qIdKey, k, false);
+            const listDomId = `optList_${qIdKey}_${String(k).replace(/[^a-zA-Z0-9_-]/g, '_')}`;
+
+            let stuChips = matchedStus.map(s => `
+              <span onclick="openStudentModal('${s.name}')" class="inline-block px-1.5 py-0.5 bg-white border border-slate-200 hover:border-blue-400 hover:text-blue-700 rounded text-[10px] text-slate-700 cursor-pointer shadow-2xs font-medium">
+                ${s.class.replace('高三','3').replace('高二','2')} ${s.name}
+              </span>
+            `).join('');
+
             let barBg = 'bg-slate-200';
             let textColor = 'text-slate-700';
             let labelSuffix = '';
@@ -1123,11 +1198,18 @@
             return `
               <div class="space-y-1 text-[11px]">
                 <div class="flex justify-between items-center ${textColor}">
-                  <span>選項 ${k} ${labelSuffix}</span>
+                  <span class="flex items-center gap-1">
+                    <span>選項 ${k} ${labelSuffix}</span>
+                    ${matchedStus.length > 0 ? `<button onclick="toggleOptionStudentList('${qIdKey}', '${k}')" class="text-[10px] text-blue-600 hover:text-blue-800 font-bold underline cursor-pointer ml-1">👥 名單 (${matchedStus.length}人)</button>` : ''}
+                  </span>
                   <span class="font-bold font-mono">${pct}%</span>
                 </div>
                 <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
                   <div class="${barBg} h-2 rounded-full transition-all" style="width: ${Math.min(100, Math.max(pct > 0 ? 3 : 0, pct))}%"></div>
+                </div>
+                <div id="${listDomId}" class="hidden p-2 bg-slate-50 border border-slate-200 rounded-xl space-y-1">
+                  <div class="text-[10px] font-bold text-slate-500">選擇「選項 ${k}」之學生名單（共 ${matchedStus.length} 人，點擊看診斷卡）：</div>
+                  <div class="flex flex-wrap gap-1 max-h-32 overflow-y-auto">${stuChips || '<span class="text-slate-400">無</span>'}</div>
                 </div>
               </div>
             `;
@@ -1174,8 +1256,8 @@
 
             <div class="space-y-1.5 pt-1">
               <div class="text-[11px] font-bold text-slate-600 flex justify-between items-center">
-                <span>${isMulti ? '📊 各選項劃記率分佈（綠色 ★ 為應選項 ｜ 紅色 🚨 為多選盲點/誤選）：' : '📊 校內各選項作答分佈（綠色 ★ 為正解 ｜ 紅色 ⚠️ 為主要誘答）：'}</span>
-                ${isMulti ? '<span class="text-purple-700 text-[10px] font-semibold">多選題獨立計分</span>' : ''}
+                <span>${isMulti ? '📊 各選項劃記率分佈 ＆ 名單穿透：' : '📊 校內各選項作答分佈 ＆ 名單穿透：'}</span>
+                <span class="text-[10px] text-blue-600 font-bold">點擊「👥 名單」查看學生名冊</span>
               </div>
               <div class="space-y-2 bg-white p-2.5 rounded-xl border border-slate-100">
                 ${optBars}
