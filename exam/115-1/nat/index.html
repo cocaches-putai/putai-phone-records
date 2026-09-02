@@ -1012,7 +1012,12 @@
         return `
           <div class="grid-cell ${cls}" title="${titleStr}">
             <span class="text-[9px] text-slate-400 leading-none">#${g.q}</span>
-            <span class="leading-none mt-0.5 font-bold">${g.stud || '-'}</span>
+            <span class="leading-none mt-0.5 font-bold">${(() => {
+              if (g.ok) return (g.stud === 'M' || !g.stud || g.stud === '-') ? '✓' : g.stud;
+              if (!g.stud || g.stud === '-' || g.stud === ' ') return '未';
+              if (g.stud === 'M') return '多';
+              return g.stud;
+            })()}</span>
           </div>
         `;
       }).join('');
