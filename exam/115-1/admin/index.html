@@ -305,7 +305,7 @@
 
           <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-1">
             <div class="font-black text-rose-700 text-sm flex items-center gap-1.5">
-              <span>🔥 各科失分重災區 Top 3 錯題病歷</span>
+              <span>班級均分 ＆ 各科表現</span>
             </div>
             <p class="text-slate-600 leading-relaxed text-[11.5px]">
               盤點本班國文、英文、數A、自/社各科班錯率最高之 3 道題目，標註本班主要誤選之誘答選項與正解。
@@ -2072,16 +2072,6 @@
             <div class="text-[10px] text-slate-400">${isNat ? '數理分科' : '文史分科'}</div>
           </div>
         </div>
-
-        <!-- Wrong Questions Top 3 Heatmap Cards -->
-        <div class="space-y-2 pt-1">
-          <div class="font-bold text-xs text-slate-700 flex items-center gap-1.5">
-            <span>🔥 【本班各考科失分重災區 Top 3 錯題病歷】：</span>
-          </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2.5">
-            ${heatmapsHtml}
-          </div>
-        </div>
       `;
 
       // Update Roster Section Header
@@ -3074,7 +3064,7 @@
           </div>
         </div>
 
-        <div class="font-bold text-xs text-slate-800 mb-2">🔥 本班主要失分重災區（任課老師需優先澄清之迷思病灶）：</div>
+        <div class="font-bold text-xs text-slate-800 mb-2"></div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
           ${heatCards}
         </div>
@@ -3223,7 +3213,7 @@
           <button onclick="setItemClassScope('all')" class="text-[11px] text-slate-500 hover:text-slate-900 font-bold">返回全校視角 ✕</button>
         </div>
         <div class="flex flex-wrap items-center gap-2">
-          <span class="text-slate-500 font-bold text-[11px]">🔥 本班失分重災區 Top 3：</span>
+          <span class="text-slate-500 font-bold text-[11px]"></span>
           ${wrongListHtml || '<span class="text-slate-400">本班無特殊重災題目或為非考科組別</span>'}
         </div>
       `;
