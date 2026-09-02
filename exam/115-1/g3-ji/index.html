@@ -431,34 +431,58 @@
       </div>
     </div>
 
-    <!-- ==================== TAB 3: BOTTLENECK & JUMP POTENTIAL ==================== -->
+    <!-- ==================== TAB 3: ACADEMIC PROFILE RADAR & JUMP POTENTIAL ==================== -->
     <div id="tabContent-triage" class="tab-pane space-y-5 hidden">
       
       <!-- Top Purpose Banner for Tab 3 -->
-      <div class="p-4 bg-gradient-to-r from-purple-950 via-slate-900 to-indigo-950 text-white rounded-3xl shadow-sm border border-purple-800/80 space-y-2">
+      <div class="p-4 bg-gradient-to-r from-purple-900 via-indigo-950 to-slate-900 text-white rounded-3xl shadow-sm border border-purple-800/80 space-y-2">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-2 font-black text-sm text-yellow-300">
-            <span>💡 【偏科破口與門檻躍升診斷：班級學力精準輔導指南】</span>
+            <span>💡 【學力型態雷達 ＆ 門檻躍升診斷：班級精準輔導指南】</span>
           </div>
-          <span class="text-[11px] bg-purple-500/30 text-purple-200 px-2.5 py-0.5 rounded-full font-bold border border-purple-400/30">客觀學力 ➔ 精準輔導</span>
+          <span class="text-[11px] bg-purple-500/30 text-purple-200 px-2.5 py-0.5 rounded-full font-bold border border-purple-400/30">多科學力全貌 ➔ 精準輔導</span>
         </div>
         <p class="text-xs leading-relaxed text-purple-100/90">
-          本頁整合兩大客觀決策模組：<b>① 全班偏科破口分析</b>（挪出 20% 強科時間專攻破口科基本盤）、<b>② 五標門檻「壓線生」名單</b>（差 1 題 / 差 1 級分衝標群），協助導師客觀掌握學生學習瓶頸與躍升潛力！
+          本頁整合兩大客觀決策模組：<b>① 全班 4 大學力型態雷達</b>（客觀區分「3強1弱單科瓶頸」、「1強3弱單科拔尖」、「2強2弱文理偏斜」與「均質均衡型」，各科直覺標記五標落點，杜絕輔導誤判）、<b>② 五標門檻「壓線生」名單</b>（差 1 題 / 差 1 級分衝標群），協助導師掌握學生多科全貌與躍升潛力！
         </p>
       </div>
 
-      <!-- Module 1: ⚡ 偏科破口救援名單 -->
-      <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm space-y-3">
-        <div class="flex justify-between items-start border-b border-slate-100 pb-3">
+      <!-- Module 1: 🧭 4 大學力型態診斷雷達 -->
+      <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm space-y-4">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-slate-100 pb-3">
           <div>
             <h4 class="text-sm font-black text-slate-900 flex items-center gap-2">
-              <span>⚡ 【全班偏科破口 ＆ 關鍵支援名單】</span>
+              <span>🧭 【全班學力型態診斷 ＆ 跨科輔導雷達】</span>
             </h4>
             <p class="text-xs text-slate-500 mt-1">
-              <b>導師參考方針</b>：部分學生常偏好特定強科而忽略弱科。導師可提醒學生適度平衡各科複習時間，優先強化弱科核心基本觀念，總級分提升效益更佳。
+              依據 4 科級分落差客觀分類，並標示各科五標落點，杜絕「將 1 強 3 弱誤判為僅 1 科弱」之輔導盲點：
             </p>
           </div>
+          <!-- Profile Filters -->
+          <div class="flex flex-wrap gap-1 text-xs" id="profileFilterGroup">
+            <button onclick="filterProfileType('all')" class="p-filter-chip px-2.5 py-1 rounded-lg font-bold bg-slate-900 text-white shadow-sm" id="pFilter-all">全部型態</button>
+            <button onclick="filterProfileType('bottle')" class="p-filter-chip px-2.5 py-1 rounded-lg font-bold bg-purple-50 text-purple-800 border border-purple-200" id="pFilter-bottle">⚡ 單科瓶頸 (3強1弱)</button>
+            <button onclick="filterProfileType('solo')" class="p-filter-chip px-2.5 py-1 rounded-lg font-bold bg-amber-50 text-amber-800 border border-amber-200" id="pFilter-solo">🌟 單科拔尖 (1強3弱)</button>
+            <button onclick="filterProfileType('skew')" class="p-filter-chip px-2.5 py-1 rounded-lg font-bold bg-blue-50 text-blue-800 border border-blue-200" id="pFilter-skew">⚖️ 文理偏斜 (2強2弱)</button>
+            <button onclick="filterProfileType('balanced')" class="p-filter-chip px-2.5 py-1 rounded-lg font-bold bg-emerald-50 text-emerald-800 border border-emerald-200" id="pFilter-balanced">🛡️ 均質均衡型</button>
+          </div>
         </div>
+
+        
+        <!-- Five Standards Color & Text Legend Bar -->
+        <div class="p-3 bg-slate-50 rounded-2xl border border-slate-200 text-xs flex flex-wrap items-center justify-between gap-2.5">
+          <div class="flex flex-wrap items-center gap-2 font-bold text-slate-700">
+            <span class="text-slate-500 font-bold text-[11px]">📊 各科五標圖例說明：</span>
+            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md border text-[11px] bg-amber-100 text-amber-950 border-amber-300 font-black">🌟 頂標 (金)</span>
+            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md border text-[11px] bg-blue-100 text-blue-950 border-blue-300 font-black">🚀 前標 (藍)</span>
+            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md border text-[11px] bg-emerald-100 text-emerald-950 border-emerald-300 font-bold">⚖️ 均標 (綠)</span>
+            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md border text-[11px] bg-slate-100 text-slate-700 border-slate-200 font-medium">🛡️ 後標 (灰)</span>
+            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md border text-[11px] bg-rose-100 text-rose-900 border-rose-300 font-black">🚨 底標 (紅)</span>
+          </div>
+          <span class="text-[11px] text-slate-400 font-normal">依據模考廠商公佈之全國全體考生五標常模標準</span>
+        </div>
+
+
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="bottleneckCardsContainer">
           <!-- Populated by JS -->
         </div>
@@ -481,9 +505,7 @@
         </div>
       </div>
 
-    </div>
-
-  </main>
+    </div></main>
 
   <!-- Modal -->
   <div id="studentModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 hidden" onclick="closeModalOnBackdrop(event)">
@@ -815,33 +837,46 @@
         bContainer.innerHTML = list.map(item => {
           const s = item.student;
           const p = item.profile;
+          const e_lvl = s.eng ? (s.eng.corr_level || s.eng.orig_level || s.eng.level || 0) : 0;
+          const s_lvl = (s[specKey] && s[specKey].level) ? s[specKey].level : 0;
+
           return `
-            <div class="p-4 rounded-2xl border ${p.cardBorder} space-y-2 text-xs transition shadow-2xs hover:shadow-sm">
+            <div class="p-4 rounded-3xl border ${p.cardBorder} space-y-2.5 text-xs transition shadow-2xs hover:shadow-sm">
               <div class="flex flex-wrap justify-between items-center gap-1.5 border-b border-slate-200/60 pb-2">
-                <span class="font-black text-slate-900 text-sm cursor-pointer hover:text-blue-600 flex items-center gap-1" onclick="openStudentModalByName('${s.name}')">
+                <span class="font-black text-slate-900 text-sm cursor-pointer hover:text-blue-600 flex items-center gap-1.5" onclick="openStudentModalByName('${s.name}')">
                   <span>${s.seat} 號 ${s.name}</span>
-                  <span class="text-xs font-mono text-slate-500 font-normal">(${s.tot_lvl} 級分)</span>
+                  <span class="text-xs font-normal text-slate-500">(${s.tot_lvl} 級分)</span>
                 </span>
-                <span class="px-2 py-0.5 rounded-full text-[10.5px] font-black border ${p.badgeCls}">${p.title}</span>
+                <span class="px-2.5 py-0.5 rounded-full text-[11px] font-black border ${p.badgeCls}">${p.title}</span>
               </div>
 
-              <!-- 4-Subject Level Pill Matrix -->
-              <div class="grid grid-cols-4 gap-1.5 text-center text-xs py-1">
-                ${p.subjs.map(sub => `
-                  <div class="p-1.5 bg-white/90 rounded-xl border ${sub.lvl === p.maxL ? 'border-amber-300 ring-1 ring-amber-200' : (sub.lvl === p.minL ? 'border-rose-300 bg-rose-50/50' : 'border-slate-200')}">
-                    <div class="text-[10px] text-slate-400 leading-none">${sub.name}</div>
-                    <div class="font-black text-slate-900 text-xs mt-1">${sub.lvl} <span class="text-[9px] font-normal text-slate-400">級</span></div>
-                  </div>
-                `).join('')}
+              <!-- 4-Subject Level Pill Matrix with Five Standards Badges -->
+              <div class="grid grid-cols-4 gap-1.5 text-center text-xs py-0.5">
+                <div class="p-1.5 bg-white/90 rounded-2xl border border-slate-200 shadow-2xs space-y-0.5">
+                  <div class="text-[10px] text-slate-400 font-bold">國文</div>
+                  <div>${formatSubjectLevelWithStandard('chi', s.chi.level)}</div>
+                </div>
+                <div class="p-1.5 bg-white/90 rounded-2xl border border-slate-200 shadow-2xs space-y-0.5">
+                  <div class="text-[10px] text-slate-400 font-bold">英文</div>
+                  <div>${formatSubjectLevelWithStandard('eng', e_lvl)}</div>
+                </div>
+                <div class="p-1.5 bg-white/90 rounded-2xl border border-slate-200 shadow-2xs space-y-0.5">
+                  <div class="text-[10px] text-slate-400 font-bold">數A</div>
+                  <div>${formatSubjectLevelWithStandard('mathA', s.mathA.level)}</div>
+                </div>
+                <div class="p-1.5 bg-white/90 rounded-2xl border border-slate-200 shadow-2xs space-y-0.5">
+                  <div class="text-[10px] text-slate-400 font-bold">${specCol}</div>
+                  <div>${formatSubjectLevelWithStandard(specKey, s_lvl)}</div>
+                </div>
               </div>
 
               <!-- Educational Guidance Box -->
-              <div class="text-[11px] text-slate-700 bg-white/80 p-2.5 rounded-xl border border-slate-200/80 leading-relaxed">
+              <div class="text-[11px] text-slate-700 bg-white/90 p-3 rounded-2xl border border-slate-200 leading-relaxed shadow-2xs">
                 💡 <b>導師輔導備忘</b>：${p.advice}
               </div>
             </div>
           `;
-        }).join('') || '<div class="text-xs text-slate-400 p-4 text-center col-span-2">此學力型態分類下無學生</div>';
+        }).join('') || '<div class="text-xs text-slate-400 p-6 text-center col-span-2">此學力型態分類下無學生</div>';
       }
 
       const nContainer = document.getElementById('nearStandardCardsContainer');
