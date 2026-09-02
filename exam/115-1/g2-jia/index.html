@@ -395,6 +395,20 @@
           </div>
         </div>
 
+        
+        <!-- Five Standards Color & Text Legend Bar -->
+        <div class="p-3 bg-slate-50 rounded-2xl border border-slate-200 text-xs flex flex-wrap items-center justify-between gap-2.5">
+          <div class="flex flex-wrap items-center gap-2 font-bold text-slate-700">
+            <span class="text-slate-500 font-bold text-[11px]">📊 各科五標圖例說明：</span>
+            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md border text-[11px] bg-amber-100 text-amber-950 border-amber-300 font-black">🌟 頂標 (金)</span>
+            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md border text-[11px] bg-blue-100 text-blue-950 border-blue-300 font-black">🚀 前標 (藍)</span>
+            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md border text-[11px] bg-emerald-100 text-emerald-950 border-emerald-300 font-bold">⚖️ 均標 (綠)</span>
+            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md border text-[11px] bg-slate-100 text-slate-700 border-slate-200 font-medium">🛡️ 後標 (灰)</span>
+            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md border text-[11px] bg-rose-100 text-rose-900 border-rose-300 font-black">🚨 底標 (紅)</span>
+          </div>
+          <span class="text-[11px] text-slate-400 font-normal">依據模考廠商公佈之全國全體考生五標常模標準</span>
+        </div>
+
         <div class="overflow-x-auto border border-slate-200 rounded-2xl max-h-[600px] overflow-y-auto">
           <table class="w-full text-xs text-left">
             <thead class="bg-slate-100 text-slate-700 font-bold sticky top-0 border-b border-slate-200">
@@ -489,6 +503,75 @@
   </div>
 
   <script>
+
+    function formatSubjectLevelWithStandard(sKey, lvl) {
+      const stds = {
+        'chi': { top: 14, front: 13, avg: 12, back: 10, bot: 9 },
+        'eng': { top: 12, front: 10, avg: 8, back: 5, bot: 3 },
+        'mathA': { top: 13, front: 11, avg: 7, back: 4, bot: 3 },
+        'nat': { top: 13, front: 11, avg: 9, back: 6, bot: 5 },
+        'soc': { top: 13, front: 11, avg: 10, back: 9, bot: 7 }
+      };
+      const s = stds[sKey] || stds['chi'];
+      if (lvl === undefined || lvl === null || isNaN(lvl)) return '<span class="text-slate-300">-</span>';
+      
+      let badgeStyle = '';
+      let tagText = '';
+      if (lvl >= s.top) {
+        badgeStyle = 'bg-amber-100 text-amber-950 border-amber-300 font-black shadow-2xs';
+        tagText = '頂';
+      } else if (lvl >= s.front) {
+        badgeStyle = 'bg-blue-100 text-blue-950 border-blue-300 font-black shadow-2xs';
+        tagText = '前';
+      } else if (lvl >= s.avg) {
+        badgeStyle = 'bg-emerald-100 text-emerald-950 border-emerald-300 font-bold';
+        tagText = '均';
+      } else if (lvl >= s.back) {
+        badgeStyle = 'bg-slate-100 text-slate-700 border-slate-200 font-medium';
+        tagText = '後';
+      } else {
+        badgeStyle = 'bg-rose-100 text-rose-900 border-rose-300 font-black';
+        tagText = '底';
+      }
+
+      return `
+        <div class="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg border text-xs ${badgeStyle}">
+          <span>${lvl}級</span>
+          <span class="text-[9.5px] px-1 py-0.2 rounded bg-white/80 font-bold shadow-2xs">${tagText}</span>
+        </div>
+      `;
+    }
+
+    function formatTotalLevelWithStandard(lvl) {
+      if (lvl === undefined || lvl === null || isNaN(lvl)) return '-';
+      let badgeStyle = '';
+      let tagText = '';
+      if (lvl >= 48) {
+        badgeStyle = 'bg-amber-100 text-amber-950 border-amber-300 font-black shadow-2xs';
+        tagText = '頂標';
+      } else if (lvl >= 40) {
+        badgeStyle = 'bg-blue-100 text-blue-950 border-blue-300 font-black shadow-2xs';
+        tagText = '前標';
+      } else if (lvl >= 31) {
+        badgeStyle = 'bg-emerald-100 text-emerald-950 border-emerald-300 font-bold';
+        tagText = '均標';
+      } else if (lvl >= 23) {
+        badgeStyle = 'bg-slate-100 text-slate-700 border-slate-200 font-medium';
+        tagText = '後標';
+      } else {
+        badgeStyle = 'bg-rose-100 text-rose-900 border-rose-300 font-black';
+        tagText = '底標';
+      }
+
+      return `
+        <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl border text-xs ${badgeStyle}">
+          <span class="text-sm font-black">${lvl} 級</span>
+          <span class="text-[10px] px-1 py-0.2 rounded bg-white/80 font-black shadow-2xs">${tagText}</span>
+        </div>
+      `;
+    }
+
+
 
     function getReadableAnswerInfo(g, qListRef) {
       const qNum = g.paper_q || g.q;
@@ -593,12 +676,12 @@
           <tr class="hover:bg-slate-50 border-b border-slate-100 transition">
             <td class="p-3 text-slate-500 font-bold">${s.seat} 號</td>
             <td class="p-3 font-black text-blue-700 cursor-pointer hover:underline text-sm" onclick="openStudentModalByName('${s.name}')">${s.name}</td>
-            <td class="p-3 bg-amber-50/50 font-black text-amber-900 text-sm">${s.tot_lvl} 級分</td>
-            <td class="p-3 font-black text-slate-900">${s.tot_score} 分</td>
-            <td class="p-3 font-bold ${s.chi.level === p.maxL ? 'text-amber-800 font-black bg-amber-50/30' : (s.chi.level === p.minL ? 'text-rose-700 font-black bg-rose-50/30' : '')}">${s.chi.level}級</td>
-            <td class="p-3 font-bold ${e_lvl === p.maxL ? 'text-amber-800 font-black bg-amber-50/30' : (e_lvl === p.minL ? 'text-rose-700 font-black bg-rose-50/30' : '')}">${e_lvl}級</td>
-            <td class="p-3 font-bold ${s.mathA.level === p.maxL ? 'text-amber-800 font-black bg-amber-50/30' : (s.mathA.level === p.minL ? 'text-rose-700 font-black bg-rose-50/30' : '')}">${s.mathA.level}級</td>
-            <td class="p-3 font-bold ${s_lvl === p.maxL ? 'text-amber-800 font-black bg-amber-50/30' : (s_lvl === p.minL ? 'text-rose-700 font-black bg-rose-50/30' : '')}">${s_lvl}級</td>
+            <td class="p-3 bg-amber-50/30">${formatTotalLevelWithStandard(s.tot_lvl)}</td>
+            <td class="p-3 font-black text-slate-900 font-mono">${s.tot_score} 分</td>
+            <td class="p-3">${formatSubjectLevelWithStandard('chi', s.chi.level)}</td>
+            <td class="p-3">${formatSubjectLevelWithStandard('eng', e_lvl)}</td>
+            <td class="p-3">${formatSubjectLevelWithStandard('mathA', s.mathA.level)}</td>
+            <td class="p-3">${formatSubjectLevelWithStandard(specKey, s_lvl)}</td>
             <td class="p-3 text-xs">
               <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md font-black border text-[11px] ${p.badgeCls}">${p.title}</span>
             </td>
