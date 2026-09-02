@@ -90,14 +90,14 @@
   <!-- Main Container -->
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 space-y-5">
     
-    <!-- Top Cohort Switcher Bar -->
+        <!-- Top Cohort Switcher Bar -->
     <div class="bg-white p-3 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row justify-between items-center gap-3">
       <div class="flex items-center gap-2">
         <span class="text-xs font-black text-slate-700 flex items-center gap-1">
           <span>🎯 【請選擇檢視年段】：</span>
         </span>
         <div class="inline-flex rounded-xl bg-slate-100 p-1 border border-slate-200 text-xs font-bold">
-          <button onclick="switchGlobalCohort('高三')" id="cohortBtn-高三" class="cohort-toggle px-3.5 py-1.5 rounded-lg transition bg-blue-600 text-white shadow-sm font-black">
+          <button onclick="switchGlobalCohort('高三')" id="cohortBtn-高三" class="cohort-toggle px-3.5 py-1.5 rounded-lg transition bg-blue-600 text-white shadow-md font-black">
             🎓 高三應考群
           </button>
           <button onclick="switchGlobalCohort('高二')" id="cohortBtn-高二" class="cohort-toggle px-3.5 py-1.5 rounded-lg transition text-slate-600 hover:text-slate-900 font-bold">
@@ -109,12 +109,8 @@
         </div>
       </div>
 
-      <div id="cohortActiveNotice" class="text-xs text-blue-700 font-bold bg-blue-50 px-3 py-1.5 rounded-xl border border-blue-200">
-        📌 目前檢視：<b>🎓 高三應考群</b>（數據、五標與名冊已過濾）
-      </div><div id="cohortActiveNotice" class="text-xs text-blue-700 font-bold bg-blue-50 px-3 py-1.5 rounded-xl border border-blue-200">
-        📌 目前檢視：<b>🎓 高三應考群</b>（數據、五標與名冊已過濾）
-      </div><div id="cohortActiveNotice" class="text-xs text-blue-700 font-bold bg-blue-50 px-3 py-1.5 rounded-xl border border-blue-200">
-        📌 目前檢視：<b>🎓 高三應考群</b>（數據、五標與名冊已過濾）
+      <div id="cohortActiveNotice" class="text-xs text-blue-800 font-bold bg-blue-50 px-3 py-1.5 rounded-xl border border-blue-200 flex items-center gap-1.5">
+        <span>📊 當前年段樣本人數：</span><b id="cohortActiveNoticeCount" class="text-blue-950 font-black">119 人 (高三)</b>
       </div>
     </div>
 
@@ -432,11 +428,10 @@
         }
       });
 
-      const notice = document.getElementById('cohortActiveNotice');
-      if (notice) {
-        if (cohort === '高三') notice.innerHTML = '📌 目前檢視：<b>🎓 高三應考群</b>（共 119 人，五標與名冊已鎖定）';
-        else if (cohort === '高二') notice.innerHTML = '📌 目前檢視：<b>🌱 高二健檢群</b>（共 116 人，五標與名冊已鎖定）';
-        else notice.innerHTML = '📌 目前檢視：<b>🏫 全體年段</b>（共 235 人，跨年段常模全貌）';
+      const stus = getCohortStudents();
+      const countEl = document.getElementById('cohortActiveNoticeCount');
+      if (countEl) {
+        countEl.innerText = `${stus.length} 人 (${cohort})`;
       }
 
       updateCohortBadge();
