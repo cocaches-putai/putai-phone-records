@@ -3136,16 +3136,17 @@
 
       let cellsHtml = '';
       grid.forEach(g => {
+        const info = getReadableAnswerInfo(g, null);
         const isOk = g.ok;
-        const studAns = g.stud || '未答';
-        const rightAns = g.diff || '';
+        const displayStud = isOk ? ((g.stud === 'M' || !g.stud || g.stud === '-') ? '✓' : g.stud) : ((!g.stud || g.stud === '-' || g.stud === ' ') ? '未' : (g.stud === 'M' ? '多' : g.stud));
+        const displayDiff = (g.diff === 'X' || !g.diff) ? '' : g.diff;
         
         cellsHtml += `
           <div class="flex flex-col items-center justify-center p-1.5 rounded-lg text-center ${isOk ? 'bg-emerald-600 text-white' : 'bg-rose-600 text-white ring-1 ring-rose-400'}" 
-               title="第 ${g.q} 題 ｜ 學生作答: [${studAns}] ${isOk ? '✅ 答對' : '❌ 答錯 (正解: ' + rightAns + ')'}">
+               title="第 ${g.q} 題 ${g.topic ? '｜ ' + g.topic : ''} ｜ 學生作答: [${info.studLabel}] ${isOk ? '✅ 答對' : '❌ 答錯 ↳ 正解: ' + info.ansLabel}">
             <div class="text-[10px] opacity-80 leading-none">第${g.q}題</div>
-            <div class="text-xs font-black leading-tight mt-0.5">${studAns}</div>
-            ${!isOk && rightAns ? `<div class="text-[9px] font-bold bg-black/40 px-1 rounded text-yellow-300 mt-0.5">${rightAns}</div>` : ''}
+            <div class="text-xs font-black leading-tight mt-0.5">${displayStud}</div>
+            ${!isOk && displayDiff ? `<div class="text-[9px] font-bold bg-black/40 px-1 rounded text-yellow-300 mt-0.5">${displayDiff}</div>` : ''}
           </div>
         `;
       });
