@@ -459,29 +459,22 @@
     function getReadableAnswerInfo(g, qListRef) {
       const qNum = g.paper_q || g.q;
       const item = (qListRef && qListRef.length) ? qListRef.find(it => String(it.paper_q || it.q) === String(qNum) || String(it.q) === String(g.q)) : null;
-      
       let realAns = (item && item.ans) ? item.ans : (g.diff && g.diff !== 'X' ? g.diff : '');
       const isMulti = (item && item.q_type === 'multi') || (g.domain && g.domain.includes('多選'));
       
       let studLabel = g.stud;
       if (g.ok) {
-        studLabel = realAns ? `✅ 正解 (${realAns})` : '✅ 正解';
+        studLabel = realAns ? `${realAns} (命中正解)` : '命中正解';
       } else if (!g.stud || g.stud === '-' || g.stud === ' ') {
-        studLabel = '⬜ 未作答(空白)';
+        studLabel = '未作答';
       } else if (g.stud === 'M') {
-        studLabel = isMulti ? '⚠️ 多選未全對(複選)' : '⚠️ 雙重劃記(塗改未淨)';
+        studLabel = isMulti ? '多選劃記' : '複選劃記';
       } else {
         studLabel = `${g.stud}`;
       }
 
       let ansLabel = realAns || (isMulti ? '多選標準正解' : (g.diff || '標準解答'));
-
-      return {
-        studLabel,
-        ansLabel,
-        realAns,
-        isMulti
-      };
+      return { studLabel, ansLabel, realAns, isMulti };
     }
 
 
