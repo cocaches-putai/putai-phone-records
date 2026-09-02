@@ -148,17 +148,18 @@
         </div>
 
 
-      <!-- Section 1.5: Subject Specific Five Standards & Grade Step Table -->
-      <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm space-y-3">
-        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-slate-100 pb-2.5">
+      
+      <!-- Section 1.5: Official National Mock Exam Five Standards & Grade Step Table -->
+      <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-slate-100 pb-3">
           <div>
-            <h4 class="text-sm font-black text-slate-900 flex items-center gap-2">
-              <span>📑 【自然科 五標級分門檻、分數換算 ＆ 級距標準表】</span>
+            <h4 class="text-base font-black text-slate-900 flex items-center gap-2">
+              <span>📑 【自然科 模考廠商全國全體考生五標級分門檻、換算分數 ＆ 級距標準表】</span>
             </h4>
-            <p class="text-xs text-slate-400 mt-0.5">提供高三應屆常模與高二越級檢測五標門檻、級距計算值（滿分 128 分）</p>
+            <p class="text-xs text-slate-400 mt-0.5">依據模考廠商全國全體考生統計常模（滿分 128 分 ｜ 15 級分制），不額外針對校內個別換算</p>
           </div>
           <div class="flex items-center gap-2 text-xs font-bold text-slate-700 bg-slate-100 px-3 py-1 rounded-xl">
-            <span>📐 本考科計算級距：</span>
+            <span>📐 模考全國計算級距：</span>
             <span class="font-mono font-black text-blue-700 bg-white px-2 py-0.5 rounded border border-slate-200">7.20 分 / 級</span>
           </div>
         </div>
@@ -167,42 +168,29 @@
           <table class="w-full text-xs text-left">
             <thead class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
               <tr>
-                <th class="p-3">常模年段樣本</th>
+                <th class="p-3">常模標準樣本</th>
+                <th class="p-3 text-center">全國計算級距</th>
                 <th class="p-3 text-center bg-blue-50 text-blue-900 font-black">頂標 (P88)</th>
                 <th class="p-3 text-center text-indigo-900">前標 (P75)</th>
                 <th class="p-3 text-center bg-emerald-50 text-emerald-900 font-black">均標 (P50)</th>
                 <th class="p-3 text-center text-slate-600">後標 (P25)</th>
                 <th class="p-3 text-center text-slate-500">底標 (P12)</th>
-                <th class="p-3 text-center bg-amber-50 text-amber-900 font-black">普台年段實測均分</th>
-                <th class="p-3 text-center">級距基準</th>
+                <th class="p-3 text-center">試卷架構與配分</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-slate-100">
-              <tr class="hover:bg-slate-50 transition">
+              <tr class="hover:bg-slate-50 transition font-medium">
                 <td class="p-3 font-bold text-slate-900 flex items-center gap-1.5">
-                  <span class="px-2 py-0.5 bg-blue-100 text-blue-900 rounded font-black text-[10px]">高三</span>
-                  <span>高三應屆常模矩陣</span>
+                  <span class="px-2.5 py-0.5 bg-blue-100 text-blue-900 rounded-full font-black text-[10px]">全國常模</span>
+                  <span>模考全體考生標準五標</span>
                 </td>
+                <td class="p-3 text-center font-mono font-bold text-slate-700">7.20 <span class="text-[10px] text-slate-400">分/級</span></td>
                 <td class="p-3 text-center font-mono font-bold text-blue-800 bg-blue-50/50">13 級 <span class="text-[10px] text-slate-500 font-normal">(≥86.4分)</span></td>
                 <td class="p-3 text-center font-mono font-bold text-indigo-700 bg-indigo-50/30">11 級 <span class="text-[10px] text-slate-500 font-normal">(≥72.0分)</span></td>
                 <td class="p-3 text-center font-mono font-bold text-emerald-800 bg-emerald-50/50">9 級 <span class="text-[10px] text-slate-500 font-normal">(≥57.6分)</span></td>
                 <td class="p-3 text-center font-mono text-slate-600">6 級 <span class="text-[10px] text-slate-400 font-normal">(≥36.0分)</span></td>
                 <td class="p-3 text-center font-mono text-slate-500">5 級 <span class="text-[10px] text-slate-400 font-normal">(≥28.8分)</span></td>
-                <td class="p-3 text-center font-mono font-black text-amber-900 bg-amber-50/40" id="stdCardG3Avg">載入中...</td>
-                <td class="p-3 text-center font-mono font-bold text-slate-700">7.20 分/級</td>
-              </tr>
-              <tr class="hover:bg-slate-50 transition">
-                <td class="p-3 font-bold text-slate-900 flex items-center gap-1.5">
-                  <span class="px-2 py-0.5 bg-emerald-100 text-emerald-900 rounded font-black text-[10px]">高二</span>
-                  <span>高二越級檢測常模</span>
-                </td>
-                <td class="p-3 text-center font-mono font-bold text-blue-800 bg-blue-50/50">11 級 <span class="text-[10px] text-slate-500 font-normal">(≥72.0分)</span></td>
-                <td class="p-3 text-center font-mono font-bold text-indigo-700 bg-indigo-50/30">9 級 <span class="text-[10px] text-slate-500 font-normal">(≥57.6分)</span></td>
-                <td class="p-3 text-center font-mono font-bold text-emerald-800 bg-emerald-50/50">7 級 <span class="text-[10px] text-slate-500 font-normal">(≥43.2分)</span></td>
-                <td class="p-3 text-center font-mono text-slate-600">5 級 <span class="text-[10px] text-slate-400 font-normal">(≥28.8分)</span></td>
-                <td class="p-3 text-center font-mono text-slate-500">4 級 <span class="text-[10px] text-slate-400 font-normal">(≥21.6分)</span></td>
-                <td class="p-3 text-center font-mono font-black text-amber-900 bg-amber-50/40" id="stdCardG2Avg">載入中...</td>
-                <td class="p-3 text-center font-mono font-bold text-slate-700">7.20 分/級</td>
+                <td class="p-3 text-center text-slate-600 text-[11px] font-sans">物理 32分 ｜ 化學 32分 ｜ 生物 32分 ｜ 地科 32分 (各佔 25%)</td>
               </tr>
             </tbody>
           </table>
@@ -210,56 +198,12 @@
 
         <div class="p-3 bg-slate-50 rounded-2xl border border-slate-200 text-[11px] text-slate-600 flex flex-wrap items-center justify-between gap-2">
           <span>💡 <b>級距與級分換算</b>：本考科級距為 <b>7.20 分</b>。考生原始得分 ÷ 7.20 ＝ 換算級分（無條件進位至整數，最高 15 級分）。</span>
-          <span class="text-slate-400 font-mono">五標門檻為該標別之最低累積百分位級分</span>
+          <span class="text-slate-400 font-mono">五標門檻為該標別之最低累積百分位級分與最低原始得分要求</span>
         </div>
       </div>
     
 
-
-      <!-- Subdiscipline Weighting & CEEC Standard Controller -->
-      <div class="bg-gradient-to-r from-emerald-500/10 via-slate-50 to-teal-500/10 p-5 rounded-3xl border border-emerald-200 shadow-sm space-y-3">
-        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-emerald-200/60 pb-2.5">
-          <div>
-            <h4 class="text-sm font-black text-slate-900 flex items-center gap-1.5">
-              <span>⚖️ 【自然科 分科配分權重 ＆ 分科標準常模調整器】</span>
-            </h4>
-            <p class="text-xs text-slate-500 mt-0.5">針對模擬考物/化/生/地各科題目配分不均問題，提供「大考中心 1:1:1:1 常模」與「自訂權重」動態試算</p>
-          </div>
-          <div class="flex items-center gap-1 bg-white p-1 rounded-xl border border-slate-200 text-xs font-bold shadow-2xs">
-            <button onclick="setSubWeightMode('ceec')" id="btnWeight-ceec" class="px-2.5 py-1 rounded-lg bg-emerald-600 text-white font-black shadow-sm transition">學測標準比例 (1:1:1:1)</button>
-            <button onclick="setSubWeightMode('raw')" id="btnWeight-raw" class="px-2.5 py-1 rounded-lg text-slate-600 hover:text-slate-900 transition">本卷實測原始分</button>
-            <button onclick="setSubWeightMode('custom')" id="btnWeight-custom" class="px-2.5 py-1 rounded-lg text-slate-600 hover:text-slate-900 transition">自訂權重比例</button>
-          </div>
-        </div>
-
-        <div id="customWeightInputs" class="hidden grid grid-cols-2 sm:grid-cols-4 gap-3 p-3 bg-white rounded-2xl border border-emerald-100 text-xs">
-          <div class="space-y-1">
-            <span class="text-slate-600 font-bold">物理權重 (%)：</span>
-            <input type="number" id="inputWeightP" value="25.0" min="0" max="100" step="0.1" onchange="applyCustomWeights()" class="w-full px-2.5 py-1 rounded-lg border border-slate-200 font-mono font-bold text-slate-800 text-center">
-          </div>
-          <div class="space-y-1">
-            <span class="text-slate-600 font-bold">化學權重 (%)：</span>
-            <input type="number" id="inputWeightC" value="25.0" min="0" max="100" step="0.1" onchange="applyCustomWeights()" class="w-full px-2.5 py-1 rounded-lg border border-slate-200 font-mono font-bold text-slate-800 text-center">
-          </div>
-          <div class="space-y-1">
-            <span class="text-slate-600 font-bold">生物權重 (%)：</span>
-            <input type="number" id="inputWeightB" value="25.0" min="0" max="100" step="0.1" onchange="applyCustomWeights()" class="w-full px-2.5 py-1 rounded-lg border border-slate-200 font-mono font-bold text-slate-800 text-center">
-          </div>
-          <div class="space-y-1">
-            <span class="text-slate-600 font-bold">地科權重 (%)：</span>
-            <input type="number" id="inputWeightE" value="25.0" min="0" max="100" step="0.1" onchange="applyCustomWeights()" class="w-full px-2.5 py-1 rounded-lg border border-slate-200 font-mono font-bold text-slate-800 text-center">
-          </div>
-        </div>
-
-        <div class="flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-600">
-          <div class="flex items-center gap-1.5">
-            <span id="currentWeightBadge" class="px-2 py-0.5 bg-emerald-100 text-emerald-900 font-bold rounded-md">⚡ 運算模式：學測標準 1:1:1:1（物 32分 ｜ 化 32分 ｜ 生 32分 ｜ 地 32分，各佔 25%）</span>
-          </div>
-          <span class="text-slate-400">切換模式後，全卷均分、各班矩陣與弱科診斷將即時動態重算</span>
-        </div>
-      </div>
-
-        <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
+    <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
           <div onclick="filterStudentTierAndSwitchTab('top')" id="cardStd-top" class="std-card cursor-pointer bg-white hover:bg-amber-50/50 p-4 rounded-2xl border-2 border-amber-200 shadow-sm text-center transition-all hover:scale-105" title="點擊直接切換至學生名冊查看頂標名單">
             <div class="text-[11px] font-black text-amber-700">🌟 頂標 (P88)</div>
             <div id="statCntTop" class="text-2xl font-black text-amber-950 my-0.5">- <span class="text-xs font-normal">人</span></div>
