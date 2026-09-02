@@ -71,7 +71,7 @@
         <button id="tab-btn-reg" onclick="switchTab('reg')" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold text-slate-300 hover:text-white">📊 註冊組成績總表</button>
         <button id="tab-btn-scatter" onclick="switchTab('scatter')" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold text-slate-300 hover:text-white">🧭 國教院四象限散佈圖</button>
         <button id="tab-btn-roster" onclick="switchTab('roster')" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold text-slate-300 hover:text-white">🎯 領域智能名冊生成器</button>
-        <button id="tab-btn-items" onclick="switchTab('items')" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold text-slate-300 hover:text-white">📑 領域試題診斷與誘答</button>
+        <button id="tab-btn-items" onclick="switchTab('items')" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold text-slate-300 hover:text-white">📑 領域試題診斷與命題趨勢</button>
         <button id="tab-btn-schools" onclick="switchTab('schools')" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold text-slate-300 hover:text-white">🏫 六校五標常模對照</button>
         <button id="tab-btn-search" onclick="switchTab('search')" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold text-slate-300 hover:text-white">🔍 全校名冊標籤檢索</button>
       </nav>
@@ -767,9 +767,9 @@
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pb-3 border-b border-slate-200">
           <div>
             <h3 class="text-lg font-black text-slate-900 flex items-center gap-2">
-              <span>📑 領域試題診斷 ＆ 各班錯題熱點（國教院試題四象限）</span>
+              <span>📑 領域試題診斷與命題趨勢（國教院試題四象限模型）</span>
             </h3>
-            <p class="text-xs text-slate-500 mt-0.5">整合 <b>5 大學科領域備課包</b> 題析：切換考科與班級，即時對照全校 vs 該班失分病灶與課堂 If-Then 澄清指引</p>
+            <p class="text-xs text-slate-500 mt-0.5">整合 <b>5 大學科領域備課包</b> 題析：切換考科，即時對照全校通過率、鑑別度與課堂 If-Then 澄清指引</p>
           </div>
           
           <!-- Subject Select Buttons -->
@@ -787,28 +787,7 @@
           <!-- Populated by JS -->
         </div>
 
-        <!-- Class Perspective Switcher (全校 / 8 班) -->
-        <div class="p-3 bg-slate-50 rounded-2xl border border-slate-200 space-y-2">
-          <div class="flex flex-wrap items-center justify-between gap-2">
-            <div class="flex flex-wrap items-center gap-2 text-xs">
-              <span class="text-slate-500 font-bold min-w-[70px]">班級熱點：</span>
-              <button onclick="setItemClassScope('all')" class="item-cls-btn px-3 py-1 rounded-lg text-xs font-bold bg-slate-900 text-white shadow-sm" id="itemClsBtn-all">🌐 全校全體視角 (235人)</button>
-              <button onclick="setItemClassScope('高三庚')" class="item-cls-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-white text-slate-700 hover:bg-slate-100 border border-slate-200" id="itemClsBtn-高三庚">高三庚 (39人)</button>
-              <button onclick="setItemClassScope('高三己')" class="item-cls-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-white text-slate-700 hover:bg-slate-100 border border-slate-200" id="itemClsBtn-高三己">高三己 (29人)</button>
-              <button onclick="setItemClassScope('高三乙')" class="item-cls-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-white text-slate-700 hover:bg-slate-100 border border-slate-200" id="itemClsBtn-高三乙">高三乙 (28人)</button>
-              <button onclick="setItemClassScope('高三甲')" class="item-cls-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-white text-slate-700 hover:bg-slate-100 border border-slate-200" id="itemClsBtn-高三甲">高三甲 (23人)</button>
-              <button onclick="setItemClassScope('高二庚')" class="item-cls-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-white text-slate-700 hover:bg-slate-100 border border-slate-200" id="itemClsBtn-高二庚">高二庚 (37人)</button>
-              <button onclick="setItemClassScope('高二己')" class="item-cls-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-white text-slate-700 hover:bg-slate-100 border border-slate-200" id="itemClsBtn-高二己">高二己 (24人)</button>
-              <button onclick="setItemClassScope('高二乙')" class="item-cls-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-white text-slate-700 hover:bg-slate-100 border border-slate-200" id="itemClsBtn-高二乙">高二乙 (35人)</button>
-              <button onclick="setItemClassScope('高二甲')" class="item-cls-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-white text-slate-700 hover:bg-slate-100 border border-slate-200" id="itemClsBtn-高二甲">高二甲 (20人)</button>
-            </div>
-          </div>
-
-          <!-- Dynamic Class Heatmap Highlight Banner (shown when a class is selected) -->
-          <div id="classSpecificHeatmapBanner" class="hidden">
-            <!-- Populated by JS -->
-          </div>
-        </div>
+        
 
         <!-- 4-Quadrant Item Classification Filter + Sub-topic Filters -->
         <div class="space-y-3 pt-1">
@@ -1408,7 +1387,7 @@
       if (tabId === 'scatter') { renderScatterPlot(); filterScatterList('Q1'); }
       if (tabId === 'roster') switchRosterDomainCategory(currentRosterDomain);
       
-      if (tabId === 'items') { currentItemFilter = 'all'; currentItemSubTopicFilter = 'sub-all'; renderDomainBriefingCard(); renderClassSpecificHeatmapBanner(); renderSubTopicFilters(); renderItems(); }
+      if (tabId === 'items') { currentItemFilter = 'all'; currentItemSubTopicFilter = 'sub-all'; renderDomainBriefingCard(); renderSubTopicFilters(); renderItems(); }
       if (tabId === 'schools') renderSchools();
       if (tabId === 'search') applySearchFilters();
     }
@@ -2363,77 +2342,6 @@
 
         
 
-    function setItemClassScope(cls) {
-      itemClassScope = cls;
-      document.querySelectorAll('.item-cls-btn').forEach(b => {
-        b.className = 'item-cls-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-white text-slate-700 hover:bg-slate-100 border border-slate-200';
-      });
-      const activeBtn = document.getElementById('itemClsBtn-' + cls);
-      if (activeBtn) activeBtn.className = 'item-cls-btn px-3 py-1 rounded-lg text-xs font-bold bg-slate-900 text-white shadow-sm';
-
-      renderClassSpecificHeatmapBanner();
-      renderItems();
-    }
-
-    function renderClassSpecificHeatmapBanner() {
-      const banner = document.getElementById('classSpecificHeatmapBanner');
-      if (!banner) return;
-
-      if (itemClassScope === 'all') {
-        banner.className = 'hidden';
-        banner.innerHTML = '';
-        return;
-      }
-
-      banner.className = 'mt-2 p-3 bg-white rounded-xl border border-slate-200 text-xs space-y-2';
-      const c_stus = students.filter(s => s.class === itemClassScope);
-      const total = c_stus.length;
-      
-      const subjKeyMap = { '國文': 'chi', '英文': 'eng', '數A': 'mathA', '自然': 'nat', '社會': 'soc' };
-      const sk = subjKeyMap[currentItemSubj] || 'chi';
-      const wrongs = (classHeatmaps[itemClassScope] && classHeatmaps[itemClassScope][sk]) || [];
-
-      // Calculate class average for this subject
-      let avgStr = '-';
-      if (currentItemSubj === '國文') avgStr = (c_stus.reduce((a, b) => a + b.chi.total, 0) / total).toFixed(1);
-      if (currentItemSubj === '英文') avgStr = (c_stus.reduce((a, b) => a + b.eng.corr_total, 0) / total).toFixed(1);
-      if (currentItemSubj === '數A') avgStr = (c_stus.reduce((a, b) => a + b.mathA.total, 0) / total).toFixed(1);
-      if (currentItemSubj === '自然') {
-        const natStus = c_stus.filter(s => s.nat && s.nat.total > 0);
-        avgStr = natStus.length ? (natStus.reduce((a, b) => a + b.nat.total, 0) / natStus.length).toFixed(1) : '非考科';
-      }
-      if (currentItemSubj === '社會') {
-        const socStus = c_stus.filter(s => s.soc && s.soc.total > 0);
-        avgStr = socStus.length ? (socStus.reduce((a, b) => a + b.soc.total, 0) / socStus.length).toFixed(1) : '非考科';
-      }
-
-      let wrongListHtml = '';
-      wrongs.slice(0, 3).forEach(w => {
-        wrongListHtml += `
-          <div class="inline-flex items-center gap-1.5 bg-rose-50 text-rose-800 px-2.5 py-1 rounded-lg border border-rose-200 font-medium text-[11px]">
-            <span>第 <b>${w.q}</b> 題 (正解 ${w.ans})</span>
-            <span class="font-bold">班錯率 ${w.wrong_pct}% (${w.wrong_count}/${total}人)</span>
-            <span class="text-rose-600 opacity-80">↳ ${w.main_trap}</span>
-          </div>
-        `;
-      });
-
-      banner.innerHTML = `
-        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-1.5">
-          <div class="font-bold text-slate-900 flex items-center gap-2">
-            <span>🩺 <b>${itemClassScope}</b> ｜ ${currentItemSubj}科班級實測健檢：</span>
-            <span class="badge badge-blue">班均分: ${avgStr} 分</span>
-            <span class="text-slate-500 font-normal">(${total} 人)</span>
-          </div>
-          <button onclick="setItemClassScope('all')" class="text-[11px] text-slate-500 hover:text-slate-900 font-bold">返回全校視角 ✕</button>
-        </div>
-        <div class="flex flex-wrap items-center gap-2">
-          <span class="text-slate-500 font-bold text-[11px]"></span>
-          ${wrongListHtml || '<span class="text-slate-400">本班無特殊重災題目或為非考科組別</span>'}
-        </div>
-      `;
-    }
-
     function switchItemSubj(subj) {
       currentItemSubj = subj;
       currentItemSubTopicFilter = 'sub-all';
@@ -2446,7 +2354,6 @@
       if (activeBtn) activeBtn.className = 'item-subj-btn px-3.5 py-1.5 rounded-xl text-xs font-black bg-blue-600 text-white shadow-sm';
 
       renderDomainBriefingCard();
-      renderClassSpecificHeatmapBanner();
       renderSubTopicFilters();
       filterItemTrap('all');
     }
