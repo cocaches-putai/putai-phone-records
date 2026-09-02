@@ -270,10 +270,16 @@
               <button onclick="filterStudentTier('bottom')" class="s-tier-chip px-2.5 py-1 rounded-lg font-bold bg-rose-50 text-rose-800 border border-rose-200" id="sTier-bottom">🚨 底標</button>
             </div>
 
-            <!-- Class Filter -->
-            <select id="studentClassFilter" onchange="applyStudentFilters()" class="px-2.5 py-1 rounded-lg bg-slate-100 border border-slate-200 text-slate-700 font-bold text-xs">
-              <!-- Populated dynamically based on selected cohort -->
-            </select>
+            <!-- Running Group Filter -->
+            <div class="flex items-center gap-1">
+              <span class="text-slate-400 font-bold">分組：</span>
+              <div class="flex items-center gap-1">
+              <span class="text-slate-400 font-bold">分組：</span>
+              <select id="studentGroupFilter" onchange="applyStudentFilters()" class="px-2.5 py-1 rounded-lg bg-blue-50 border border-blue-200 text-blue-900 font-black text-xs shadow-sm">
+                <!-- Populated dynamically -->
+              </select>
+            </div>
+            </div>
           </div>
         </div>
 
@@ -281,8 +287,8 @@
           <table class="w-full text-xs text-left">
             <thead class="bg-slate-100 text-slate-700 font-bold sticky top-0 border-b border-slate-200">
               <tr>
-                <th class="p-3">班級</th>
-                <th class="p-3">座號</th>
+                <th class="p-3 bg-blue-50/70 text-blue-900">跑班分組 (教師)</th>
+                <th class="p-3">原班座號</th>
                 <th class="p-3">姓名</th>
                 <th class="p-3 bg-blue-50 text-blue-900 font-black">英文科級分</th>
                 <th class="p-3 font-bold text-slate-900">英文科得分</th>
@@ -515,74 +521,7 @@
       updateSubdisciplineCounts();
     }
 
-    function filterStudentTierAndSwitchTab(tier) {
-      currentStudentTierFilter = tier;
-      currentSubdisciplineWeaknessFilter = 'all';
-      switchTab('roster');
-      
-      document.querySelectorAll('.s-tier-chip').forEach(b => {
-        b.className = 's-tier-chip px-2.5 py-1 rounded-lg font-bold bg-slate-100 text-slate-700 hover:bg-slate-200';
-      });
-      const activeBtn = document.getElementById('sTier-' + tier);
-      if (activeBtn) activeBtn.className = 's-tier-chip px-2.5 py-1 rounded-lg font-bold bg-slate-900 text-white shadow-sm';
-
-      applyStudentFilters();
-    }
-
-    function filterSubdisciplineWeaknessAndSwitch(type) {
-      currentSubdisciplineWeaknessFilter = type;
-      currentStudentTierFilter = 'all';
-      switchTab('roster');
-      applyStudentFilters();
-    }
-
-    function updateClassDropdownOptions() {
-      const select = document.getElementById('studentClassFilter');
-      if (!select) return;
-
-      let opts = '<option value="all">本年段全部班級</option>';
-      if (currentGlobalCohort === '高三') {
-        if (sId === 'nat') opts += '<option value="高三庚">高三庚 (自然組)</option><option value="高三己">高三己 (自然組)</option>';
-        else if (sId === 'soc') opts += '<option value="高三乙">高三乙 (社會組)</option><option value="高三甲">高三甲 (社會組)</option>';
-        else opts += '<option value="高三庚">高三庚</option><option value="高三己">高三己</option><option value="高三乙">高三乙</option><option value="高三甲">高三甲</option>';
-      } else if (currentGlobalCohort === '高二') {
-        if (sId === 'nat') opts += '<option value="高二庚">高二庚 (自然組)</option><option value="高二己">高二己 (自然組)</option>';
-        else if (sId === 'soc') opts += '<option value="高二乙">高二乙 (社會組)</option><option value="高二甲">高二甲 (社會組)</option>';
-        else opts += '<option value="高二庚">高二庚</option><option value="高二己">高二己</option><option value="高二乙">高二乙</option><option value="高二甲">高二甲</option>';
-      } else {
-        opts += '<option value="高三">高三全體</option><option value="高二">高二全體</option>';
-        opts += '<option value="高三庚">高三庚</option><option value="高三己">高三己</option><option value="高三乙">高三乙</option><option value="高三甲">高三甲</option>';
-        opts += '<option value="高二庚">高二庚</option><option value="高二己">高二己</option><option value="高二乙">高二乙</option><option value="高二甲">高二甲</option>';
-      }
-      select.innerHTML = opts;
-    }
-
-    function updateSubdisciplineCounts() {
-      const stus = getCohortStudents();
-      if (sId === 'nat') {
-        const elP = document.getElementById('cntWeakP');
-        const elC = document.getElementById('cntWeakC');
-        const elB = document.getElementById('cntWeakB');
-        const elE = document.getElementById('cntWeakE');
-        const elBal = document.getElementById('cntBalanced');
-        if (elP) elP.innerText = `${stus.filter(s => s.weak_subjs && s.weak_subjs.includes('物理')).length}人`;
-        if (elC) elC.innerText = `${stus.filter(s => s.weak_subjs && s.weak_subjs.includes('化學')).length}人`;
-        if (elB) elB.innerText = `${stus.filter(s => s.weak_subjs && s.weak_subjs.includes('生物')).length}人`;
-        if (elE) elE.innerText = `${stus.filter(s => s.weak_subjs && s.weak_subjs.includes('地科')).length}人`;
-        if (elBal) elBal.innerText = `${stus.filter(s => s.is_balanced_high).length}人`;
-      } else if (sId === 'soc') {
-        const elH = document.getElementById('cntWeakH');
-        const elG = document.getElementById('cntWeakG');
-        const elC = document.getElementById('cntWeakC');
-        const elBal = document.getElementById('cntBalanced');
-        if (elH) elH.innerText = `${stus.filter(s => s.weak_subjs && s.weak_subjs.includes('歷史')).length}人`;
-        if (elG) elG.innerText = `${stus.filter(s => s.weak_subjs && s.weak_subjs.includes('地理')).length}人`;
-        if (elC) elC.innerText = `${stus.filter(s => s.weak_subjs && s.weak_subjs.includes('公民')).length}人`;
-        if (elBal) elBal.innerText = `${stus.filter(s => s.is_balanced_high).length}人`;
-      }
-    }
-
-        function switchMatrixView(mode) {
+    function switchMatrixView(mode) {
       currentMatrixViewMode = mode;
       const bGrp = document.getElementById('mViewBtn-group');
       const bAdm = document.getElementById('mViewBtn-admin');
@@ -685,21 +624,57 @@
       }
     }
 
+    function updateSubdisciplineCounts() {
+      // Stub for subdiscipline count if any
+    }
+
+    function updateClassDropdownOptions() {
+      const select = document.getElementById('studentGroupFilter');
+      if (!select) return;
+
+      let opts = '<option value="all">🏃 本年段全部分組 (全部學生)</option>';
+      if (currentGlobalCohort === '高三') {
+        opts += '<option value="12E乙庚A1">12E乙庚A1 (鄭超文 老師 - 37人)</option>';
+        opts += '<option value="12E乙庚A2">12E乙庚A2 (林佳珍 老師 - 30人)</option>';
+        opts += '<option value="高三己">高三己 (張秋雲 老師 - 29人)</option>';
+        opts += '<option value="高三甲">高三甲 (潘俐瑾 老師 - 23人)</option>';
+      } else if (currentGlobalCohort === '高二') {
+        opts += '<option value="11E乙庚A1">11E乙庚A1 (駱智杰 老師 - 41人)</option>';
+        opts += '<option value="11E乙庚A2">11E乙庚A2 (鄭超文 老師 - 31人)</option>';
+        opts += '<option value="高二甲">高二甲 (駱智杰 老師 - 20人)</option>';
+        opts += '<option value="高二己">高二己 (張秋雲 老師 - 24人)</option>';
+      } else {
+        opts += '<optgroup label="高三年段">';
+        opts += '<option value="12E乙庚A1">12E乙庚A1 (鄭超文 老師)</option>';
+        opts += '<option value="12E乙庚A2">12E乙庚A2 (林佳珍 老師)</option>';
+        opts += '<option value="高三己">高三己 (張秋雲 老師)</option>';
+        opts += '<option value="高三甲">高三甲 (潘俐瑾 老師)</option>';
+        opts += '</optgroup><optgroup label="高二年段">';
+        opts += '<option value="11E乙庚A1">11E乙庚A1 (駱智杰 老師)</option>';
+        opts += '<option value="11E乙庚A2">11E乙庚A2 (鄭超文 老師)</option>';
+        opts += '<option value="高二甲">高二甲 (駱智杰 老師)</option>';
+        opts += '<option value="高二己">高二己 (張秋雲 老師)</option>';
+        opts += '</optgroup>';
+      }
+      select.innerHTML = opts;
+    }
+
     function filterByGroupAndSwitchTab(grp) {
-      currentGroupFilter = grp;
-      currentStudentClassFilter = 'all';
       switchTab('roster');
+      updateClassDropdownOptions();
+      const select = document.getElementById('studentGroupFilter');
+      if (select) select.value = grp;
       applyStudentFilters();
     }
 
     function filterByClassAndSwitchTab(cls) {
-      currentStudentClassFilter = cls;
-      currentGroupFilter = 'all';
       switchTab('roster');
-      const select = document.getElementById('studentClassFilter');
+      updateClassDropdownOptions();
+      const select = document.getElementById('studentGroupFilter');
       if (select) select.value = cls;
       applyStudentFilters();
     }
+
     function filterStudentTier(tier) {
       currentStudentTierFilter = tier;
       document.querySelectorAll('.s-tier-chip').forEach(b => {
@@ -710,13 +685,27 @@
       applyStudentFilters();
     }
 
+    function filterStudentTierAndSwitchTab(tier) {
+      currentStudentTierFilter = tier;
+      switchTab('roster');
+      document.querySelectorAll('.s-tier-chip').forEach(b => {
+        b.className = 's-tier-chip px-2.5 py-1 rounded-lg font-bold bg-slate-100 text-slate-700 hover:bg-slate-200';
+      });
+      const activeBtn = document.getElementById('sTier-' + tier);
+      if (activeBtn) activeBtn.className = 's-tier-chip px-2.5 py-1 rounded-lg font-bold bg-slate-900 text-white shadow-sm';
+      applyStudentFilters();
+    }
+
+    function filterSubdisciplineWeaknessAndSwitch(type) {
+      switchTab('roster');
+      applyStudentFilters();
+    }
+
     function applyStudentFilters() {
       let stus = getCohortStudents();
-      const clsFilter = document.getElementById('studentClassFilter') ? document.getElementById('studentClassFilter').value : 'all';
-      if (clsFilter !== 'all') {
-        if (clsFilter === '高三') stus = stus.filter(s => s.class.startsWith('高三'));
-        else if (clsFilter === '高二') stus = stus.filter(s => s.class.startsWith('高二'));
-        else stus = stus.filter(s => s.class === clsFilter);
+      const grpFilter = document.getElementById('studentGroupFilter') ? document.getElementById('studentGroupFilter').value : 'all';
+      if (grpFilter !== 'all') {
+        stus = stus.filter(s => (s.eng_group === grpFilter || s.class === grpFilter));
       }
 
       if (currentStudentTierFilter === 'top') stus = stus.filter(s => s.subj_lvl >= std.top);
@@ -736,17 +725,15 @@
         else if (s.subj_lvl >= std.front) tierBadge = '<span class="badge badge-blue">🚀 前標</span>';
         else if (s.subj_lvl < std.bottom) tierBadge = '<span class="badge badge-rose">🚨 底標</span>';
 
-        let subScoreText = '-';
-        if (sId === 'chi') subScoreText = `知性 ${s.subj_data.reading || 0}分 ｜ 情意 ${s.subj_data.writing || 0}分`;
-        else if (sId === 'eng') subScoreText = `翻譯 ${s.subj_data.trans || 0}分 ｜ 作文 ${s.subj_data.essay || 0}分`;
-        else if (sId === 'mathA') subScoreText = `讀卡 ${s.subj_data.choice || 0}分 ｜ 手寫 ${s.subj_data.mixed || 0}分`;
-        else if (sId === 'nat') subScoreText = `物${s.subj_data.phys || 0} 化${s.subj_data.chem || 0} 生${s.subj_data.bio || 0} 地${s.subj_data.earth || 0}`;
-        else if (sId === 'soc') subScoreText = `歷${s.subj_data.hist || 0} 地${s.subj_data.geo || 0} 公${s.subj_data.civ || 0}`;
+        let subScoreText = `翻譯 ${s.subj_data.trans || 0}分 ｜ 作文 ${s.subj_data.essay || 0}分`;
 
         return `
-          <tr class="hover:bg-slate-50 transition">
-            <td class="p-3 font-bold text-slate-800">${s.class}</td>
-            <td class="p-3 text-slate-500 font-mono">${s.seat}</td>
+          <tr class="hover:bg-slate-50 transition border-b border-slate-100">
+            <td class="p-3">
+              <span class="font-black text-blue-900">${s.eng_group || s.class}</span>
+              <div class="text-[10px] text-slate-400 font-bold">${s.eng_teacher ? s.eng_teacher + ' 老師' : ''}</div>
+            </td>
+            <td class="p-3 font-bold text-slate-700 font-mono">${s.class} ${s.seat}號</td>
             <td class="p-3">
               <button onclick="openStudentModal('${s.name}')" class="font-black text-blue-600 hover:underline flex items-center gap-1">
                 <span>${s.name}</span>
