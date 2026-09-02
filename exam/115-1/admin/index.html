@@ -282,7 +282,7 @@
               <span>📋 各班級學力導航單 ＆ 全班作答診斷名冊（8 班獨立切換）</span>
             </h3>
             <p class="text-xs text-blue-200 mt-1">
-              完整收錄 <b>8 個班級專屬學力導航單</b> 之所有內容：班級均分指標、各科失分錯題熱點、<b>全班學生作答名冊（點擊彈出個人全科診斷卡 ＆ 🟢/🔴 全卷作答網格）</b>。
+              完整收錄 <b>8 個班級專屬學力導航單</b> 之所有內容：班級均分指標、各科表現與 <b>全班學生作答名冊（點擊彈出個人全科診斷卡 ＆ 🟢/🔴 全卷作答明細）</b>。
             </p>
           </div>
           <div class="flex items-center gap-2">
@@ -323,7 +323,7 @@
         </div>
       </div>
 
-      <!-- Class Selection Bar -->
+      <!-- Class Selection Bar & Content Card -->
       <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm space-y-4">
         <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-3">
           <div class="flex flex-wrap items-center gap-2 text-xs">
@@ -340,38 +340,12 @@
           </div>
         </div>
 
-        <!-- Class Summary Stats & Heatmaps Container -->
+        <!-- Class Overview Stats Grid Container (ONLY 5 CARDS) -->
         <div id="classDetailsContainer" class="space-y-4">
-        <!-- Class Overview Stats Grid -->
-        <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
-          <div class="p-3 bg-blue-50/60 rounded-2xl border border-blue-200 text-center">
-            <div class="text-[11px] font-bold text-blue-700">班級人數 ＆ 組別</div>
-            <div class="text-xl font-black text-blue-950 my-0.5">39 <span class="text-xs font-normal">人</span></div>
-            <div class="text-[10px] text-blue-600 font-bold">自然組</div>
-          </div>
-          <div class="p-3 bg-amber-50/60 rounded-2xl border border-amber-200 text-center">
-            <div class="text-[11px] font-bold text-amber-700">4科總級分均值</div>
-            <div class="text-xl font-black text-amber-950 my-0.5">45.3 <span class="text-xs font-normal">級</span></div>
-            <div class="text-[10px] text-amber-600 font-bold">精熟+前標 22人</div>
-          </div>
-          <div class="p-3 bg-slate-50 rounded-2xl border border-slate-200 text-center">
-            <div class="text-[11px] font-bold text-slate-500">國文科均分</div>
-            <div class="text-xl font-black text-slate-900 my-0.5">60.1</div>
-            <div class="text-[10px] text-slate-400">語文基底</div>
-          </div>
-          <div class="p-3 bg-slate-50 rounded-2xl border border-slate-200 text-center">
-            <div class="text-[11px] font-bold text-slate-500">英文科均分 (校正)</div>
-            <div class="text-xl font-black text-blue-600 my-0.5">54.9</div>
-            <div class="text-[10px] text-slate-400">外語實力</div>
-          </div>
-          <div class="p-3 bg-slate-50 rounded-2xl border border-slate-200 text-center">
-            <div class="text-[11px] font-bold text-slate-500">數A ＆ 自然均分</div>
-            <div class="text-xl font-black text-purple-600 my-0.5">73.2 / 71.2</div>
-            <div class="text-[10px] text-slate-400">數理分科</div>
-          </div>
+          <!-- Populated by switchClassView with the 5 stats cards -->
         </div>
 
-        <!-- Class Full Student Roster Table -->
+        <!-- Class Full Student Roster Table (OUTSIDE classDetailsContainer) -->
         <div class="space-y-3 pt-2">
           <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
             <h4 class="text-sm font-black text-slate-900 flex items-center gap-2">
@@ -404,711 +378,12 @@
                 </tr>
               </thead>
               <tbody id="classRosterTableBody">
-          <tr class="hover:bg-slate-50 border-b border-slate-100">
-            <td class="p-3 font-bold text-slate-500">1 號</td>
-            <td class="p-3 font-black text-blue-700 cursor-pointer hover:underline text-sm" onclick="openStudentModalByName('田宜學')">
-              田宜學
-            </td>
-            <td class="p-3"><b>11級</b> <span class="text-[10px] text-slate-400">(54.9分)</span></td>
-            <td class="p-3 text-blue-600"><b>14級</b> <span class="text-[10px] text-slate-400">(71.5分)</span></td>
-            <td class="p-3 text-purple-600"><b>10級</b> <span class="text-[10px] text-slate-400">(61.0分)</span></td>
-            <td class="p-3 text-emerald-600"><b>11級</b> <span class="text-[10px] text-slate-400">(68.4分)</span></td>
-            <td class="p-3 font-black text-amber-700 text-sm">46 級 <span class="text-[10px] text-slate-400 font-normal">(255.8分)</span></td>
-            <td class="p-3"><span class="badge badge-blue">🚀 前標</span></td>
-            <td class="p-3">
-              <button onclick="openStudentModalByName('田宜學')" class="px-2.5 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded-lg text-xs font-bold hover:bg-blue-100 flex items-center gap-1">
-                <span>🔍 診斷卡</span>
-              </button>
-            </td>
-          </tr>
-    
-          <tr class="hover:bg-slate-50 border-b border-slate-100">
-            <td class="p-3 font-bold text-slate-500">2 號</td>
-            <td class="p-3 font-black text-blue-700 cursor-pointer hover:underline text-sm" onclick="openStudentModalByName('吳沐航')">
-              吳沐航
-            </td>
-            <td class="p-3"><b>13級</b> <span class="text-[10px] text-slate-400">(64.7分)</span></td>
-            <td class="p-3 text-blue-600"><b>7級</b> <span class="text-[10px] text-slate-400">(36.0分)</span></td>
-            <td class="p-3 text-purple-600"><b>8級</b> <span class="text-[10px] text-slate-400">(50.0分)</span></td>
-            <td class="p-3 text-emerald-600"><b>9級</b> <span class="text-[10px] text-slate-400">(59.6分)</span></td>
-            <td class="p-3 font-black text-amber-700 text-sm">37 級 <span class="text-[10px] text-slate-400 font-normal">(210.3分)</span></td>
-            <td class="p-3"><span class="badge badge-rose">🛡️ 基礎</span></td>
-            <td class="p-3">
-              <button onclick="openStudentModalByName('吳沐航')" class="px-2.5 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded-lg text-xs font-bold hover:bg-blue-100 flex items-center gap-1">
-                <span>🔍 診斷卡</span>
-              </button>
-            </td>
-          </tr>
-    
-          <tr class="hover:bg-slate-50 border-b border-slate-100">
-            <td class="p-3 font-bold text-slate-500">3 號</td>
-            <td class="p-3 font-black text-blue-700 cursor-pointer hover:underline text-sm" onclick="openStudentModalByName('李明聿')">
-              李明聿
-            </td>
-            <td class="p-3"><b>15級</b> <span class="text-[10px] text-slate-400">(70.9分)</span></td>
-            <td class="p-3 text-blue-600"><b>13級</b> <span class="text-[10px] text-slate-400">(67.5分)</span></td>
-            <td class="p-3 text-purple-600"><b>12級</b> <span class="text-[10px] text-slate-400">(78.0分)</span></td>
-            <td class="p-3 text-emerald-600"><b>15級</b> <span class="text-[10px] text-slate-400">(98.8分)</span></td>
-            <td class="p-3 font-black text-amber-700 text-sm">55 級 <span class="text-[10px] text-slate-400 font-normal">(315.2分)</span></td>
-            <td class="p-3"><span class="badge badge-amber">🌟 精熟</span></td>
-            <td class="p-3">
-              <button onclick="openStudentModalByName('李明聿')" class="px-2.5 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded-lg text-xs font-bold hover:bg-blue-100 flex items-center gap-1">
-                <span>🔍 診斷卡</span>
-              </button>
-            </td>
-          </tr>
-    
-          <tr class="hover:bg-slate-50 border-b border-slate-100">
-            <td class="p-3 font-bold text-slate-500">4 號</td>
-            <td class="p-3 font-black text-blue-700 cursor-pointer hover:underline text-sm" onclick="openStudentModalByName('李韋德')">
-              李韋德
-            </td>
-            <td class="p-3"><b>13級</b> <span class="text-[10px] text-slate-400">(64.3分)</span></td>
-            <td class="p-3 text-blue-600"><b>8級</b> <span class="text-[10px] text-slate-400">(43.5分)</span></td>
-            <td class="p-3 text-purple-600"><b>10級</b> <span class="text-[10px] text-slate-400">(64.0分)</span></td>
-            <td class="p-3 text-emerald-600"><b>11級</b> <span class="text-[10px] text-slate-400">(70.4分)</span></td>
-            <td class="p-3 font-black text-amber-700 text-sm">42 級 <span class="text-[10px] text-slate-400 font-normal">(242.2分)</span></td>
-            <td class="p-3"><span class="badge badge-green">⚖️ 核心</span></td>
-            <td class="p-3">
-              <button onclick="openStudentModalByName('李韋德')" class="px-2.5 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded-lg text-xs font-bold hover:bg-blue-100 flex items-center gap-1">
-                <span>🔍 診斷卡</span>
-              </button>
-            </td>
-          </tr>
-    
-          <tr class="hover:bg-slate-50 border-b border-slate-100">
-            <td class="p-3 font-bold text-slate-500">5 號</td>
-            <td class="p-3 font-black text-blue-700 cursor-pointer hover:underline text-sm" onclick="openStudentModalByName('韓鎧揚')">
-              韓鎧揚
-            </td>
-            <td class="p-3"><b>10級</b> <span class="text-[10px] text-slate-400">(46.8分)</span></td>
-            <td class="p-3 text-blue-600"><b>7級</b> <span class="text-[10px] text-slate-400">(37.0分)</span></td>
-            <td class="p-3 text-purple-600"><b>14級</b> <span class="text-[10px] text-slate-400">(90.0分)</span></td>
-            <td class="p-3 text-emerald-600"><b>10級</b> <span class="text-[10px] text-slate-400">(64.6分)</span></td>
-            <td class="p-3 font-black text-amber-700 text-sm">41 級 <span class="text-[10px] text-slate-400 font-normal">(238.4分)</span></td>
-            <td class="p-3"><span class="badge badge-green">⚖️ 核心</span></td>
-            <td class="p-3">
-              <button onclick="openStudentModalByName('韓鎧揚')" class="px-2.5 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded-lg text-xs font-bold hover:bg-blue-100 flex items-center gap-1">
-                <span>🔍 診斷卡</span>
-              </button>
-            </td>
-          </tr>
-    
-          <tr class="hover:bg-slate-50 border-b border-slate-100">
-            <td class="p-3 font-bold text-slate-500">6 號</td>
-            <td class="p-3 font-black text-blue-700 cursor-pointer hover:underline text-sm" onclick="openStudentModalByName('邱柏凱')">
-              邱柏凱
-            </td>
-            <td class="p-3"><b>13級</b> <span class="text-[10px] text-slate-400">(61.8分)</span></td>
-            <td class="p-3 text-blue-600"><b>11級</b> <span class="text-[10px] text-slate-400">(57.5分)</span></td>
-            <td class="p-3 text-purple-600"><b>12級</b> <span class="text-[10px] text-slate-400">(76.0分)</span></td>
-            <td class="p-3 text-emerald-600"><b>11級</b> <span class="text-[10px] text-slate-400">(69.6分)</span></td>
-            <td class="p-3 font-black text-amber-700 text-sm">47 級 <span class="text-[10px] text-slate-400 font-normal">(264.9分)</span></td>
-            <td class="p-3"><span class="badge badge-blue">🚀 前標</span></td>
-            <td class="p-3">
-              <button onclick="openStudentModalByName('邱柏凱')" class="px-2.5 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded-lg text-xs font-bold hover:bg-blue-100 flex items-center gap-1">
-                <span>🔍 診斷卡</span>
-              </button>
-            </td>
-          </tr>
-    
-          <tr class="hover:bg-slate-50 border-b border-slate-100">
-            <td class="p-3 font-bold text-slate-500">7 號</td>
-            <td class="p-3 font-black text-blue-700 cursor-pointer hover:underline text-sm" onclick="openStudentModalByName('張家畇')">
-              張家畇
-            </td>
-            <td class="p-3"><b>13級</b> <span class="text-[10px] text-slate-400">(61.9分)</span></td>
-            <td class="p-3 text-blue-600"><b>13級</b> <span class="text-[10px] text-slate-400">(71.0分)</span></td>
-            <td class="p-3 text-purple-600"><b>10級</b> <span class="text-[10px] text-slate-400">(61.0分)</span></td>
-            <td class="p-3 text-emerald-600"><b>11級</b> <span class="text-[10px] text-slate-400">(72.2分)</span></td>
-            <td class="p-3 font-black text-amber-700 text-sm">47 級 <span class="text-[10px] text-slate-400 font-normal">(266.1分)</span></td>
-            <td class="p-3"><span class="badge badge-blue">🚀 前標</span></td>
-            <td class="p-3">
-              <button onclick="openStudentModalByName('張家畇')" class="px-2.5 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded-lg text-xs font-bold hover:bg-blue-100 flex items-center gap-1">
-                <span>🔍 診斷卡</span>
-              </button>
-            </td>
-          </tr>
-    
-          <tr class="hover:bg-slate-50 border-b border-slate-100">
-            <td class="p-3 font-bold text-slate-500">8 號</td>
-            <td class="p-3 font-black text-blue-700 cursor-pointer hover:underline text-sm" onclick="openStudentModalByName('張鈞詠')">
-              張鈞詠
-            </td>
-            <td class="p-3"><b>13級</b> <span class="text-[10px] text-slate-400">(62.4分)</span></td>
-            <td class="p-3 text-blue-600"><b>9級</b> <span class="text-[10px] text-slate-400">(47.5分)</span></td>
-            <td class="p-3 text-purple-600"><b>14級</b> <span class="text-[10px] text-slate-400">(92.0分)</span></td>
-            <td class="p-3 text-emerald-600"><b>12級</b> <span class="text-[10px] text-slate-400">(81.6分)</span></td>
-            <td class="p-3 font-black text-amber-700 text-sm">48 級 <span class="text-[10px] text-slate-400 font-normal">(283.5分)</span></td>
-            <td class="p-3"><span class="badge badge-blue">🚀 前標</span></td>
-            <td class="p-3">
-              <button onclick="openStudentModalByName('張鈞詠')" class="px-2.5 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded-lg text-xs font-bold hover:bg-blue-100 flex items-center gap-1">
-                <span>🔍 診斷卡</span>
-              </button>
-            </td>
-          </tr>
-    
-          <tr class="hover:bg-slate-50 border-b border-slate-100">
-            <td class="p-3 font-bold text-slate-500">9 號</td>
-            <td class="p-3 font-black text-blue-700 cursor-pointer hover:underline text-sm" onclick="openStudentModalByName('張語翃')">
-              張語翃
-            </td>
-            <td class="p-3"><b>14級</b> <span class="text-[10px] text-slate-400">(69.6分)</span></td>
-            <td class="p-3 text-blue-600"><b>15級</b> <span class="text-[10px] text-slate-400">(84.5分)</span></td>
-            <td class="p-3 text-purple-600"><b>14級</b> <span class="text-[10px] text-slate-400">(88.0分)</span></td>
-            <td class="p-3 text-emerald-600"><b>13級</b> <span class="text-[10px] text-slate-400">(84.2分)</span></td>
-            <td class="p-3 font-black text-amber-700 text-sm">56 級 <span class="text-[10px] text-slate-400 font-normal">(326.3分)</span></td>
-            <td class="p-3"><span class="badge badge-amber">🌟 精熟</span></td>
-            <td class="p-3">
-              <button onclick="openStudentModalByName('張語翃')" class="px-2.5 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded-lg text-xs font-bold hover:bg-blue-100 flex items-center gap-1">
-                <span>🔍 診斷卡</span>
-              </button>
-            </td>
-          </tr>
-    
-          <tr class="hover:bg-slate-50 border-b border-slate-100">
-            <td class="p-3 font-bold text-slate-500">10 號</td>
-            <td class="p-3 font-black text-blue-700 cursor-pointer hover:underline text-sm" onclick="openStudentModalByName('賴泓豪')">
-              賴泓豪
-            </td>
-            <td class="p-3"><b>14級</b> <span class="text-[10px] text-slate-400">(65.1分)</span></td>
-            <td class="p-3 text-blue-600"><b>10級</b> <span class="text-[10px] text-slate-400">(53.5分)</span></td>
-            <td class="p-3 text-purple-600"><b>12級</b> <span class="text-[10px] text-slate-400">(75.0分)</span></td>
-            <td class="p-3 text-emerald-600"><b>9級</b> <span class="text-[10px] text-slate-400">(57.6分)</span></td>
-            <td class="p-3 font-black text-amber-700 text-sm">45 級 <span class="text-[10px] text-slate-400 font-normal">(251.2分)</span></td>
-            <td class="p-3"><span class="badge badge-blue">🚀 前標</span></td>
-            <td class="p-3">
-              <button onclick="openStudentModalByName('賴泓豪')" class="px-2.5 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded-lg text-xs font-bold hover:bg-blue-100 flex items-center gap-1">
-                <span>🔍 診斷卡</span>
-              </button>
-            </td>
-          </tr>
-    
-          <tr class="hover:bg-slate-50 border-b border-slate-100">
-            <td class="p-3 font-bold text-slate-500">11 號</td>
-            <td class="p-3 font-black text-blue-700 cursor-pointer hover:underline text-sm" onclick="openStudentModalByName('許愷夆')">
-              許愷夆
-            </td>
-            <td class="p-3"><b>13級</b> <span class="text-[10px] text-slate-400">(63.5分)</span></td>
-            <td class="p-3 text-blue-600"><b>13級</b> <span class="text-[10px] text-slate-400">(70.0分)</span></td>
-            <td class="p-3 text-purple-600"><b>13級</b> <span class="text-[10px] text-slate-400">(80.0分)</span></td>
-            <td class="p-3 text-emerald-600"><b>12級</b> <span class="text-[10px] text-slate-400">(77.8分)</span></td>
-            <td class="p-3 font-black text-amber-700 text-sm">51 級 <span class="text-[10px] text-slate-400 font-normal">(291.3分)</span></td>
-            <td class="p-3"><span class="badge badge-amber">🌟 精熟</span></td>
-            <td class="p-3">
-              <button onclick="openStudentModalByName('許愷夆')" class="px-2.5 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded-lg text-xs font-bold hover:bg-blue-100 flex items-center gap-1">
-                <span>🔍 診斷卡</span>
-              </button>
-            </td>
-          </tr>
-    
-          <tr class="hover:bg-slate-50 border-b border-slate-100">
-            <td class="p-3 font-bold text-slate-500">12 號</td>
-            <td class="p-3 font-black text-blue-700 cursor-pointer hover:underline text-sm" onclick="openStudentModalByName('郭芫愷')">
-              郭芫愷
-            </td>
-            <td class="p-3"><b>12級</b> <span class="text-[10px] text-slate-400">(57.3分)</span></td>
-            <td class="p-3 text-blue-600"><b>13級</b> <span class="text-[10px] text-slate-400">(68.5分)</span></td>
-            <td class="p-3 text-purple-600"><b>14級</b> <span class="text-[10px] text-slate-400">(90.0分)</span></td>
-            <td class="p-3 text-emerald-600"><b>13級</b> <span class="text-[10px] text-slate-400">(82.8分)</span></td>
-            <td class="p-3 font-black text-amber-700 text-sm">52 級 <span class="text-[10px] text-slate-400 font-normal">(298.6分)</span></td>
-            <td class="p-3"><span class="badge badge-amber">🌟 精熟</span></td>
-            <td class="p-3">
-              <button onclick="openStudentModalByName('郭芫愷')" class="px-2.5 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded-lg text-xs font-bold hover:bg-blue-100 flex items-center gap-1">
-                <span>🔍 診斷卡</span>
-              </button>
-            </td>
-          </tr>
-    
-          <tr class="hover:bg-slate-50 border-b border-slate-100">
-            <td class="p-3 font-bold text-slate-500">13 號</td>
-            <td class="p-3 font-black text-blue-700 cursor-pointer hover:underline text-sm" onclick="openStudentModalByName('郭彥寬')">
-              郭彥寬
-            </td>
-            <td class="p-3"><b>11級</b> <span class="text-[10px] text-slate-400">(51.7分)</span></td>
-            <td class="p-3 text-blue-600"><b>8級</b> <span class="text-[10px] text-slate-400">(40.5分)</span></td>
-            <td class="p-3 text-purple-600"><b>10級</b> <span class="text-[10px] text-slate-400">(63.0分)</span></td>
-            <td class="p-3 text-emerald-600"><b>7級</b> <span class="text-[10px] text-slate-400">(45.6分)</span></td>
-            <td class="p-3 font-black text-amber-700 text-sm">36 級 <span class="text-[10px] text-slate-400 font-normal">(200.8分)</span></td>
-            <td class="p-3"><span class="badge badge-rose">🛡️ 基礎</span></td>
-            <td class="p-3">
-              <button onclick="openStudentModalByName('郭彥寬')" class="px-2.5 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded-lg text-xs font-bold hover:bg-blue-100 flex items-center gap-1">
-                <span>🔍 診斷卡</span>
-              </button>
-            </td>
-          </tr>
-    
-          <tr class="hover:bg-slate-50 border-b border-slate-100">
-            <td class="p-3 font-bold text-slate-500">14 號</td>
-            <td class="p-3 font-black text-blue-700 cursor-pointer hover:underline text-sm" onclick="openStudentModalByName('陳泓羽')">
-              陳泓羽
-            </td>
-            <td class="p-3"><b>13級</b> <span class="text-[10px] text-slate-400">(63.7分)</span></td>
-            <td class="p-3 text-blue-600"><b>11級</b> <span class="text-[10px] text-slate-400">(59.5分)</span></td>
-            <td class="p-3 text-purple-600"><b>14級</b> <span class="text-[10px] text-slate-400">(91.0分)</span></td>
-            <td class="p-3 text-emerald-600"><b>12級</b> <span class="text-[10px] text-slate-400">(76.4分)</span></td>
-            <td class="p-3 font-black text-amber-700 text-sm">50 級 <span class="text-[10px] text-slate-400 font-normal">(290.6分)</span></td>
-            <td class="p-3"><span class="badge badge-amber">🌟 精熟</span></td>
-            <td class="p-3">
-              <button onclick="openStudentModalByName('陳泓羽')" class="px-2.5 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded-lg text-xs font-bold hover:bg-blue-100 flex items-center gap-1">
-                <span>🔍 診斷卡</span>
-              </button>
-            </td>
-          </tr>
-    
-          <tr class="hover:bg-slate-50 border-b border-slate-100">
-            <td class="p-3 font-bold text-slate-500">15 號</td>
-            <td class="p-3 font-black text-blue-700 cursor-pointer hover:underline text-sm" onclick="openStudentModalByName('陳奕勳')">
-              陳奕勳
-            </td>
-            <td class="p-3"><b>12級</b> <span class="text-[10px] text-slate-400">(56.9分)</span></td>
-            <td class="p-3 text-blue-600"><b>5級</b> <span class="text-[10px] text-slate-400">(25.0分)</span></td>
-            <td class="p-3 text-purple-600"><b>13級</b> <span class="text-[10px] text-slate-400">(82.0分)</span></td>
-            <td class="p-3 text-emerald-600"><b>12級</b> <span class="text-[10px] text-slate-400">(80.4分)</span></td>
-            <td class="p-3 font-black text-amber-700 text-sm">42 級 <span class="text-[10px] text-slate-400 font-normal">(244.3分)</span></td>
-            <td class="p-3"><span class="badge badge-green">⚖️ 核心</span></td>
-            <td class="p-3">
-              <button onclick="openStudentModalByName('陳奕勳')" class="px-2.5 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded-lg text-xs font-bold hover:bg-blue-100 flex items-center gap-1">
-                <span>🔍 診斷卡</span>
-              </button>
-            </td>
-          </tr>
-    
-          <tr class="hover:bg-slate-50 border-b border-slate-100">
-            <td class="p-3 font-bold text-slate-500">16 號</td>
-            <td class="p-3 font-black text-blue-700 cursor-pointer hover:underline text-sm" onclick="openStudentModalByName('陳學慶')">
-              陳學慶
-            </td>
-            <td class="p-3"><b>13級</b> <span class="text-[10px] text-slate-400">(63.0分)</span></td>
-            <td class="p-3 text-blue-600"><b>13級</b> <span class="text-[10px] text-slate-400">(68.0分)</span></td>
-            <td class="p-3 text-purple-600"><b>14級</b> <span class="text-[10px] text-slate-400">(90.0分)</span></td>
-            <td class="p-3 text-emerald-600"><b>12級</b> <span class="text-[10px] text-slate-400">(76.8分)</span></td>
-            <td class="p-3 font-black text-amber-700 text-sm">52 級 <span class="text-[10px] text-slate-400 font-normal">(297.8分)</span></td>
-            <td class="p-3"><span class="badge badge-amber">🌟 精熟</span></td>
-            <td class="p-3">
-              <button onclick="openStudentModalByName('陳學慶')" class="px-2.5 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded-lg text-xs font-bold hover:bg-blue-100 flex items-center gap-1">
-                <span>🔍 診斷卡</span>
-              </button>
-            </td>
-          </tr>
-    
-          <tr class="hover:bg-slate-50 border-b border-slate-100">
-            <td class="p-3 font-bold text-slate-500">17 號</td>
-            <td class="p-3 font-black text-blue-700 cursor-pointer hover:underline text-sm" onclick="openStudentModalByName('陳薪地')">
-              陳薪地
-            </td>
-            <td class="p-3"><b>14級</b> <span class="text-[10px] text-slate-400">(67.1分)</span></td>
-            <td class="p-3 text-blue-600"><b>13級</b> <span class="text-[10px] text-slate-400">(68.5分)</span></td>
-            <td class="p-3 text-purple-600"><b>14級</b> <span class="text-[10px] text-slate-400">(90.0分)</span></td>
-            <td class="p-3 text-emerald-600"><b>13級</b> <span class="text-[10px] text-slate-400">(88.2分)</span></td>
-            <td class="p-3 font-black text-amber-700 text-sm">54 級 <span class="text-[10px] text-slate-400 font-normal">(313.8分)</span></td>
-            <td class="p-3"><span class="badge badge-amber">🌟 精熟</span></td>
-            <td class="p-3">
-              <button onclick="openStudentModalByName('陳薪地')" class="px-2.5 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded-lg text-xs font-bold hover:bg-blue-100 flex items-center gap-1">
-                <span>🔍 診斷卡</span>
-              </button>
-            </td>
-          </tr>
-    
-          <tr class="hover:bg-slate-50 border-b border-slate-100">
-            <td class="p-3 font-bold text-slate-500">18 號</td>
-            <td class="p-3 font-black text-blue-700 cursor-pointer hover:underline text-sm" onclick="openStudentModalByName('陸子浩')">
-              陸子浩
-            </td>
-            <td class="p-3"><b>11級</b> <span class="text-[10px] text-slate-400">(53.1分)</span></td>
-            <td class="p-3 text-blue-600"><b>10級</b> <span class="text-[10px] text-slate-400">(50.5分)</span></td>
-            <td class="p-3 text-purple-600"><b>12級</b> <span class="text-[10px] text-slate-400">(74.0分)</span></td>
-            <td class="p-3 text-emerald-600"><b>9級</b> <span class="text-[10px] text-slate-400">(60.8分)</span></td>
-            <td class="p-3 font-black text-amber-700 text-sm">42 級 <span class="text-[10px] text-slate-400 font-normal">(238.4分)</span></td>
-            <td class="p-3"><span class="badge badge-green">⚖️ 核心</span></td>
-            <td class="p-3">
-              <button onclick="openStudentModalByName('陸子浩')" class="px-2.5 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded-lg text-xs font-bold hover:bg-blue-100 flex items-center gap-1">
-                <span>🔍 診斷卡</span>
-              </button>
-            </td>
-          </tr>
-    
-          <tr class="hover:bg-slate-50 border-b border-slate-100">
-            <td class="p-3 font-bold text-slate-500">19 號</td>
-            <td class="p-3 font-black text-blue-700 cursor-pointer hover:underline text-sm" onclick="openStudentModalByName('陸子琦')">
-              陸子琦
-            </td>
-            <td class="p-3"><b>14級</b> <span class="text-[10px] text-slate-400">(66.5分)</span></td>
-            <td class="p-3 text-blue-600"><b>12級</b> <span class="text-[10px] text-slate-400">(62.5分)</span></td>
-            <td class="p-3 text-purple-600"><b>13級</b> <span class="text-[10px] text-slate-400">(85.0分)</span></td>
-            <td class="p-3 text-emerald-600"><b>13級</b> <span class="text-[10px] text-slate-400">(84.0分)</span></td>
-            <td class="p-3 font-black text-amber-700 text-sm">52 級 <span class="text-[10px] text-slate-400 font-normal">(298.0分)</span></td>
-            <td class="p-3"><span class="badge badge-amber">🌟 精熟</span></td>
-            <td class="p-3">
-              <button onclick="openStudentModalByName('陸子琦')" class="px-2.5 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded-lg text-xs font-bold hover:bg-blue-100 flex items-center gap-1">
-                <span>🔍 診斷卡</span>
-              </button>
-            </td>
-          </tr>
-    
-          <tr class="hover:bg-slate-50 border-b border-slate-100">
-            <td class="p-3 font-bold text-slate-500">20 號</td>
-            <td class="p-3 font-black text-blue-700 cursor-pointer hover:underline text-sm" onclick="openStudentModalByName('彭聖友')">
-              彭聖友
-            </td>
-            <td class="p-3"><b>13級</b> <span class="text-[10px] text-slate-400">(60.2分)</span></td>
-            <td class="p-3 text-blue-600"><b>9級</b> <span class="text-[10px] text-slate-400">(44.0分)</span></td>
-            <td class="p-3 text-purple-600"><b>5級</b> <span class="text-[10px] text-slate-400">(31.0分)</span></td>
-            <td class="p-3 text-emerald-600"><b>8級</b> <span class="text-[10px] text-slate-400">(51.4分)</span></td>
-            <td class="p-3 font-black text-amber-700 text-sm">35 級 <span class="text-[10px] text-slate-400 font-normal">(186.6分)</span></td>
-            <td class="p-3"><span class="badge badge-rose">🛡️ 基礎</span></td>
-            <td class="p-3">
-              <button onclick="openStudentModalByName('彭聖友')" class="px-2.5 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded-lg text-xs font-bold hover:bg-blue-100 flex items-center gap-1">
-                <span>🔍 診斷卡</span>
-              </button>
-            </td>
-          </tr>
-    
-          <tr class="hover:bg-slate-50 border-b border-slate-100">
-            <td class="p-3 font-bold text-slate-500">21 號</td>
-            <td class="p-3 font-black text-blue-700 cursor-pointer hover:underline text-sm" onclick="openStudentModalByName('黃子恩')">
-              黃子恩
-            </td>
-            <td class="p-3"><b>11級</b> <span class="text-[10px] text-slate-400">(54.2分)</span></td>
-            <td class="p-3 text-blue-600"><b>9級</b> <span class="text-[10px] text-slate-400">(47.5分)</span></td>
-            <td class="p-3 text-purple-600"><b>14級</b> <span class="text-[10px] text-slate-400">(89.0分)</span></td>
-            <td class="p-3 text-emerald-600"><b>11級</b> <span class="text-[10px] text-slate-400">(68.8分)</span></td>
-            <td class="p-3 font-black text-amber-700 text-sm">45 級 <span class="text-[10px] text-slate-400 font-normal">(259.5分)</span></td>
-            <td class="p-3"><span class="badge badge-blue">🚀 前標</span></td>
-            <td class="p-3">
-              <button onclick="openStudentModalByName('黃子恩')" class="px-2.5 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded-lg text-xs font-bold hover:bg-blue-100 flex items-center gap-1">
-                <span>🔍 診斷卡</span>
-              </button>
-            </td>
-          </tr>
-    
-          <tr class="hover:bg-slate-50 border-b border-slate-100">
-            <td class="p-3 font-bold text-slate-500">22 號</td>
-            <td class="p-3 font-black text-blue-700 cursor-pointer hover:underline text-sm" onclick="openStudentModalByName('楊秉翰')">
-              楊秉翰
-            </td>
-            <td class="p-3"><b>12級</b> <span class="text-[10px] text-slate-400">(58.8分)</span></td>
-            <td class="p-3 text-blue-600"><b>10級</b> <span class="text-[10px] text-slate-400">(53.0分)</span></td>
-            <td class="p-3 text-purple-600"><b>9級</b> <span class="text-[10px] text-slate-400">(56.0分)</span></td>
-            <td class="p-3 text-emerald-600"><b>10級</b> <span class="text-[10px] text-slate-400">(65.4分)</span></td>
-            <td class="p-3 font-black text-amber-700 text-sm">41 級 <span class="text-[10px] text-slate-400 font-normal">(233.2分)</span></td>
-            <td class="p-3"><span class="badge badge-green">⚖️ 核心</span></td>
-            <td class="p-3">
-              <button onclick="openStudentModalByName('楊秉翰')" class="px-2.5 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded-lg text-xs font-bold hover:bg-blue-100 flex items-center gap-1">
-                <span>🔍 診斷卡</span>
-              </button>
-            </td>
-          </tr>
-    
-          <tr class="hover:bg-slate-50 border-b border-slate-100">
-            <td class="p-3 font-bold text-slate-500">23 號</td>
-            <td class="p-3 font-black text-blue-700 cursor-pointer hover:underline text-sm" onclick="openStudentModalByName('陸子軒')">
-              陸子軒
-            </td>
-            <td class="p-3"><b>11級</b> <span class="text-[10px] text-slate-400">(53.3分)</span></td>
-            <td class="p-3 text-blue-600"><b>7級</b> <span class="text-[10px] text-slate-400">(38.0分)</span></td>
-            <td class="p-3 text-purple-600"><b>11級</b> <span class="text-[10px] text-slate-400">(71.0分)</span></td>
-            <td class="p-3 text-emerald-600"><b>10級</b> <span class="text-[10px] text-slate-400">(67.2分)</span></td>
-            <td class="p-3 font-black text-amber-700 text-sm">39 級 <span class="text-[10px] text-slate-400 font-normal">(229.5分)</span></td>
-            <td class="p-3"><span class="badge badge-rose">🛡️ 基礎</span></td>
-            <td class="p-3">
-              <button onclick="openStudentModalByName('陸子軒')" class="px-2.5 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded-lg text-xs font-bold hover:bg-blue-100 flex items-center gap-1">
-                <span>🔍 診斷卡</span>
-              </button>
-            </td>
-          </tr>
-    
-          <tr class="hover:bg-slate-50 border-b border-slate-100">
-            <td class="p-3 font-bold text-slate-500">24 號</td>
-            <td class="p-3 font-black text-blue-700 cursor-pointer hover:underline text-sm" onclick="openStudentModalByName('劉子嘉')">
-              劉子嘉
-            </td>
-            <td class="p-3"><b>11級</b> <span class="text-[10px] text-slate-400">(53.7分)</span></td>
-            <td class="p-3 text-blue-600"><b>6級</b> <span class="text-[10px] text-slate-400">(28.5分)</span></td>
-            <td class="p-3 text-purple-600"><b>8級</b> <span class="text-[10px] text-slate-400">(50.0分)</span></td>
-            <td class="p-3 text-emerald-600"><b>9級</b> <span class="text-[10px] text-slate-400">(58.0分)</span></td>
-            <td class="p-3 font-black text-amber-700 text-sm">34 級 <span class="text-[10px] text-slate-400 font-normal">(190.2分)</span></td>
-            <td class="p-3"><span class="badge badge-rose">🛡️ 基礎</span></td>
-            <td class="p-3">
-              <button onclick="openStudentModalByName('劉子嘉')" class="px-2.5 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded-lg text-xs font-bold hover:bg-blue-100 flex items-center gap-1">
-                <span>🔍 診斷卡</span>
-              </button>
-            </td>
-          </tr>
-    
-          <tr class="hover:bg-slate-50 border-b border-slate-100">
-            <td class="p-3 font-bold text-slate-500">25 號</td>
-            <td class="p-3 font-black text-blue-700 cursor-pointer hover:underline text-sm" onclick="openStudentModalByName('余昕霖')">
-              余昕霖
-            </td>
-            <td class="p-3"><b>11級</b> <span class="text-[10px] text-slate-400">(54.4分)</span></td>
-            <td class="p-3 text-blue-600"><b>11級</b> <span class="text-[10px] text-slate-400">(57.5分)</span></td>
-            <td class="p-3 text-purple-600"><b>11級</b> <span class="text-[10px] text-slate-400">(69.0分)</span></td>
-            <td class="p-3 text-emerald-600"><b>9級</b> <span class="text-[10px] text-slate-400">(56.0分)</span></td>
-            <td class="p-3 font-black text-amber-700 text-sm">42 級 <span class="text-[10px] text-slate-400 font-normal">(236.9分)</span></td>
-            <td class="p-3"><span class="badge badge-green">⚖️ 核心</span></td>
-            <td class="p-3">
-              <button onclick="openStudentModalByName('余昕霖')" class="px-2.5 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded-lg text-xs font-bold hover:bg-blue-100 flex items-center gap-1">
-                <span>🔍 診斷卡</span>
-              </button>
-            </td>
-          </tr>
-    
-          <tr class="hover:bg-slate-50 border-b border-slate-100">
-            <td class="p-3 font-bold text-slate-500">26 號</td>
-            <td class="p-3 font-black text-blue-700 cursor-pointer hover:underline text-sm" onclick="openStudentModalByName('羅筱蓁')">
-              羅筱蓁
-            </td>
-            <td class="p-3"><b>13級</b> <span class="text-[10px] text-slate-400">(64.4分)</span></td>
-            <td class="p-3 text-blue-600"><b>9級</b> <span class="text-[10px] text-slate-400">(48.5分)</span></td>
-            <td class="p-3 text-purple-600"><b>14級</b> <span class="text-[10px] text-slate-400">(90.0分)</span></td>
-            <td class="p-3 text-emerald-600"><b>13級</b> <span class="text-[10px] text-slate-400">(87.4分)</span></td>
-            <td class="p-3 font-black text-amber-700 text-sm">49 級 <span class="text-[10px] text-slate-400 font-normal">(290.3分)</span></td>
-            <td class="p-3"><span class="badge badge-blue">🚀 前標</span></td>
-            <td class="p-3">
-              <button onclick="openStudentModalByName('羅筱蓁')" class="px-2.5 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded-lg text-xs font-bold hover:bg-blue-100 flex items-center gap-1">
-                <span>🔍 診斷卡</span>
-              </button>
-            </td>
-          </tr>
-    
-          <tr class="hover:bg-slate-50 border-b border-slate-100">
-            <td class="p-3 font-bold text-slate-500">27 號</td>
-            <td class="p-3 font-black text-blue-700 cursor-pointer hover:underline text-sm" onclick="openStudentModalByName('王羿婷')">
-              王羿婷
-            </td>
-            <td class="p-3"><b>12級</b> <span class="text-[10px] text-slate-400">(58.0分)</span></td>
-            <td class="p-3 text-blue-600"><b>11級</b> <span class="text-[10px] text-slate-400">(57.5分)</span></td>
-            <td class="p-3 text-purple-600"><b>13級</b> <span class="text-[10px] text-slate-400">(83.0分)</span></td>
-            <td class="p-3 text-emerald-600"><b>12級</b> <span class="text-[10px] text-slate-400">(76.6分)</span></td>
-            <td class="p-3 font-black text-amber-700 text-sm">48 級 <span class="text-[10px] text-slate-400 font-normal">(275.1分)</span></td>
-            <td class="p-3"><span class="badge badge-blue">🚀 前標</span></td>
-            <td class="p-3">
-              <button onclick="openStudentModalByName('王羿婷')" class="px-2.5 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded-lg text-xs font-bold hover:bg-blue-100 flex items-center gap-1">
-                <span>🔍 診斷卡</span>
-              </button>
-            </td>
-          </tr>
-    
-          <tr class="hover:bg-slate-50 border-b border-slate-100">
-            <td class="p-3 font-bold text-slate-500">28 號</td>
-            <td class="p-3 font-black text-blue-700 cursor-pointer hover:underline text-sm" onclick="openStudentModalByName('江芷嫻')">
-              江芷嫻
-            </td>
-            <td class="p-3"><b>12級</b> <span class="text-[10px] text-slate-400">(59.5分)</span></td>
-            <td class="p-3 text-blue-600"><b>10級</b> <span class="text-[10px] text-slate-400">(54.0分)</span></td>
-            <td class="p-3 text-purple-600"><b>12級</b> <span class="text-[10px] text-slate-400">(74.0分)</span></td>
-            <td class="p-3 text-emerald-600"><b>9級</b> <span class="text-[10px] text-slate-400">(56.6分)</span></td>
-            <td class="p-3 font-black text-amber-700 text-sm">43 級 <span class="text-[10px] text-slate-400 font-normal">(244.1分)</span></td>
-            <td class="p-3"><span class="badge badge-green">⚖️ 核心</span></td>
-            <td class="p-3">
-              <button onclick="openStudentModalByName('江芷嫻')" class="px-2.5 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded-lg text-xs font-bold hover:bg-blue-100 flex items-center gap-1">
-                <span>🔍 診斷卡</span>
-              </button>
-            </td>
-          </tr>
-    
-          <tr class="hover:bg-slate-50 border-b border-slate-100">
-            <td class="p-3 font-bold text-slate-500">29 號</td>
-            <td class="p-3 font-black text-blue-700 cursor-pointer hover:underline text-sm" onclick="openStudentModalByName('江禮如')">
-              江禮如
-            </td>
-            <td class="p-3"><b>13級</b> <span class="text-[10px] text-slate-400">(60.2分)</span></td>
-            <td class="p-3 text-blue-600"><b>14級</b> <span class="text-[10px] text-slate-400">(73.5分)</span></td>
-            <td class="p-3 text-purple-600"><b>9級</b> <span class="text-[10px] text-slate-400">(58.0分)</span></td>
-            <td class="p-3 text-emerald-600"><b>13級</b> <span class="text-[10px] text-slate-400">(87.4分)</span></td>
-            <td class="p-3 font-black text-amber-700 text-sm">49 級 <span class="text-[10px] text-slate-400 font-normal">(279.1分)</span></td>
-            <td class="p-3"><span class="badge badge-blue">🚀 前標</span></td>
-            <td class="p-3">
-              <button onclick="openStudentModalByName('江禮如')" class="px-2.5 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded-lg text-xs font-bold hover:bg-blue-100 flex items-center gap-1">
-                <span>🔍 診斷卡</span>
-              </button>
-            </td>
-          </tr>
-    
-          <tr class="hover:bg-slate-50 border-b border-slate-100">
-            <td class="p-3 font-bold text-slate-500">30 號</td>
-            <td class="p-3 font-black text-blue-700 cursor-pointer hover:underline text-sm" onclick="openStudentModalByName('李安淇')">
-              李安淇
-            </td>
-            <td class="p-3"><b>11級</b> <span class="text-[10px] text-slate-400">(55.0分)</span></td>
-            <td class="p-3 text-blue-600"><b>5級</b> <span class="text-[10px] text-slate-400">(24.5分)</span></td>
-            <td class="p-3 text-purple-600"><b>13級</b> <span class="text-[10px] text-slate-400">(86.0分)</span></td>
-            <td class="p-3 text-emerald-600"><b>11級</b> <span class="text-[10px] text-slate-400">(72.4分)</span></td>
-            <td class="p-3 font-black text-amber-700 text-sm">40 級 <span class="text-[10px] text-slate-400 font-normal">(237.9分)</span></td>
-            <td class="p-3"><span class="badge badge-green">⚖️ 核心</span></td>
-            <td class="p-3">
-              <button onclick="openStudentModalByName('李安淇')" class="px-2.5 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded-lg text-xs font-bold hover:bg-blue-100 flex items-center gap-1">
-                <span>🔍 診斷卡</span>
-              </button>
-            </td>
-          </tr>
-    
-          <tr class="hover:bg-slate-50 border-b border-slate-100">
-            <td class="p-3 font-bold text-slate-500">31 號</td>
-            <td class="p-3 font-black text-blue-700 cursor-pointer hover:underline text-sm" onclick="openStudentModalByName('姚妤青')">
-              姚妤青
-            </td>
-            <td class="p-3"><b>12級</b> <span class="text-[10px] text-slate-400">(59.6分)</span></td>
-            <td class="p-3 text-blue-600"><b>11級</b> <span class="text-[10px] text-slate-400">(57.0分)</span></td>
-            <td class="p-3 text-purple-600"><b>13級</b> <span class="text-[10px] text-slate-400">(86.0分)</span></td>
-            <td class="p-3 text-emerald-600"><b>11級</b> <span class="text-[10px] text-slate-400">(73.8分)</span></td>
-            <td class="p-3 font-black text-amber-700 text-sm">47 級 <span class="text-[10px] text-slate-400 font-normal">(276.4分)</span></td>
-            <td class="p-3"><span class="badge badge-blue">🚀 前標</span></td>
-            <td class="p-3">
-              <button onclick="openStudentModalByName('姚妤青')" class="px-2.5 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded-lg text-xs font-bold hover:bg-blue-100 flex items-center gap-1">
-                <span>🔍 診斷卡</span>
-              </button>
-            </td>
-          </tr>
-    
-          <tr class="hover:bg-slate-50 border-b border-slate-100">
-            <td class="p-3 font-bold text-slate-500">32 號</td>
-            <td class="p-3 font-black text-blue-700 cursor-pointer hover:underline text-sm" onclick="openStudentModalByName('陳芸安')">
-              陳芸安
-            </td>
-            <td class="p-3"><b>13級</b> <span class="text-[10px] text-slate-400">(60.9分)</span></td>
-            <td class="p-3 text-blue-600"><b>8級</b> <span class="text-[10px] text-slate-400">(41.0分)</span></td>
-            <td class="p-3 text-purple-600"><b>7級</b> <span class="text-[10px] text-slate-400">(46.0分)</span></td>
-            <td class="p-3 text-emerald-600"><b>9級</b> <span class="text-[10px] text-slate-400">(61.0分)</span></td>
-            <td class="p-3 font-black text-amber-700 text-sm">37 級 <span class="text-[10px] text-slate-400 font-normal">(208.9分)</span></td>
-            <td class="p-3"><span class="badge badge-rose">🛡️ 基礎</span></td>
-            <td class="p-3">
-              <button onclick="openStudentModalByName('陳芸安')" class="px-2.5 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded-lg text-xs font-bold hover:bg-blue-100 flex items-center gap-1">
-                <span>🔍 診斷卡</span>
-              </button>
-            </td>
-          </tr>
-    
-          <tr class="hover:bg-slate-50 border-b border-slate-100">
-            <td class="p-3 font-bold text-slate-500">33 號</td>
-            <td class="p-3 font-black text-blue-700 cursor-pointer hover:underline text-sm" onclick="openStudentModalByName('楊庭蓁')">
-              楊庭蓁
-            </td>
-            <td class="p-3"><b>12級</b> <span class="text-[10px] text-slate-400">(59.2分)</span></td>
-            <td class="p-3 text-blue-600"><b>9級</b> <span class="text-[10px] text-slate-400">(49.0分)</span></td>
-            <td class="p-3 text-purple-600"><b>10級</b> <span class="text-[10px] text-slate-400">(64.0分)</span></td>
-            <td class="p-3 text-emerald-600"><b>9級</b> <span class="text-[10px] text-slate-400">(60.2分)</span></td>
-            <td class="p-3 font-black text-amber-700 text-sm">40 級 <span class="text-[10px] text-slate-400 font-normal">(232.4分)</span></td>
-            <td class="p-3"><span class="badge badge-green">⚖️ 核心</span></td>
-            <td class="p-3">
-              <button onclick="openStudentModalByName('楊庭蓁')" class="px-2.5 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded-lg text-xs font-bold hover:bg-blue-100 flex items-center gap-1">
-                <span>🔍 診斷卡</span>
-              </button>
-            </td>
-          </tr>
-    
-          <tr class="hover:bg-slate-50 border-b border-slate-100">
-            <td class="p-3 font-bold text-slate-500">34 號</td>
-            <td class="p-3 font-black text-blue-700 cursor-pointer hover:underline text-sm" onclick="openStudentModalByName('劉弈澄')">
-              劉弈澄
-            </td>
-            <td class="p-3"><b>13級</b> <span class="text-[10px] text-slate-400">(62.1分)</span></td>
-            <td class="p-3 text-blue-600"><b>14級</b> <span class="text-[10px] text-slate-400">(71.5分)</span></td>
-            <td class="p-3 text-purple-600"><b>13級</b> <span class="text-[10px] text-slate-400">(85.0分)</span></td>
-            <td class="p-3 text-emerald-600"><b>14級</b> <span class="text-[10px] text-slate-400">(89.0分)</span></td>
-            <td class="p-3 font-black text-amber-700 text-sm">54 級 <span class="text-[10px] text-slate-400 font-normal">(307.6分)</span></td>
-            <td class="p-3"><span class="badge badge-amber">🌟 精熟</span></td>
-            <td class="p-3">
-              <button onclick="openStudentModalByName('劉弈澄')" class="px-2.5 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded-lg text-xs font-bold hover:bg-blue-100 flex items-center gap-1">
-                <span>🔍 診斷卡</span>
-              </button>
-            </td>
-          </tr>
-    
-          <tr class="hover:bg-slate-50 border-b border-slate-100">
-            <td class="p-3 font-bold text-slate-500">35 號</td>
-            <td class="p-3 font-black text-blue-700 cursor-pointer hover:underline text-sm" onclick="openStudentModalByName('劉語昕')">
-              劉語昕
-            </td>
-            <td class="p-3"><b>13級</b> <span class="text-[10px] text-slate-400">(62.9分)</span></td>
-            <td class="p-3 text-blue-600"><b>11級</b> <span class="text-[10px] text-slate-400">(57.0分)</span></td>
-            <td class="p-3 text-purple-600"><b>11級</b> <span class="text-[10px] text-slate-400">(68.0分)</span></td>
-            <td class="p-3 text-emerald-600"><b>11級</b> <span class="text-[10px] text-slate-400">(69.6分)</span></td>
-            <td class="p-3 font-black text-amber-700 text-sm">46 級 <span class="text-[10px] text-slate-400 font-normal">(257.5分)</span></td>
-            <td class="p-3"><span class="badge badge-blue">🚀 前標</span></td>
-            <td class="p-3">
-              <button onclick="openStudentModalByName('劉語昕')" class="px-2.5 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded-lg text-xs font-bold hover:bg-blue-100 flex items-center gap-1">
-                <span>🔍 診斷卡</span>
-              </button>
-            </td>
-          </tr>
-    
-          <tr class="hover:bg-slate-50 border-b border-slate-100">
-            <td class="p-3 font-bold text-slate-500">36 號</td>
-            <td class="p-3 font-black text-blue-700 cursor-pointer hover:underline text-sm" onclick="openStudentModalByName('蔡宛庭')">
-              蔡宛庭
-            </td>
-            <td class="p-3"><b>15級</b> <span class="text-[10px] text-slate-400">(70.1分)</span></td>
-            <td class="p-3 text-blue-600"><b>15級</b> <span class="text-[10px] text-slate-400">(82.0分)</span></td>
-            <td class="p-3 text-purple-600"><b>14級</b> <span class="text-[10px] text-slate-400">(89.0分)</span></td>
-            <td class="p-3 text-emerald-600"><b>15級</b> <span class="text-[10px] text-slate-400">(96.0分)</span></td>
-            <td class="p-3 font-black text-amber-700 text-sm">59 級 <span class="text-[10px] text-slate-400 font-normal">(337.1分)</span></td>
-            <td class="p-3"><span class="badge badge-amber">🌟 精熟</span></td>
-            <td class="p-3">
-              <button onclick="openStudentModalByName('蔡宛庭')" class="px-2.5 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded-lg text-xs font-bold hover:bg-blue-100 flex items-center gap-1">
-                <span>🔍 診斷卡</span>
-              </button>
-            </td>
-          </tr>
-    
-          <tr class="hover:bg-slate-50 border-b border-slate-100">
-            <td class="p-3 font-bold text-slate-500">37 號</td>
-            <td class="p-3 font-black text-blue-700 cursor-pointer hover:underline text-sm" onclick="openStudentModalByName('蔡旻芳')">
-              蔡旻芳
-            </td>
-            <td class="p-3"><b>11級</b> <span class="text-[10px] text-slate-400">(51.4分)</span></td>
-            <td class="p-3 text-blue-600"><b>12級</b> <span class="text-[10px] text-slate-400">(64.5分)</span></td>
-            <td class="p-3 text-purple-600"><b>14級</b> <span class="text-[10px] text-slate-400">(92.0分)</span></td>
-            <td class="p-3 text-emerald-600"><b>11級</b> <span class="text-[10px] text-slate-400">(69.4分)</span></td>
-            <td class="p-3 font-black text-amber-700 text-sm">48 級 <span class="text-[10px] text-slate-400 font-normal">(277.3分)</span></td>
-            <td class="p-3"><span class="badge badge-blue">🚀 前標</span></td>
-            <td class="p-3">
-              <button onclick="openStudentModalByName('蔡旻芳')" class="px-2.5 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded-lg text-xs font-bold hover:bg-blue-100 flex items-center gap-1">
-                <span>🔍 診斷卡</span>
-              </button>
-            </td>
-          </tr>
-    
-          <tr class="hover:bg-slate-50 border-b border-slate-100">
-            <td class="p-3 font-bold text-slate-500">38 號</td>
-            <td class="p-3 font-black text-blue-700 cursor-pointer hover:underline text-sm" onclick="openStudentModalByName('賴慧端')">
-              賴慧端
-            </td>
-            <td class="p-3"><b>13級</b> <span class="text-[10px] text-slate-400">(62.5分)</span></td>
-            <td class="p-3 text-blue-600"><b>12級</b> <span class="text-[10px] text-slate-400">(62.5分)</span></td>
-            <td class="p-3 text-purple-600"><b>2級</b> <span class="text-[10px] text-slate-400">(11.0分)</span></td>
-            <td class="p-3 text-emerald-600"><b>11級</b> <span class="text-[10px] text-slate-400">(72.4分)</span></td>
-            <td class="p-3 font-black text-amber-700 text-sm">38 級 <span class="text-[10px] text-slate-400 font-normal">(208.4分)</span></td>
-            <td class="p-3"><span class="badge badge-rose">🛡️ 基礎</span></td>
-            <td class="p-3">
-              <button onclick="openStudentModalByName('賴慧端')" class="px-2.5 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded-lg text-xs font-bold hover:bg-blue-100 flex items-center gap-1">
-                <span>🔍 診斷卡</span>
-              </button>
-            </td>
-          </tr>
-    
-          <tr class="hover:bg-slate-50 border-b border-slate-100">
-            <td class="p-3 font-bold text-slate-500">39 號</td>
-            <td class="p-3 font-black text-blue-700 cursor-pointer hover:underline text-sm" onclick="openStudentModalByName('李珈縈')">
-              李珈縈
-            </td>
-            <td class="p-3"><b>12級</b> <span class="text-[10px] text-slate-400">(56.6分)</span></td>
-            <td class="p-3 text-blue-600"><b>9級</b> <span class="text-[10px] text-slate-400">(47.5分)</span></td>
-            <td class="p-3 text-purple-600"><b>12級</b> <span class="text-[10px] text-slate-400">(76.0分)</span></td>
-            <td class="p-3 text-emerald-600"><b>6級</b> <span class="text-[10px] text-slate-400">(39.4分)</span></td>
-            <td class="p-3 font-black text-amber-700 text-sm">39 級 <span class="text-[10px] text-slate-400 font-normal">(219.5分)</span></td>
-            <td class="p-3"><span class="badge badge-rose">🛡️ 基礎</span></td>
-            <td class="p-3">
-              <button onclick="openStudentModalByName('李珈縈')" class="px-2.5 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded-lg text-xs font-bold hover:bg-blue-100 flex items-center gap-1">
-                <span>🔍 診斷卡</span>
-              </button>
-            </td>
-          </tr>
-    </tbody>
+                <!-- Populated by JS renderClassRosterTable -->
+              </tbody>
             </table>
           </div>
         </div>
+
       </div>
     </div>
 
@@ -1860,12 +1135,64 @@
       const activeBtn = document.getElementById('clsBtn-' + clsName);
       if (activeBtn) activeBtn.className = 'cls-select-btn px-3 py-1.5 rounded-xl font-bold text-xs bg-blue-600 text-white shadow-sm';
 
-      const standaloneLink = document.getElementById('classStandalonePackLink');
-      if (standaloneLink) {
-        standaloneLink.href = `03_各班導師學力包/115-1學測模考_${clsName}_班級學力導航單.html`;
-      }
+      const container = document.getElementById('classDetailsContainer');
+      if (!container) return;
 
-      renderClassDetails();
+      const c_stus = students.filter(s => s.class === clsName);
+      if (c_stus.length === 0) return;
+      const total = c_stus.length;
+      const isNat = (c_stus[0].nat && c_stus[0].nat.total > 0);
+
+      const chi_avg = (c_stus.reduce((a, b) => a + b.chi.total, 0) / total).toFixed(1);
+      const eng_avg = (c_stus.reduce((a, b) => a + b.eng.corr_total, 0) / total).toFixed(1);
+      const mat_avg = (c_stus.reduce((a, b) => a + b.mathA.total, 0) / total).toFixed(1);
+      const elec_avg = isNat 
+        ? (c_stus.reduce((a, b) => a + (b.nat ? b.nat.total : 0), 0) / total).toFixed(1)
+        : (c_stus.reduce((a, b) => a + (b.soc ? b.soc.total : 0), 0) / total).toFixed(1);
+      const tot_lvl_avg = (c_stus.reduce((a, b) => a + b.tot_lvl, 0) / total).toFixed(1);
+
+      const top50_cnt = c_stus.filter(s => s.tot_lvl >= 50).length;
+      const tier45_cnt = c_stus.filter(s => s.tot_lvl >= 45 && s.tot_lvl < 50).length;
+
+      container.innerHTML = `
+        <!-- Class Overview Stats Grid -->
+        <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
+          <div class="p-3 bg-blue-50/60 rounded-2xl border border-blue-200 text-center">
+            <div class="text-[11px] font-bold text-blue-700">班級人數 ＆ 組別</div>
+            <div class="text-xl font-black text-blue-950 my-0.5">${total} <span class="text-xs font-normal">人</span></div>
+            <div class="text-[10px] text-blue-600 font-bold">${c_stus[0].track}</div>
+          </div>
+          <div class="p-3 bg-amber-50/60 rounded-2xl border border-amber-200 text-center">
+            <div class="text-[11px] font-bold text-amber-700">4科總級分均值</div>
+            <div class="text-xl font-black text-amber-950 my-0.5">${tot_lvl_avg} <span class="text-xs font-normal">級</span></div>
+            <div class="text-[10px] text-amber-600 font-bold">精熟+前標 ${top50_cnt + tier45_cnt}人</div>
+          </div>
+          <div class="p-3 bg-slate-50 rounded-2xl border border-slate-200 text-center">
+            <div class="text-[11px] font-bold text-slate-500">國文科均分</div>
+            <div class="text-xl font-black text-slate-900 my-0.5">${chi_avg}</div>
+            <div class="text-[10px] text-slate-400">語文基底</div>
+          </div>
+          <div class="p-3 bg-slate-50 rounded-2xl border border-slate-200 text-center">
+            <div class="text-[11px] font-bold text-slate-500">英文科均分 (校正)</div>
+            <div class="text-xl font-black text-blue-600 my-0.5">${eng_avg}</div>
+            <div class="text-[10px] text-slate-400">外語實力</div>
+          </div>
+          <div class="p-3 bg-slate-50 rounded-2xl border border-slate-200 text-center">
+            <div class="text-[11px] font-bold text-slate-500">數A ＆ ${isNat ? '自然' : '社會'}均分</div>
+            <div class="text-xl font-black text-purple-600 my-0.5">${mat_avg} / ${elec_avg}</div>
+            <div class="text-[10px] text-slate-400">${isNat ? '數理分科' : '文史分科'}</div>
+          </div>
+        </div>
+      `;
+
+      // Update Roster Section Header
+      const headerTitle = document.getElementById('classRosterTitle');
+      const headerBadge = document.getElementById('classRosterCountBadge');
+      const elecHeader = document.getElementById('classRosterElecHeader');
+      if (headerTitle) headerTitle.innerText = `👥 ${clsName} 班級全體學生作答與學力名冊`;
+      if (headerBadge) headerBadge.innerText = `${total} 人`;
+      if (elecHeader) elecHeader.innerText = isNat ? '自然科' : '社會科';
+
       renderClassRosterTable();
     }
 
