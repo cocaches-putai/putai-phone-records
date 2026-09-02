@@ -19,6 +19,20 @@
     .grid-cell-ok { background-color: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; }
     .grid-cell-wrong { background-color: #fff1f2; color: #9f1239; border: 1px solid #fecdd3; }
   </style>
+
+<style id="customLayoutStyles">
+  .layout-force-desktop {
+    min-width: 1100px !important;
+    overflow-x: auto !important;
+  }
+  .layout-force-mobile .hide-on-mobile-mode {
+    display: none !important;
+  }
+  .layout-force-mobile table {
+    font-size: 11px !important;
+  }
+</style>
+
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen">
 
@@ -51,6 +65,21 @@
       
       <!-- Actions -->
       <div class="flex items-center gap-2 text-xs">
+
+        <!-- Layout Mode Switcher -->
+        <div class="inline-flex rounded-xl bg-slate-800/90 p-0.5 border border-slate-700 text-xs shadow-inner">
+          <button id="btnLayoutAuto" onclick="setLayoutMode('auto')" class="px-2.5 py-1 rounded-lg font-bold bg-blue-600 text-white shadow-sm transition flex items-center gap-1">
+            <span>⚡️ 自動</span>
+          </button>
+          <button id="btnLayoutMobile" onclick="setLayoutMode('mobile')" class="px-2.5 py-1 rounded-lg font-bold text-slate-300 hover:text-white transition flex items-center gap-1">
+            <span>📱 手機</span>
+          </button>
+          <button id="btnLayoutDesktop" onclick="setLayoutMode('desktop')" class="px-2.5 py-1 rounded-lg font-bold text-slate-300 hover:text-white transition flex items-center gap-1">
+            <span>🖥️ 電腦</span>
+          </button>
+        </div>
+
+
         <button onclick="downloadStudentRosterCSV()" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold shadow-sm transition flex items-center gap-1">
           <span>📥 匯出名冊 CSV</span>
         </button>
@@ -71,16 +100,18 @@
           <button onclick="switchGlobalCohort('高三')" id="cohortBtn-高三" class="cohort-toggle px-3.5 py-1.5 rounded-lg transition bg-blue-600 text-white shadow-sm font-black">
             🎓 高三應考群
           </button>
-          <button onclick="switchGlobalCohort('高二')" id="cohortBtn-高二" class="cohort-toggle px-3.5 py-1.5 rounded-lg transition text-slate-600 hover:text-slate-900">
+          <button onclick="switchGlobalCohort('高二')" id="cohortBtn-高二" class="cohort-toggle px-3.5 py-1.5 rounded-lg transition text-slate-600 hover:text-slate-900 font-bold">
             🌱 高二健檢群
           </button>
-          <button onclick="switchGlobalCohort('all')" id="cohortBtn-all" class="cohort-toggle px-3 py-1.5 rounded-lg transition text-slate-600 hover:text-slate-900">
+          <button onclick="switchGlobalCohort('全體')" id="cohortBtn-全體" class="cohort-toggle px-3 py-1.5 rounded-lg transition text-slate-600 hover:text-slate-900 font-bold">
             🏫 全體年段
           </button>
         </div>
       </div>
 
       <div id="cohortActiveNotice" class="text-xs text-blue-700 font-bold bg-blue-50 px-3 py-1.5 rounded-xl border border-blue-200">
+        📌 目前檢視：<b>🎓 高三應考群</b>（數據、五標與名冊已過濾）
+      </div><div id="cohortActiveNotice" class="text-xs text-blue-700 font-bold bg-blue-50 px-3 py-1.5 rounded-xl border border-blue-200">
         📌 目前檢視：<b>🎓 高三應考群</b>（數據、五標與名冊已過濾）
       </div>
     </div>
@@ -299,11 +330,11 @@
 
           <div class="flex flex-wrap items-center gap-1.5 text-xs">
             <span class="text-slate-400 font-bold">四象限快篩：</span>
-            <button onclick="filterQuad('all')" class="quad-chip px-2.5 py-1 rounded-lg font-bold bg-slate-900 text-white" id="qChip-all">全部 (47)</button>
-            <button onclick="filterQuad('trap')" class="quad-chip px-2.5 py-1 rounded-lg font-bold bg-rose-50 text-rose-800 border border-rose-200" id="qChip-trap">🚨 迷思題</button>
-            <button onclick="filterQuad('hard')" class="quad-chip px-2.5 py-1 rounded-lg font-bold bg-purple-50 text-purple-800 border border-purple-200" id="qChip-hard">💣 難題</button>
-            <button onclick="filterQuad('win')" class="quad-chip px-2.5 py-1 rounded-lg font-bold bg-blue-50 text-blue-800 border border-blue-200" id="qChip-win">🌟 優勢題</button>
-            <button onclick="filterQuad('normal')" class="quad-chip px-2.5 py-1 rounded-lg font-bold bg-emerald-50 text-emerald-800 border border-emerald-200" id="qChip-normal">🛡️ 基本掌握題</button>
+            <button onclick="filterQuad('all')" class="quad-chip px-2.5 py-1 rounded-lg font-bold bg-slate-900 text-white" id="quad-all">全部 (47)</button>
+            <button onclick="filterQuad('trap')" class="quad-chip px-2.5 py-1 rounded-lg font-bold bg-rose-50 text-rose-800 border border-rose-200" id="quad-trap">🚨 迷思題</button>
+            <button onclick="filterQuad('hard')" class="quad-chip px-2.5 py-1 rounded-lg font-bold bg-purple-50 text-purple-800 border border-purple-200" id="quad-hard">💣 難題</button>
+            <button onclick="filterQuad('win')" class="quad-chip px-2.5 py-1 rounded-lg font-bold bg-blue-50 text-blue-800 border border-blue-200" id="quad-win">🌟 優勢題</button>
+            <button onclick="filterQuad('normal')" class="quad-chip px-2.5 py-1 rounded-lg font-bold bg-emerald-50 text-emerald-800 border border-emerald-200" id="quad-normal">🛡️ 基本掌握題</button>
           </div>
         </div>
 
@@ -389,15 +420,22 @@
     function switchGlobalCohort(cohort) {
       currentGlobalCohort = cohort;
       ['高三', '高二', '全體'].forEach(c => {
-        const btn = document.getElementById('btnCohort-' + c);
+        const btn = document.getElementById('cohortBtn-' + c);
         if (btn) {
           if (c === cohort) {
-            btn.className = 'px-3 py-1.5 rounded-xl font-black bg-blue-600 text-white shadow-sm text-xs';
+            btn.className = 'cohort-toggle px-3.5 py-1.5 rounded-lg transition bg-blue-600 text-white shadow-md font-black ring-2 ring-blue-400';
           } else {
-            btn.className = 'px-3 py-1.5 rounded-xl font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 text-xs';
+            btn.className = 'cohort-toggle px-3.5 py-1.5 rounded-lg transition text-slate-600 hover:text-slate-900 hover:bg-slate-200 font-bold';
           }
         }
       });
+
+      const notice = document.getElementById('cohortActiveNotice');
+      if (notice) {
+        if (cohort === '高三') notice.innerHTML = '📌 目前檢視：<b>🎓 高三應考群</b>（共 119 人，五標與名冊已鎖定）';
+        else if (cohort === '高二') notice.innerHTML = '📌 目前檢視：<b>🌱 高二健檢群</b>（共 116 人，五標與名冊已鎖定）';
+        else notice.innerHTML = '📌 目前檢視：<b>🏫 全體年段</b>（共 235 人，跨年段常模全貌）';
+      }
 
       updateCohortBadge();
       updateClassDropdownOptions();
@@ -410,6 +448,11 @@
       if (!b) return;
       const stus = getCohortStudents();
       b.innerText = `實測 ${stus.length}人 (${currentGlobalCohort})`;
+    }
+
+    function getCohortStudents() {
+      if (currentGlobalCohort === '全體') return allStudents;
+      return allStudents.filter(s => s.cohort === currentGlobalCohort);
     }
 
     function getCohortStudents() {
@@ -1177,17 +1220,62 @@
 
     function filterQuad(quad) {
       currentQuadFilter = quad;
-      document.querySelectorAll('.quad-chip').forEach(b => {
-        b.className = 'quad-chip px-2.5 py-1 rounded-lg font-bold bg-slate-100 text-slate-700 hover:bg-slate-200';
+      const quadConfigs = {
+        'all': { active: 'bg-slate-900 text-white shadow-md ring-2 ring-slate-700', inactive: 'bg-slate-100 text-slate-700 border border-slate-200' },
+        'trap': { active: 'bg-rose-600 text-white shadow-md ring-2 ring-rose-400 font-black', inactive: 'bg-rose-50 text-rose-800 border border-rose-300' },
+        'hard': { active: 'bg-purple-600 text-white shadow-md ring-2 ring-purple-400 font-black', inactive: 'bg-purple-50 text-purple-800 border border-purple-300' },
+        'win': { active: 'bg-blue-600 text-white shadow-md ring-2 ring-blue-400 font-black', inactive: 'bg-blue-50 text-blue-800 border border-blue-300' },
+        'normal': { active: 'bg-emerald-600 text-white shadow-md ring-2 ring-emerald-400 font-black', inactive: 'bg-emerald-50 text-emerald-800 border border-emerald-300' }
+      };
+
+      Object.keys(quadConfigs).forEach(qKey => {
+        const btn = document.getElementById('quad-' + qKey);
+        if (btn) {
+          if (qKey === quad) {
+            btn.className = `quad-chip px-3 py-1.5 rounded-lg font-black transition-all ${quadConfigs[qKey].active}`;
+          } else {
+            btn.className = `quad-chip px-2.5 py-1 rounded-lg font-bold transition-all hover:scale-105 ${quadConfigs[qKey].inactive}`;
+          }
+        }
       });
-      const activeBtn = document.getElementById('quad-' + quad);
-      if (activeBtn) activeBtn.className = 'quad-chip px-2.5 py-1 rounded-lg font-bold bg-slate-900 text-white shadow-sm';
+
       renderItems();
     }
 
     function filterItemsQuad(quad) {
       filterQuad(quad);
     }
+
+    
+    function setLayoutMode(mode) {
+      const bAuto = document.getElementById('btnLayoutAuto');
+      const bMobile = document.getElementById('btnLayoutMobile');
+      const bDesktop = document.getElementById('btnLayoutDesktop');
+      
+      [bAuto, bMobile, bDesktop].forEach(b => {
+        if (b) b.className = 'px-2.5 py-1 rounded-lg font-bold text-slate-300 hover:text-white transition flex items-center gap-1';
+      });
+
+      document.body.classList.remove('layout-force-desktop', 'layout-force-mobile');
+
+      if (mode === 'desktop') {
+        document.body.classList.add('layout-force-desktop');
+        if (bDesktop) bDesktop.className = 'px-2.5 py-1 rounded-lg font-bold bg-blue-600 text-white shadow-sm transition flex items-center gap-1';
+      } else if (mode === 'mobile') {
+        document.body.classList.add('layout-force-mobile');
+        if (bMobile) bMobile.className = 'px-2.5 py-1 rounded-lg font-bold bg-blue-600 text-white shadow-sm transition flex items-center gap-1';
+      } else {
+        if (bAuto) bAuto.className = 'px-2.5 py-1 rounded-lg font-bold bg-blue-600 text-white shadow-sm transition flex items-center gap-1';
+      }
+      localStorage.setItem('putai_preferred_layout_mode', mode);
+    }
+
+    // Auto restore preferred layout mode
+    const savedLayout = localStorage.getItem('putai_preferred_layout_mode');
+    if (savedLayout && ['auto', 'mobile', 'desktop'].includes(savedLayout)) {
+      setLayoutMode(savedLayout);
+    }
+
 
     // Initialize to Grade 12 (高三) and Overview tab
     switchGlobalCohort('高三');

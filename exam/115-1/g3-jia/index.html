@@ -20,6 +20,20 @@
     .grid-cell-ok { background-color: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; }
     .grid-cell-wrong { background-color: #fff1f2; color: #9f1239; border: 1px solid #fecdd3; }
   </style>
+
+<style id="customLayoutStyles">
+  .layout-force-desktop {
+    min-width: 1100px !important;
+    overflow-x: auto !important;
+  }
+  .layout-force-mobile .hide-on-mobile-mode {
+    display: none !important;
+  }
+  .layout-force-mobile table {
+    font-size: 11px !important;
+  }
+</style>
+
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen">
 
@@ -52,6 +66,21 @@
       
       <!-- Actions -->
       <div class="flex items-center gap-2 text-xs">
+
+        <!-- Layout Mode Switcher -->
+        <div class="inline-flex rounded-xl bg-slate-800/90 p-0.5 border border-slate-700 text-xs shadow-inner">
+          <button id="btnLayoutAuto" onclick="setLayoutMode('auto')" class="px-2.5 py-1 rounded-lg font-bold bg-blue-600 text-white shadow-sm transition flex items-center gap-1">
+            <span>⚡️ 自動</span>
+          </button>
+          <button id="btnLayoutMobile" onclick="setLayoutMode('mobile')" class="px-2.5 py-1 rounded-lg font-bold text-slate-300 hover:text-white transition flex items-center gap-1">
+            <span>📱 手機</span>
+          </button>
+          <button id="btnLayoutDesktop" onclick="setLayoutMode('desktop')" class="px-2.5 py-1 rounded-lg font-bold text-slate-300 hover:text-white transition flex items-center gap-1">
+            <span>🖥️ 電腦</span>
+          </button>
+        </div>
+
+
         <button onclick="downloadClassCSV()" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold shadow-sm transition flex items-center gap-1">
           <span>📥 匯出名冊 CSV</span>
         </button>
