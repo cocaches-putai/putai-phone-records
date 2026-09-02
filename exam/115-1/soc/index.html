@@ -221,12 +221,12 @@
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-amber-200/60 pb-2.5">
           <div>
             <h4 class="text-sm font-black text-slate-900 flex items-center gap-1.5">
-              <span>⚖️ 【社會科 分科配分權重 ＆ 大考中心常模調整器】</span>
+              <span>⚖️ 【社會科 分科配分權重 ＆ 分科標準常模調整器】</span>
             </h4>
             <p class="text-xs text-slate-500 mt-0.5">針對模擬考各科題目配分不均問題，提供「大考中心 1:1:1 常模」與「自訂權重」動態試算</p>
           </div>
           <div class="flex items-center gap-1 bg-white p-1 rounded-xl border border-slate-200 text-xs font-bold shadow-2xs">
-            <button onclick="setSubWeightMode('ceec')" id="btnWeight-ceec" class="px-2.5 py-1 rounded-lg bg-amber-600 text-white font-black shadow-sm transition">大考中心標準 (1:1:1)</button>
+            <button onclick="setSubWeightMode('ceec')" id="btnWeight-ceec" class="px-2.5 py-1 rounded-lg bg-amber-600 text-white font-black shadow-sm transition">學測標準比例 (1:1:1)</button>
             <button onclick="setSubWeightMode('raw')" id="btnWeight-raw" class="px-2.5 py-1 rounded-lg text-slate-600 hover:text-slate-900 transition">本卷實測原始分</button>
             <button onclick="setSubWeightMode('custom')" id="btnWeight-custom" class="px-2.5 py-1 rounded-lg text-slate-600 hover:text-slate-900 transition">自訂權重比例</button>
           </div>
@@ -249,7 +249,7 @@
 
         <div class="flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-600">
           <div class="flex items-center gap-1.5">
-            <span id="currentWeightBadge" class="px-2 py-0.5 bg-amber-100 text-amber-900 font-bold rounded-md">⚡ 運算模式：大考中心標準 1:1:1（歷史 48分 ｜ 地理 48分 ｜ 公民 48分，各佔 33.3%）</span>
+            <span id="currentWeightBadge" class="px-2 py-0.5 bg-amber-100 text-amber-900 font-bold rounded-md">⚡ 運算模式：學測標準 1:1:1（歷史 48分 ｜ 地理 48分 ｜ 公民 48分，各佔 33.3%）</span>
           </div>
           <span class="text-slate-400">切換模式後，全卷均分、各班矩陣與弱科診斷將即時動態重算</span>
         </div>
@@ -544,7 +544,7 @@
 
       const badge = document.getElementById('currentWeightBadge');
       if (badge) {
-        if (mode === 'ceec') badge.innerText = '⚡ 運算模式：大考中心標準 1:1:1（歷史 48分 ｜ 地理 48分 ｜ 公民 48分，各佔 33.3%）';
+        if (mode === 'ceec') badge.innerText = '⚡ 運算模式：學測標準 1:1:1（歷史 48分 ｜ 地理 48分 ｜ 公民 48分，各佔 33.3%）';
         else if (mode === 'raw') badge.innerText = '⚡ 運算模式：本卷實測原始配分（未加權原始得分）';
         else badge.innerText = `⚡ 運算模式：自訂比例（歷史 ${subWeights.h}% ｜ 地理 ${subWeights.g}% ｜ 公民 ${subWeights.c}%）`;
       }
