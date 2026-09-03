@@ -440,7 +440,7 @@
                 <th class="py-3 px-2 w-16 text-center whitespace-nowrap">5科積分</th>
                 <th class="py-3 px-2 w-16 text-center whitespace-nowrap">6科積點</th>
                 <th class="py-3 px-2 w-16 text-center whitespace-nowrap">作文</th>
-                <th class="py-3 px-4 min-w-[320px]">微課程專屬指導策略與行動處方</th>
+                <th class="py-3 px-4 min-w-[320px]">待強化考科與失分焦點</th>
               </tr>
             </thead>
             <tbody id="archetypeTableBody" class="divide-y divide-slate-100">
@@ -501,7 +501,7 @@
         </div>
       </div>
 
-      <!-- 區塊 3: 班級全員詳細名冊與一對一輔導話術表 -->
+      <!-- 區塊 3: 班級全員學力成績與考科強弱分析總表 -->
       <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
         <div class="px-5 py-4 border-b border-slate-200 bg-slate-50/80 flex justify-between items-center">
           <div>
@@ -526,7 +526,7 @@
                 <th class="py-3 px-1 w-12 text-center whitespace-nowrap">社會</th>
                 <th class="py-3 px-1 w-12 text-center whitespace-nowrap">自然</th>
                 <th class="py-3 px-1 w-12 text-center whitespace-nowrap">作文</th>
-                <th class="py-3 px-4 min-w-[300px]">導師一對一面談專屬指導話術</th>
+                <th class="py-3 px-4 min-w-[300px]">學力型態與考科強弱</th>
               </tr>
             </thead>
             <tbody id="hrTableBody" class="divide-y divide-slate-100">
@@ -1006,7 +1006,7 @@
                 <th class="py-2.5 px-2 w-16 text-center whitespace-nowrap">${curCfg.name}</th>
                 <th class="py-2.5 px-3 w-40 text-center whitespace-nowrap">五科標示</th>
                 <th class="py-2.5 px-2 w-14 text-center whitespace-nowrap">積點</th>
-                <th class="py-2.5 px-4 min-w-[240px]">個別輔導處方與話術</th>
+                <th class="py-2.5 px-4 min-w-[240px]">學力落點與強弱分析</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-slate-100">
@@ -1018,7 +1018,7 @@
                   <td class="py-2.5 px-2 text-center">${formatLvlBadge(s[curCfg.field])}</td>
                   <td class="py-2.5 px-3 text-center font-semibold text-slate-700 font-mono whitespace-nowrap">${s.combo}</td>
                   <td class="py-2.5 px-2 text-center font-bold text-amber-700">${s.points_6}</td>
-                  <td class="py-2.5 px-4 text-slate-600 text-xs">${s.homeroom_talk}</td>
+                  <td class="py-2.5 px-4 text-slate-700 text-xs font-mono"><span class="font-bold text-blue-700">優勢:</span> ${s.top_subj || "-"} ｜ <span class="font-bold text-rose-600">瓶頸:</span> ${s.bot_subj || "-"} ｜ <span class="text-slate-500">數:${s.math_group || "-"} / 英:${s.eng_group || "-"}</span></td>
                 </tr>
               `).join('')}
             </tbody>
@@ -1141,7 +1141,7 @@
             <td class="py-2.5 px-2 w-16 text-center font-black text-slate-900 whitespace-nowrap">${s.pts_5}</td>
             <td class="py-2.5 px-2 w-16 text-center font-black text-amber-600 whitespace-nowrap">${s.points_6}</td>
             <td class="py-2.5 px-2 w-16 text-center font-bold whitespace-nowrap ${s.writing_score <= 4 ? 'text-pink-600 bg-pink-50' : 'text-slate-700'}">${s.writing_score}級</td>
-            <td class="py-2.5 px-4 min-w-[320px] text-slate-700 text-xs leading-relaxed">${s.mc_action || s.homeroom_talk}</td>
+            <td class="py-2.5 px-4 min-w-[320px] text-slate-700 text-xs font-mono"><span class="font-bold text-blue-700">優勢:</span> ${s.top_subj || "-"} ｜ <span class="font-bold text-rose-600">瓶頸:</span> ${s.bot_subj || "-"} ｜ <span class="text-slate-500">數非選: ${s.math_nonchoice}分 / 作文: ${s.writing_score}級</span></td>
           </tr>
         `;
       }).join('');
@@ -1282,7 +1282,7 @@
               <td class="py-2.5 px-1 w-12 text-center text-slate-400 whitespace-nowrap">-</td>
               <td class="py-2.5 px-1 w-12 text-center text-slate-400 whitespace-nowrap">-</td>
               <td class="py-2.5 px-1 w-12 text-center text-slate-400 whitespace-nowrap">-</td>
-              <td class="py-2.5 px-4 min-w-[300px] text-slate-500 text-xs">${s.homeroom_talk}</td>
+              <td class="py-2.5 px-4 min-w-[300px] text-slate-400 text-xs font-mono">請假缺考 ｜ 無受測紀錄</td>
             </tr>
           `;
         }
@@ -1301,7 +1301,7 @@
             <td class="py-2.5 px-1 w-12 text-center whitespace-nowrap">${formatLvlBadge(s.soc_lvl)}</td>
             <td class="py-2.5 px-1 w-12 text-center whitespace-nowrap">${formatLvlBadge(s.nat_lvl)}</td>
             <td class="py-2.5 px-1 w-12 text-center font-bold whitespace-nowrap text-slate-700">${s.writing_score}級</td>
-            <td class="py-2.5 px-4 min-w-[300px] text-slate-700 text-xs leading-relaxed">${s.homeroom_talk}</td>
+            <td class="py-2.5 px-4 min-w-[300px] text-slate-700 text-xs font-mono"><span class="font-bold text-blue-700">優勢:</span> ${s.top_subj || "-"} ｜ <span class="font-bold text-rose-600">瓶頸:</span> ${s.bot_subj || "-"} ｜ <span class="text-slate-500">數:${s.math_group || "-"} / 英:${s.eng_group || "-"}</span></td>
           </tr>
         `;
       }).join('');
@@ -1657,42 +1657,6 @@
         <div class="bg-slate-900 text-white p-4 rounded-2xl mb-4 border border-slate-800 shadow-inner">
           <div id="modalAnswerGridContainer">
             <!-- Populated by JS -->
-          </div>
-        </div>
-
-        <!-- 導師一對一精準對話三部曲 (Coaching Script) -->
-        <div class="p-4 bg-gradient-to-br from-blue-50 to-indigo-50/60 rounded-2xl border border-blue-200 mb-4 space-y-2.5">
-          <div class="flex justify-between items-center border-b border-blue-200/60 pb-2">
-            <h4 class="font-black text-blue-950 text-sm flex items-center space-x-2">
-              <span>🗣️ 導師一對一面談指導話術（三步賦能法）</span>
-            </h4>
-            <span class="text-[10px] bg-blue-600 text-white px-2 py-0.5 rounded-full font-bold">晚自習/談心專用</span>
-          </div>
-
-          <div class="space-y-2 text-xs leading-relaxed text-blue-950">
-            <div class="p-2.5 bg-white rounded-xl border border-blue-100">
-              <strong class="text-emerald-700 font-bold block mb-0.5">🌱 Step 1：先肯定優勢（建立自信與賦能）</strong>
-              ${s.talk_step1}
-            </div>
-            <div class="p-2.5 bg-white rounded-xl border border-blue-100">
-              <strong class="text-amber-700 font-bold block mb-0.5">🎯 Step 2：指陳關鍵盲點（客觀剖析失分原因）</strong>
-              ${s.talk_step2}
-            </div>
-            <div class="p-2.5 bg-white rounded-xl border border-blue-100">
-              <strong class="text-blue-700 font-bold block mb-0.5">🚀 Step 3：具體動作指令（給予 7 天內立即落實的行動）</strong>
-              ${s.talk_step3}
-            </div>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
-          <div class="p-3 bg-amber-50/80 rounded-xl border border-amber-200 text-xs">
-            <strong class="text-amber-900 font-bold block mb-1">⏱️ 晚自習每日時間再分配建議：</strong>
-            <p class="text-amber-950 font-medium">${s.time_alloc}</p>
-          </div>
-          <div class="p-3 bg-emerald-50/80 rounded-xl border border-emerald-200 text-xs">
-            <strong class="text-emerald-900 font-bold block mb-1">🎯 二模目標設定與路徑：</strong>
-            <p class="text-emerald-950 font-medium">${s.next_target}</p>
           </div>
         </div>
 
