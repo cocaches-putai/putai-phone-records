@@ -145,7 +145,52 @@
             <span class="badge badge-amber">頂標: 13 級</span>
             <span class="badge badge-blue">均標: 11 級</span>
           </div>
+
+        <!-- 6 Quick Status Cards: 頂、前、均、後、底、未達標 -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 pt-2">
+          <div onclick="filterStudentTierAndSwitchTab('top')" id="cardStd-top" class="std-card cursor-pointer bg-white hover:bg-amber-50/50 p-4 rounded-2xl border-2 border-amber-200 shadow-sm text-center transition-all hover:scale-105" title="點擊直接切換至學生名冊查看頂標名單">
+            <div class="text-[11px] font-black text-amber-700">🌟 頂標 (P88)</div>
+            <div id="statCntTop" class="text-2xl font-black text-amber-950 my-0.5">- <span class="text-xs font-normal">人</span></div>
+            <div id="statPctTop" class="text-[10px] text-amber-600 font-bold">佔比 -%</div>
+            <div class="text-[9px] text-amber-700/70 font-bold mt-1 bg-amber-100/60 py-0.5 rounded">點擊查名單 ➔</div>
+          </div>
+
+          <div onclick="filterStudentTierAndSwitchTab('front')" id="cardStd-front" class="std-card cursor-pointer bg-white hover:bg-blue-50/50 p-4 rounded-2xl border-2 border-blue-200 shadow-sm text-center transition-all hover:scale-105" title="點擊直接切換至學生名冊查看前標名單">
+            <div class="text-[11px] font-black text-blue-700">🚀 前標 (P75)</div>
+            <div id="statCntFront" class="text-2xl font-black text-blue-950 my-0.5">- <span class="text-xs font-normal">人</span></div>
+            <div id="statPctFront" class="text-[10px] text-blue-600 font-bold">佔比 -%</div>
+            <div class="text-[9px] text-blue-700/70 font-bold mt-1 bg-blue-100/60 py-0.5 rounded">點擊查名單 ➔</div>
+          </div>
+
+          <div onclick="filterStudentTierAndSwitchTab('avg')" id="cardStd-avg" class="std-card cursor-pointer bg-white hover:bg-emerald-50/50 p-4 rounded-2xl border-2 border-emerald-200 shadow-sm text-center transition-all hover:scale-105" title="點擊直接切換至學生名冊查看均標名單">
+            <div class="text-[11px] font-black text-emerald-700">⚖️ 均標 (P50)</div>
+            <div id="statCntAvg" class="text-2xl font-black text-emerald-950 my-0.5">- <span class="text-xs font-normal">人</span></div>
+            <div id="statPctAvg" class="text-[10px] text-emerald-600 font-bold">佔比 -%</div>
+            <div class="text-[9px] text-emerald-700/70 font-bold mt-1 bg-emerald-100/60 py-0.5 rounded">點擊查名單 ➔</div>
+          </div>
+
+          <div onclick="filterStudentTierAndSwitchTab('back')" id="cardStd-back" class="std-card cursor-pointer bg-white hover:bg-slate-100/70 p-4 rounded-2xl border-2 border-slate-200 shadow-sm text-center transition-all hover:scale-105" title="點擊直接切換至學生名冊查看後標名單">
+            <div class="text-[11px] font-black text-slate-600">🍂 後標 (P25)</div>
+            <div id="statCntBack" class="text-2xl font-black text-slate-900 my-0.5">- <span class="text-xs font-normal">人</span></div>
+            <div id="statPctBack" class="text-[10px] text-slate-500 font-bold">佔比 -%</div>
+            <div class="text-[9px] text-slate-600/70 font-bold mt-1 bg-slate-100 py-0.5 rounded">點擊查名單 ➔</div>
+          </div>
+
+          <div onclick="filterStudentTierAndSwitchTab('bottom')" id="cardStd-bottom" class="std-card cursor-pointer bg-white hover:bg-rose-50/50 p-4 rounded-2xl border-2 border-rose-200 shadow-sm text-center transition-all hover:scale-105" title="點擊直接切換至學生名冊查看底標名單">
+            <div class="text-[11px] font-black text-rose-700">🚨 底標 (P12)</div>
+            <div id="statCntBottom" class="text-2xl font-black text-rose-950 my-0.5">- <span class="text-xs font-normal">人</span></div>
+            <div id="statPctBottom" class="text-[10px] text-rose-600 font-bold">佔比 -%</div>
+            <div class="text-[9px] text-rose-700/70 font-bold mt-1 bg-rose-100/60 py-0.5 rounded">點擊查名單 ➔</div>
+          </div>
+
+          <div onclick="filterStudentTierAndSwitchTab('unreached')" id="cardStd-unreached" class="std-card cursor-pointer bg-white hover:bg-red-50/70 p-4 rounded-2xl border-2 border-red-300 shadow-sm text-center transition-all hover:scale-105" title="點擊直接切換至學生名冊查看未達底標名單">
+            <div class="text-[11px] font-black text-red-700">❌ 未達標 (&lt;底標)</div>
+            <div id="statCntUnreached" class="text-2xl font-black text-red-950 my-0.5">- <span class="text-xs font-normal">人</span></div>
+            <div id="statPctUnreached" class="text-[10px] text-red-600 font-bold">佔比 -%</div>
+            <div class="text-[9px] text-red-700/70 font-bold mt-1 bg-red-100 py-0.5 rounded">扶助名單 ➔</div>
+          </div>
         </div>
+      </div>
 
 
       
@@ -203,42 +248,7 @@
       </div>
     
 
-    <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
-          <div onclick="filterStudentTierAndSwitchTab('top')" id="cardStd-top" class="std-card cursor-pointer bg-white hover:bg-amber-50/50 p-4 rounded-2xl border-2 border-amber-200 shadow-sm text-center transition-all hover:scale-105" title="點擊直接切換至學生名冊查看頂標名單">
-            <div class="text-[11px] font-black text-amber-700">🌟 頂標 (P88)</div>
-            <div id="statCntTop" class="text-2xl font-black text-amber-950 my-0.5">- <span class="text-xs font-normal">人</span></div>
-            <div id="statPctTop" class="text-[10px] text-amber-600 font-bold">佔比 -%</div>
-            <div class="text-[9px] text-amber-700/70 font-bold mt-1 bg-amber-100/60 py-0.5 rounded">點擊查名單 ➔</div>
-          </div>
-
-          <div onclick="filterStudentTierAndSwitchTab('front')" id="cardStd-front" class="std-card cursor-pointer bg-white hover:bg-blue-50/50 p-4 rounded-2xl border-2 border-blue-200 shadow-sm text-center transition-all hover:scale-105" title="點擊直接切換至學生名冊查看前標名單">
-            <div class="text-[11px] font-black text-blue-700">🚀 前標 (P75)</div>
-            <div id="statCntFront" class="text-2xl font-black text-blue-950 my-0.5">- <span class="text-xs font-normal">人</span></div>
-            <div id="statPctFront" class="text-[10px] text-blue-600 font-bold">佔比 -%</div>
-            <div class="text-[9px] text-blue-700/70 font-bold mt-1 bg-blue-100/60 py-0.5 rounded">點擊查名單 ➔</div>
-          </div>
-
-          <div onclick="filterStudentTierAndSwitchTab('avg')" id="cardStd-avg" class="std-card cursor-pointer bg-white hover:bg-emerald-50/50 p-4 rounded-2xl border-2 border-emerald-200 shadow-sm text-center transition-all hover:scale-105" title="點擊直接切換至學生名冊查看均標名單">
-            <div class="text-[11px] font-black text-emerald-700">⚖️ 均標 (P50)</div>
-            <div id="statCntAvg" class="text-2xl font-black text-emerald-950 my-0.5">- <span class="text-xs font-normal">人</span></div>
-            <div id="statPctAvg" class="text-[10px] text-emerald-600 font-bold">佔比 -%</div>
-            <div class="text-[9px] text-emerald-700/70 font-bold mt-1 bg-emerald-100/60 py-0.5 rounded">點擊查名單 ➔</div>
-          </div>
-
-          <div onclick="filterStudentTierAndSwitchTab('back')" id="cardStd-back" class="std-card cursor-pointer bg-white hover:bg-slate-100/70 p-4 rounded-2xl border-2 border-slate-200 shadow-sm text-center transition-all hover:scale-105" title="點擊直接切換至學生名冊查看後標名單">
-            <div class="text-[11px] font-black text-slate-600">🛡️ 後標 (P25)</div>
-            <div id="statCntBack" class="text-2xl font-black text-slate-900 my-0.5">- <span class="text-xs font-normal">人</span></div>
-            <div id="statPctBack" class="text-[10px] text-slate-500 font-bold">佔比 -%</div>
-            <div class="text-[9px] text-slate-600/70 font-bold mt-1 bg-slate-100 py-0.5 rounded">點擊查名單 ➔</div>
-          </div>
-
-          <div onclick="filterStudentTierAndSwitchTab('bottom')" id="cardStd-bottom" class="std-card cursor-pointer bg-white hover:bg-rose-50/50 p-4 rounded-2xl border-2 border-rose-200 shadow-sm text-center transition-all hover:scale-105" title="點擊直接切換至學生名冊查看底標名單">
-            <div class="text-[11px] font-black text-rose-700">🚨 底標 (P12)</div>
-            <div id="statCntBottom" class="text-2xl font-black text-rose-950 my-0.5">- <span class="text-xs font-normal">人</span></div>
-            <div id="statPctBottom" class="text-[10px] text-rose-600 font-bold">佔比 -%</div>
-            <div class="text-[9px] text-rose-700/70 font-bold mt-1 bg-rose-100/60 py-0.5 rounded">點擊查名單 ➔</div>
-          </div>
-        </div>
+    </div>
       </div>
 
       
