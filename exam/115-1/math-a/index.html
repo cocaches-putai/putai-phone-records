@@ -1275,14 +1275,17 @@
 
     function downloadStudentRosterCSV() {
       const stus = getCohortStudents();
-      let csv = `年段,班級,座號,姓名,組別,${sName}級分,${sName}得分,五標屬性,4科總級分\n`;
+      let csv = "年段,班級,座號,姓名,組別,數學A級分,數學A總分,單選多選選擇題得分,選填與混合題得分,五標屬性,4科總級分\n";
       stus.forEach(s => {
-        csv += `${s.cohort},${s.class},${s.seat},${s.name},${s.track},${s.subj_lvl},${s.subj_score},${s.subj_tier_label},${s.tot_lvl}\n`;
+        const sd = s.subj_data || {};
+        const choice = sd.choice || 0;
+        const mixed = sd.mixed || 0;
+        csv += `"${s.cohort}","${s.class}","${s.seat}","${s.name}","${s.track}","${s.subj_lvl}","${s.subj_score}","${choice}","${mixed}","${s.subj_tier_label}","${s.tot_lvl}"\n`;
       });
       const blob = new Blob(["\uFEFF" + csv], { type: 'text/csv;charset=utf-8;' });
       const link = document.createElement("a");
       link.href = URL.createObjectURL(blob);
-      link.download = `115-1學測模考_${sName}_${currentGlobalCohort}_學生學力名冊.csv`;
+      link.download = `115-1學測模考_數學A_${currentGlobalCohort}_學生學力名冊(含選擇_選填混合).csv`;
       link.click();
     }
 

@@ -1397,14 +1397,21 @@
 
     function downloadStudentRosterCSV() {
       const stus = getCohortStudents();
-      let csv = `年段,班級,座號,姓名,組別,${sName}級分,${sName}得分,五標屬性,4科總級分\n`;
+      let csv = "年段,班級,座號,姓名,組別,自然科級分,自然科總分,選擇題得分,混合題得分,物理得分,化學得分,生物得分,地科得分,五標屬性,4科總級分\n";
       stus.forEach(s => {
-        csv += `${s.cohort},${s.class},${s.seat},${s.name},${s.track},${s.subj_lvl},${s.subj_score},${s.subj_tier_label},${s.tot_lvl}\n`;
+        const sd = s.subj_data || {};
+        const choice = sd.choice || 0;
+        const mixed = sd.mixed || 0;
+        const phys = sd.phys || 0;
+        const chem = sd.chem || 0;
+        const bio = sd.bio || 0;
+        const earth = sd.earth || 0;
+        csv += `"${s.cohort}","${s.class}","${s.seat}","${s.name}","${s.track}","${s.subj_lvl}","${s.subj_score}","${choice}","${mixed}","${phys}","${chem}","${bio}","${earth}","${s.subj_tier_label}","${s.tot_lvl}"\n`;
       });
       const blob = new Blob(["\uFEFF" + csv], { type: 'text/csv;charset=utf-8;' });
       const link = document.createElement("a");
       link.href = URL.createObjectURL(blob);
-      link.download = `115-1學測模考_${sName}_${currentGlobalCohort}_學生學力名冊.csv`;
+      link.download = `115-1學測模考_自然科_${currentGlobalCohort}_學生學力名冊(含物化生生分科細項).csv`;
       link.click();
     }
 

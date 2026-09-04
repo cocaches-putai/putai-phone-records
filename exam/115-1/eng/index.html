@@ -401,7 +401,7 @@
                 </th>
                 <th class="p-3 cursor-pointer hover:bg-slate-200 transition select-none" onclick="toggleSort('nonchoice')" title="點擊依翻譯作文得分排序">
                   <div class="flex items-center gap-1">
-                    <span>細部子分數 (翻譯/作文)</span>
+                    <span>各項子分數 (選擇/混合/翻譯/作文)</span>
                     <span id="sortIcon-nonchoice" class="text-[10px] text-slate-400 font-mono">⇅</span>
                   </div>
                 </th>
@@ -1012,7 +1012,24 @@
         else if (s.subj_lvl >= std.bottom) tierBadge = '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md border text-[11px] bg-rose-100 text-rose-800 border-rose-200 font-bold">🚨 底標</span>';
         else tierBadge = '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md border text-[11px] bg-red-100 text-red-950 border-red-300 font-black shadow-2xs">❌ 未達標</span>';
 
-        let subScoreText = `翻譯 ${s.subj_data.trans || 0}分 ｜ 作文 ${s.subj_data.essay || 0}分`;
+        const sd = s.subj_data || {};
+        const choice = (sd.corr_choice !== undefined) ? sd.corr_choice : (sd.orig_choice || 0);
+        const mixed = sd.mixed || 0;
+        const trans = sd.trans || 0;
+        const essay = sd.essay || 0;
+
+        let subScoreText = `
+          <div class="space-y-1">
+            <div class="flex items-center gap-1 font-mono text-[10.5px]">
+              <span class="px-1.5 py-0.5 bg-blue-50 text-blue-900 border border-blue-200 rounded font-bold">選擇 ${choice}</span>
+              <span class="px-1.5 py-0.5 bg-indigo-50 text-indigo-900 border border-indigo-200 rounded font-bold">混合 ${mixed}</span>
+            </div>
+            <div class="flex items-center gap-1 font-mono text-[10.5px]">
+              <span class="px-1.5 py-0.5 bg-emerald-50 text-emerald-900 border border-emerald-200 rounded font-bold">翻譯 ${trans}</span>
+              <span class="px-1.5 py-0.5 bg-purple-50 text-purple-900 border border-purple-200 rounded font-bold">作文 ${essay}</span>
+            </div>
+          </div>
+        `;
 
         return `
           <tr class="hover:bg-slate-50 transition border-b border-slate-100">
@@ -1121,19 +1138,28 @@
           </div>
         `;
       } else if (sId === 'eng') {
+        const sd = s.subj_data || {};
+        const choice = (sd.corr_choice !== undefined) ? sd.corr_choice : (sd.orig_choice || 0);
+        const mixed = sd.mixed || 0;
+        const trans = sd.trans || 0;
+        const essay = sd.essay || 0;
         subScoresBreakdown = `
-          <div class="grid grid-cols-3 gap-2 text-center text-xs">
-            <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200">
-              <span class="text-slate-400 text-[11px]">選擇題得分</span>
-              <div class="font-black text-slate-900 text-sm mt-0.5">${s.subj_data.corr_choice || s.subj_data.choice || 0} 分</div>
-            </div>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center text-xs">
             <div class="p-2.5 bg-blue-50/70 rounded-xl border border-blue-200">
-              <span class="text-blue-700 text-[11px] font-bold">中譯英翻譯</span>
-              <div class="font-black text-blue-950 text-sm mt-0.5">${s.subj_data.trans || 0} / 8 分</div>
+              <span class="text-blue-700 text-[11px] font-bold">選擇題得分</span>
+              <div class="font-black text-blue-950 text-sm mt-0.5">${choice} 分</div>
+            </div>
+            <div class="p-2.5 bg-indigo-50/70 rounded-xl border border-indigo-200">
+              <span class="text-indigo-700 text-[11px] font-bold">混合題得分</span>
+              <div class="font-black text-indigo-950 text-sm mt-0.5">${mixed} 分</div>
+            </div>
+            <div class="p-2.5 bg-emerald-50/70 rounded-xl border border-emerald-200">
+              <span class="text-emerald-700 text-[11px] font-bold">中譯英翻譯</span>
+              <div class="font-black text-emerald-950 text-sm mt-0.5">${trans} / 8 分</div>
             </div>
             <div class="p-2.5 bg-purple-50/70 rounded-xl border border-purple-200">
               <span class="text-purple-700 text-[11px] font-bold">英文寫作作文</span>
-              <div class="font-black text-purple-950 text-sm mt-0.5">${s.subj_data.essay || 0} / 20 分</div>
+              <div class="font-black text-purple-950 text-sm mt-0.5">${essay} / 20 分</div>
             </div>
           </div>
         `;
@@ -1286,14 +1312,20 @@
 
     function downloadStudentRosterCSV() {
       const stus = getCohortStudents();
-      let csv = `年段,班級,座號,姓名,組別,${sName}級分,${sName}得分,五標屬性,4科總級分\n`;
+      let csv = "年段,班級,座號,姓名,組別,英文科級分,英文科總分,選擇題得分,混合題得分,非選翻譯得分,非選作文得分,非選總分,五標屬性,4科總級分\n";
       stus.forEach(s => {
-        csv += `${s.cohort},${s.class},${s.seat},${s.name},${s.track},${s.subj_lvl},${s.subj_score},${s.subj_tier_label},${s.tot_lvl}\n`;
+        const sd = s.subj_data || {};
+        const choice = (sd.corr_choice !== undefined) ? sd.corr_choice : (sd.orig_choice || 0);
+        const mixed = sd.mixed || 0;
+        const trans = sd.trans || 0;
+        const essay = sd.essay || 0;
+        const nonchoice = (sd.nonchoice_tot !== undefined) ? sd.nonchoice_tot : (trans + essay);
+        csv += `"${s.cohort}","${s.class}","${s.seat}","${s.name}","${s.track}","${s.subj_lvl}","${s.subj_score}","${choice}","${mixed}","${trans}","${essay}","${nonchoice}","${s.subj_tier_label}","${s.tot_lvl}"\n`;
       });
       const blob = new Blob(["\uFEFF" + csv], { type: 'text/csv;charset=utf-8;' });
       const link = document.createElement("a");
       link.href = URL.createObjectURL(blob);
-      link.download = `115-1學測模考_${sName}_${currentGlobalCohort}_學生學力名冊.csv`;
+      link.download = `115-1學測模考_英文科_${currentGlobalCohort}_學生學力名冊(含選擇_混合_翻譯_作文).csv`;
       link.click();
     }
 
