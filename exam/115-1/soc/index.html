@@ -1387,7 +1387,7 @@
 
     function downloadStudentRosterCSV() {
       const stus = getCohortStudents();
-      let csv = '年段,班級,座號,姓名,組別,${sName}級分,${sName}得分,五標屬性,4科總級分\n';
+      let csv = `年段,班級,座號,姓名,組別,${sName}級分,${sName}得分,五標屬性,4科總級分\n`;
       stus.forEach(s => {
         csv += `${s.cohort},${s.class},${s.seat},${s.name},${s.track},${s.subj_lvl},${s.subj_score},${s.subj_tier_label},${s.tot_lvl}\n`;
       });
