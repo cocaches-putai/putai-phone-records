@@ -599,9 +599,12 @@
       } else if (lvl >= s.back) {
         badgeStyle = 'bg-slate-100 text-slate-700 border-slate-200 font-medium';
         tagText = '後';
-      } else {
-        badgeStyle = 'bg-rose-100 text-rose-900 border-rose-300 font-black';
+      } else if (lvl >= s.bot) {
+        badgeStyle = 'bg-rose-100 text-rose-800 border-rose-200 font-bold';
         tagText = '底';
+      } else {
+        badgeStyle = 'bg-red-100 text-red-900 border-red-300 font-black';
+        tagText = '未達';
       }
 
       return `

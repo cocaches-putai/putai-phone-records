@@ -353,6 +353,7 @@
             <button onclick="filterStudentTier('avg')" class="s-tier-chip px-2.5 py-1 rounded-lg font-bold bg-emerald-50 text-emerald-800 border border-emerald-200" id="sTier-avg">⚖️ 均標</button>
             <button onclick="filterStudentTier('back')" class="s-tier-chip px-2.5 py-1 rounded-lg font-bold bg-slate-100 text-slate-700 border border-slate-200" id="sTier-back">🍂 後標</button>
             <button onclick="filterStudentTier('bottom')" class="s-tier-chip px-2.5 py-1 rounded-lg font-bold bg-rose-50 text-rose-800 border border-rose-200" id="sTier-bottom">🚨 底標</button>
+            <button onclick="filterStudentTier('unreached')" class="s-tier-chip px-2.5 py-1 rounded-lg font-bold bg-red-50 text-red-900 border border-red-300 hover:bg-red-100" id="sTier-unreached">❌ 未達標 (&lt;底標)</button>
             <button onclick="filterStudentTier('near')" class="s-tier-chip px-2.5 py-1 rounded-lg font-bold bg-purple-50 text-purple-800 border border-purple-200" id="sTier-near">🎯 差 1 級衝標生</button>
             <button onclick="filterStudentTier('nonchoice_low')" class="s-tier-chip px-2.5 py-1 rounded-lg font-bold bg-orange-50 text-orange-800 border border-orange-200" id="sTier-nonchoice_low">📝 混合手寫待加強</button>
           </div>
@@ -634,7 +635,8 @@
       const frontCount = stus.filter(s => s.subj_lvl >= std.front && s.subj_lvl < std.top).length;
       const avgCount = stus.filter(s => s.subj_lvl >= std.avg && s.subj_lvl < std.front).length;
       const backCount = stus.filter(s => s.subj_lvl >= std.back && s.subj_lvl < std.avg).length;
-      const bottomCount = stus.filter(s => s.subj_lvl < std.bottom).length;
+      const bottomCount = stus.filter(s => s.subj_lvl >= std.bottom && s.subj_lvl < std.back).length;
+      const unreachedCount = stus.filter(s => s.subj_lvl < std.bottom).length;
 
       const elTop = document.getElementById('statCntTop');
       if (elTop) elTop.innerHTML = `${topCount} <span class="text-xs font-normal">人</span>`;
@@ -660,6 +662,11 @@
       if (elBottom) elBottom.innerHTML = `${bottomCount} <span class="text-xs font-normal">人</span>`;
       const elBottomPct = document.getElementById('statPctBottom');
       if (elBottomPct) elBottomPct.innerText = `佔比 ${Math.round(bottomCount / total * 100)}%`;
+
+      const elUnreached = document.getElementById('statCntUnreached');
+      if (elUnreached) elUnreached.innerHTML = `${unreachedCount} <span class="text-xs font-normal">人</span>`;
+      const elUnreachedPct = document.getElementById('statPctUnreached');
+      if (elUnreachedPct) elUnreachedPct.innerText = `佔比 ${Math.round(unreachedCount / total * 100)}%`;
 
       renderClassMatrix();
       updateSubdisciplineCounts();
@@ -894,6 +901,9 @@
       } else if (currentStudentTierFilter === 'back') {
         stus = stus.filter(s => s.subj_lvl >= std.back && s.subj_lvl < std.avg);
       } else if (currentStudentTierFilter === 'bottom') {
+        stus = stus.filter(s => s.subj_lvl >= std.bottom && s.subj_lvl < std.back);
+      }
+      else if (currentStudentTierFilter === 'unreached') {
         stus = stus.filter(s => s.subj_lvl < std.bottom);
       } else if (currentStudentTierFilter === 'near') {
         stus = stus.filter(s => s.is_near_standard || (s.near_standards && s.near_standards.length > 0));
@@ -978,7 +988,8 @@
         else if (s.subj_lvl >= std.front) tierBadge = '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md border text-[11px] bg-blue-100 text-blue-950 border-blue-300 font-black">🚀 前標</span>';
         else if (s.subj_lvl >= std.avg) tierBadge = '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md border text-[11px] bg-emerald-100 text-emerald-950 border-emerald-300 font-bold">⚖️ 均標</span>';
         else if (s.subj_lvl >= std.back) tierBadge = '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md border text-[11px] bg-slate-100 text-slate-700 border-slate-200 font-medium">🍂 後標</span>';
-        else tierBadge = '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md border text-[11px] bg-rose-100 text-rose-900 border-rose-300 font-black">🚨 底標</span>';
+        else if (s.subj_lvl >= std.bottom) tierBadge = '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md border text-[11px] bg-rose-100 text-rose-800 border-rose-200 font-bold">🚨 底標</span>';
+        else tierBadge = '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md border text-[11px] bg-red-100 text-red-950 border-red-300 font-black shadow-2xs">❌ 未達標</span>';
 
         let subScoreText = `選擇 ${s.subj_data.choice || 0}分 ｜ 混合 ${s.subj_data.mixed || 0}分`;
 
