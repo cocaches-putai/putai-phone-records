@@ -307,51 +307,100 @@
       </div>
 
       <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm space-y-4">
-        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-slate-100 pb-3">
-          <div>
-            <h4 class="text-sm font-black text-slate-900 flex items-center gap-2">
-              <span id="studentRosterTitle">👥 【英文科 學生學力名冊 ＆ 作答明細調閱】</span>
-              <span id="studentRosterCountBadge" class="badge badge-blue">0 人</span>
-            </h4>
-            <p class="text-xs text-slate-400 mt-0.5">點擊學生姓名或「🔍 診斷卡」按鈕，立即展開全卷 🟢/🔴 作答網格</p>
+        <div class="space-y-3.5 border-b border-slate-100 pb-4">
+          <!-- Row 1: Title, Search, Filter Dropdown, and Sort Dropdown -->
+          <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-3">
+            <div>
+              <h4 class="text-sm font-black text-slate-900 flex items-center gap-2">
+                <span id="studentRosterTitle">👥 【英文科 學生學力名冊 ＆ 作答明細調閱】</span>
+                <span id="studentRosterCountBadge" class="badge badge-blue">0 人</span>
+              </h4>
+              <p class="text-xs text-slate-400 mt-0.5">點擊學生姓名或「🔍 診斷卡」按鈕，立即展開全卷 🟢/🔴 作答網格</p>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2.5 text-xs w-full lg:w-auto">
+              <!-- Search Box -->
+              <div class="relative flex-1 sm:w-48">
+                <input type="text" id="studentSearchInput" oninput="applyStudentFilters()" placeholder="🔍 搜尋姓名或座號..." class="w-full pl-7 pr-2.5 py-1.5 rounded-xl border border-slate-200 text-xs bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 font-bold text-slate-800 placeholder:text-slate-400">
+                <span class="absolute left-2.5 top-1.5 text-slate-400 text-xs"></span>
+              </div>
+
+              <!-- Group / Class Dropdown -->
+              <div class="flex items-center gap-1.5">
+                <span class="text-slate-500 font-bold whitespace-nowrap">分組：</span>
+                <select id="studentGroupFilter" onchange="applyStudentFilters()" class="px-2.5 py-1.5 rounded-xl bg-blue-50 border border-blue-200 text-blue-900 font-black text-xs shadow-sm">
+                  <!-- Populated dynamically -->
+                </select>
+              </div>
+
+              <!-- Sort Dropdown -->
+              <div class="flex items-center gap-1.5">
+                <span class="text-slate-500 font-bold whitespace-nowrap">排序：</span>
+                <select id="studentSortSelect" onchange="changeStudentSort(this.value)" class="px-2.5 py-1.5 rounded-xl bg-amber-50 border border-amber-300 text-amber-950 font-black text-xs shadow-sm">
+                  <option value="seat_asc">🔢 原班座號序 (預設)</option>
+                  <option value="score_desc">🏆 英文得分：由高到低</option>
+                  <option value="score_asc">📉 英文得分：由低到高</option>
+                  <option value="lvl_desc">🌟 英文級分：由高到低</option>
+                  <option value="tot_desc">🎓 4科總級分：由高到低</option>
+                  <option value="nonchoice_desc">✍️ 翻譯作文：由高到低</option>
+                  <option value="nonchoice_asc">⚠️ 翻譯作文：由低到高</option>
+                </select>
+              </div>
+            </div>
           </div>
 
-          <div class="flex flex-wrap items-center gap-2 text-xs">
-            <!-- Standard Filter -->
-            <div class="flex items-center gap-1">
-              <span class="text-slate-400 font-bold">五標：</span>
-              <button onclick="filterStudentTier('all')" class="s-tier-chip px-2.5 py-1 rounded-lg font-bold bg-slate-900 text-white" id="sTier-all">全部</button>
-              <button onclick="filterStudentTier('top')" class="s-tier-chip px-2.5 py-1 rounded-lg font-bold bg-amber-50 text-amber-800 border border-amber-200" id="sTier-top">🌟 頂標</button>
-              <button onclick="filterStudentTier('front')" class="s-tier-chip px-2.5 py-1 rounded-lg font-bold bg-blue-50 text-blue-800 border border-blue-200" id="sTier-front">🚀 前標</button>
-              <button onclick="filterStudentTier('avg')" class="s-tier-chip px-2.5 py-1 rounded-lg font-bold bg-emerald-50 text-emerald-800 border border-emerald-200" id="sTier-avg">⚖️ 均標</button>
-              <button onclick="filterStudentTier('bottom')" class="s-tier-chip px-2.5 py-1 rounded-lg font-bold bg-rose-50 text-rose-800 border border-rose-200" id="sTier-bottom">🚨 底標</button>
-            </div>
-
-            <!-- Running Group Filter -->
-            <div class="flex items-center gap-1">
-              <span class="text-slate-400 font-bold">分組：</span>
-              <div class="flex items-center gap-1">
-              <span class="text-slate-400 font-bold">分組：</span>
-              <select id="studentGroupFilter" onchange="applyStudentFilters()" class="px-2.5 py-1 rounded-lg bg-blue-50 border border-blue-200 text-blue-900 font-black text-xs shadow-sm">
-                <!-- Populated dynamically -->
-              </select>
-            </div>
-            </div>
+          <!-- Row 2: Comprehensive Filter Chips (Beyond just 5 standards) -->
+          <div class="flex flex-wrap items-center gap-1.5 text-xs pt-1">
+            <span class="text-slate-400 font-bold mr-1">學力快篩：</span>
+            <button onclick="filterStudentTier('all')" class="s-tier-chip px-2.5 py-1 rounded-lg font-bold bg-slate-900 text-white shadow-sm" id="sTier-all">全部名冊</button>
+            <button onclick="filterStudentTier('15')" class="s-tier-chip px-2.5 py-1 rounded-lg font-bold bg-amber-100 text-amber-900 border border-amber-300" id="sTier-15">👑 15 滿級分</button>
+            <button onclick="filterStudentTier('top')" class="s-tier-chip px-2.5 py-1 rounded-lg font-bold bg-amber-50 text-amber-800 border border-amber-200" id="sTier-top">🌟 頂標 (≥12級)</button>
+            <button onclick="filterStudentTier('front')" class="s-tier-chip px-2.5 py-1 rounded-lg font-bold bg-blue-50 text-blue-800 border border-blue-200" id="sTier-front">🚀 前標 (10~11級)</button>
+            <button onclick="filterStudentTier('avg')" class="s-tier-chip px-2.5 py-1 rounded-lg font-bold bg-emerald-50 text-emerald-800 border border-emerald-200" id="sTier-avg">⚖️ 均標 (8~9級)</button>
+            <button onclick="filterStudentTier('back')" class="s-tier-chip px-2.5 py-1 rounded-lg font-bold bg-slate-100 text-slate-700 border border-slate-200" id="sTier-back">🍂 後標 (5~7級)</button>
+            <button onclick="filterStudentTier('bottom')" class="s-tier-chip px-2.5 py-1 rounded-lg font-bold bg-rose-50 text-rose-800 border border-rose-200" id="sTier-bottom">🚨 底標 (≤4級)</button>
+            <button onclick="filterStudentTier('near')" class="s-tier-chip px-2.5 py-1 rounded-lg font-bold bg-purple-50 text-purple-800 border border-purple-200" id="sTier-near">🎯 差 1 級衝標生</button>
+            <button onclick="filterStudentTier('nonchoice_low')" class="s-tier-chip px-2.5 py-1 rounded-lg font-bold bg-orange-50 text-orange-800 border border-orange-200" id="sTier-nonchoice_low">📝 翻譯作文待加強 (&lt;10分)</button>
           </div>
         </div>
 
-        <div class="overflow-x-auto border border-slate-200 rounded-2xl max-h-[600px] overflow-y-auto">
+        <div class="overflow-x-auto border border-slate-200 rounded-2xl max-h-[600px] overflow-y-auto"> rounded-2xl max-h-[600px] overflow-y-auto">
           <table class="w-full text-xs text-left">
             <thead class="bg-slate-100 text-slate-700 font-bold sticky top-0 border-b border-slate-200">
               <tr>
                 <th class="p-3 bg-blue-50/70 text-blue-900">跑班分組 (教師)</th>
-                <th class="p-3">原班座號</th>
+                <th class="p-3 cursor-pointer hover:bg-slate-200 transition select-none" onclick="toggleSort('seat')" title="點擊切換座號升/降序">
+                  <div class="flex items-center gap-1">
+                    <span>原班座號</span>
+                    <span id="sortIcon-seat" class="text-[10px] text-blue-700 font-mono font-black">▲</span>
+                  </div>
+                </th>
                 <th class="p-3">姓名</th>
-                <th class="p-3 bg-blue-50 text-blue-900 font-black">英文科級分</th>
-                <th class="p-3 font-bold text-slate-900">英文科得分</th>
-                <th class="p-3">細部子分數拆解</th>
+                <th class="p-3 bg-blue-50 text-blue-900 font-black cursor-pointer hover:bg-blue-100 transition select-none" onclick="toggleSort('lvl')" title="點擊依級分排序">
+                  <div class="flex items-center gap-1">
+                    <span>英文科級分</span>
+                    <span id="sortIcon-lvl" class="text-[10px] text-slate-400 font-mono">⇅</span>
+                  </div>
+                </th>
+                <th class="p-3 font-bold text-slate-900 cursor-pointer hover:bg-slate-200 transition select-none" onclick="toggleSort('score')" title="點擊依得分排序">
+                  <div class="flex items-center gap-1">
+                    <span>英文科得分</span>
+                    <span id="sortIcon-score" class="text-[10px] text-slate-400 font-mono">⇅</span>
+                  </div>
+                </th>
+                <th class="p-3 cursor-pointer hover:bg-slate-200 transition select-none" onclick="toggleSort('nonchoice')" title="點擊依翻譯作文得分排序">
+                  <div class="flex items-center gap-1">
+                    <span>細部子分數 (翻譯/作文)</span>
+                    <span id="sortIcon-nonchoice" class="text-[10px] text-slate-400 font-mono">⇅</span>
+                  </div>
+                </th>
                 <th class="p-3">五標等級</th>
-                <th class="p-3">4科總級分</th>
+                <th class="p-3 cursor-pointer hover:bg-slate-200 transition select-none" onclick="toggleSort('tot')" title="點擊依4科總級分排序">
+                  <div class="flex items-center gap-1">
+                    <span>4科總級分</span>
+                    <span id="sortIcon-tot" class="text-[10px] text-slate-400 font-mono">⇅</span>
+                  </div>
+                </th>
                 <th class="p-3">操作</th>
               </tr>
             </thead>
@@ -776,6 +825,40 @@
       applyStudentFilters();
     }
 
+    let currentStudentSort = 'seat_asc';
+
+    function changeStudentSort(sortKey) {
+      currentStudentSort = sortKey;
+      const sel = document.getElementById('studentSortSelect');
+      if (sel && sel.value !== sortKey) sel.value = sortKey;
+      applyStudentFilters();
+    }
+
+    function toggleSort(col) {
+      if (col === 'seat') {
+        currentStudentSort = (currentStudentSort === 'seat_asc') ? 'seat_desc' : 'seat_asc';
+      } else if (col === 'score') {
+        currentStudentSort = (currentStudentSort === 'score_desc') ? 'score_asc' : 'score_desc';
+      } else if (col === 'lvl') {
+        currentStudentSort = (currentStudentSort === 'lvl_desc') ? 'lvl_asc' : 'lvl_desc';
+      } else if (col === 'nonchoice') {
+        currentStudentSort = (currentStudentSort === 'nonchoice_desc') ? 'nonchoice_asc' : 'nonchoice_desc';
+      } else if (col === 'tot') {
+        currentStudentSort = (currentStudentSort === 'tot_desc') ? 'tot_asc' : 'tot_desc';
+      }
+      changeStudentSort(currentStudentSort);
+    }
+
+    function updateSortIcons() {
+      ['seat', 'score', 'lvl', 'nonchoice', 'tot'].forEach(k => {
+        const el = document.getElementById('sortIcon-' + k);
+        if (!el) return;
+        if (currentStudentSort === k + '_asc') el.innerHTML = '<span class="text-blue-700 font-black">▲</span>';
+        else if (currentStudentSort === k + '_desc') el.innerHTML = '<span class="text-blue-700 font-black">▼</span>';
+        else el.innerHTML = '<span class="text-slate-400">⇅</span>';
+      });
+    }
+
     function filterStudentTier(tier) {
       currentStudentTierFilter = tier;
       document.querySelectorAll('.s-tier-chip').forEach(b => {
@@ -804,16 +887,95 @@
 
     function applyStudentFilters() {
       let stus = getCohortStudents();
+
+      // 1. Filter by Group or Class
       const grpFilter = document.getElementById('studentGroupFilter') ? document.getElementById('studentGroupFilter').value : 'all';
       if (grpFilter !== 'all') {
         stus = stus.filter(s => (s.eng_group === grpFilter || s.class === grpFilter));
       }
 
-      if (currentStudentTierFilter === 'top') stus = stus.filter(s => s.subj_lvl >= std.top);
-      else if (currentStudentTierFilter === 'front') stus = stus.filter(s => s.subj_lvl >= std.front && s.subj_lvl < std.top);
-      else if (currentStudentTierFilter === 'avg') stus = stus.filter(s => s.subj_lvl >= std.avg && s.subj_lvl < std.front);
-      else if (currentStudentTierFilter === 'back') stus = stus.filter(s => s.subj_lvl >= std.back && s.subj_lvl < std.avg);
-      else if (currentStudentTierFilter === 'bottom') stus = stus.filter(s => s.subj_lvl < std.bottom);
+      // 2. Filter by Tier / Preset
+      if (currentStudentTierFilter === '15') {
+        stus = stus.filter(s => s.subj_lvl === 15);
+      } else if (currentStudentTierFilter === 'top') {
+        stus = stus.filter(s => s.subj_lvl >= std.top);
+      } else if (currentStudentTierFilter === 'front') {
+        stus = stus.filter(s => s.subj_lvl >= std.front && s.subj_lvl < std.top);
+      } else if (currentStudentTierFilter === 'avg') {
+        stus = stus.filter(s => s.subj_lvl >= std.avg && s.subj_lvl < std.front);
+      } else if (currentStudentTierFilter === 'back') {
+        stus = stus.filter(s => s.subj_lvl >= std.back && s.subj_lvl < std.avg);
+      } else if (currentStudentTierFilter === 'bottom') {
+        stus = stus.filter(s => s.subj_lvl < std.bottom);
+      } else if (currentStudentTierFilter === 'near') {
+        stus = stus.filter(s => s.is_near_standard || (s.near_standards && s.near_standards.length > 0));
+      } else if (currentStudentTierFilter === 'nonchoice_low') {
+        stus = stus.filter(s => {
+          const nc = (s.subj_data && ((s.subj_data.trans || 0) + (s.subj_data.essay || 0))) || 0;
+          return nc < 10;
+        });
+      }
+
+      // 3. Filter by Search keyword
+      const kw = document.getElementById('studentSearchInput') ? document.getElementById('studentSearchInput').value.trim().toLowerCase() : '';
+      if (kw) {
+        stus = stus.filter(s => 
+          (s.name && s.name.toLowerCase().includes(kw)) || 
+          (s.class && s.class.toLowerCase().includes(kw)) || 
+          (String(s.seat).includes(kw)) ||
+          (s.eng_group && s.eng_group.toLowerCase().includes(kw))
+        );
+      }
+
+      // 4. Sorting logic
+      const classOrder = {
+        '高三甲': 1, '高三乙': 2, '高三己': 3, '高三庚': 4,
+        '高二甲': 5, '高二乙': 6, '高二己': 7, '高二庚': 8
+      };
+
+      stus.sort((a, b) => {
+        const ca = classOrder[a.class] || 99;
+        const cb = classOrder[b.class] || 99;
+
+        if (currentStudentSort === 'seat_asc') {
+          if (ca !== cb) return ca - cb;
+          return (a.seat || 0) - (b.seat || 0);
+        } else if (currentStudentSort === 'seat_desc') {
+          if (ca !== cb) return cb - ca;
+          return (b.seat || 0) - (a.seat || 0);
+        } else if (currentStudentSort === 'score_desc') {
+          if (b.subj_score !== a.subj_score) return (b.subj_score || 0) - (a.subj_score || 0);
+          return (b.subj_lvl || 0) - (a.subj_lvl || 0);
+        } else if (currentStudentSort === 'score_asc') {
+          if (a.subj_score !== b.subj_score) return (a.subj_score || 0) - (b.subj_score || 0);
+          return (a.subj_lvl || 0) - (b.subj_lvl || 0);
+        } else if (currentStudentSort === 'lvl_desc') {
+          if (b.subj_lvl !== a.subj_lvl) return (b.subj_lvl || 0) - (a.subj_lvl || 0);
+          return (b.subj_score || 0) - (a.subj_score || 0);
+        } else if (currentStudentSort === 'lvl_asc') {
+          if (a.subj_lvl !== b.subj_lvl) return (a.subj_lvl || 0) - (b.subj_lvl || 0);
+          return (a.subj_score || 0) - (b.subj_score || 0);
+        } else if (currentStudentSort === 'tot_desc') {
+          if (b.tot_lvl !== a.tot_lvl) return (b.tot_lvl || 0) - (a.tot_lvl || 0);
+          return (b.subj_score || 0) - (a.subj_score || 0);
+        } else if (currentStudentSort === 'tot_asc') {
+          if (a.tot_lvl !== b.tot_lvl) return (a.tot_lvl || 0) - (b.tot_lvl || 0);
+          return (a.subj_score || 0) - (b.subj_score || 0);
+        } else if (currentStudentSort === 'nonchoice_desc') {
+          const nca = (a.subj_data && ((a.subj_data.trans || 0) + (a.subj_data.essay || 0))) || 0;
+          const ncb = (b.subj_data && ((b.subj_data.trans || 0) + (b.subj_data.essay || 0))) || 0;
+          if (ncb !== nca) return ncb - nca;
+          return (b.subj_score || 0) - (a.subj_score || 0);
+        } else if (currentStudentSort === 'nonchoice_asc') {
+          const nca = (a.subj_data && ((a.subj_data.trans || 0) + (a.subj_data.essay || 0))) || 0;
+          const ncb = (b.subj_data && ((b.subj_data.trans || 0) + (b.subj_data.essay || 0))) || 0;
+          if (nca !== ncb) return nca - ncb;
+          return (a.subj_score || 0) - (b.subj_score || 0);
+        }
+        return 0;
+      });
+
+      updateSortIcons();
 
       const tbody = document.getElementById('studentRosterTableBody');
       const badge = document.getElementById('studentRosterCountBadge');
@@ -821,10 +983,13 @@
       if (!tbody) return;
 
       tbody.innerHTML = stus.map(s => {
-        let tierBadge = '<span class="badge badge-emerald">⚖️ 均標群</span>';
-        if (s.subj_lvl >= std.top) tierBadge = '<span class="badge badge-amber">🌟 頂標</span>';
-        else if (s.subj_lvl >= std.front) tierBadge = '<span class="badge badge-blue">🚀 前標</span>';
-        else if (s.subj_lvl < std.bottom) tierBadge = '<span class="badge badge-rose">🚨 底標</span>';
+        let tierBadge = '';
+        if (s.subj_lvl >= 15) tierBadge = '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md border text-[11px] bg-amber-200 text-amber-950 border-amber-400 font-black shadow-2xs">👑 15滿級</span>';
+        else if (s.subj_lvl >= std.top) tierBadge = '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md border text-[11px] bg-amber-100 text-amber-950 border-amber-300 font-black">🌟 頂標</span>';
+        else if (s.subj_lvl >= std.front) tierBadge = '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md border text-[11px] bg-blue-100 text-blue-950 border-blue-300 font-black">🚀 前標</span>';
+        else if (s.subj_lvl >= std.avg) tierBadge = '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md border text-[11px] bg-emerald-100 text-emerald-950 border-emerald-300 font-bold">⚖️ 均標</span>';
+        else if (s.subj_lvl >= std.back) tierBadge = '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md border text-[11px] bg-slate-100 text-slate-700 border-slate-200 font-medium">🍂 後標</span>';
+        else tierBadge = '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md border text-[11px] bg-rose-100 text-rose-900 border-rose-300 font-black">🚨 底標</span>';
 
         let subScoreText = `翻譯 ${s.subj_data.trans || 0}分 ｜ 作文 ${s.subj_data.essay || 0}分`;
 
